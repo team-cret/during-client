@@ -7,8 +7,6 @@ assignees: ''
 
 ---
 
-## ✅ {Title}
-
 ### Description
 {Description}
 
