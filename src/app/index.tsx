@@ -1,5 +1,5 @@
-import { Text } from "react-native";
+import RootLayout from "./routes";
 
 export default function App() {
-  return <Text>App</Text>;
+  return <RootLayout />;
 }
