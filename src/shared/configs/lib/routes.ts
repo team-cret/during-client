@@ -2,10 +2,11 @@ import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
+import { Platform } from "@/src/shared";
 
 type RootStackParamList = {
   "oauth/index": {
-    platform: string | undefined;
+    platform: Platform | undefined;
     accessToken: string | undefined;
   };
   "oauth/kakao": undefined;

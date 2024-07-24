@@ -2,7 +2,12 @@ import { SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
 
 import { APPLE_CLIENT_ID, REDIRECT_URI } from "@env";
-import { getParamFromUrl, INJECTED_JAVASCRIPT, NavProp } from "@/src/shared";
+import {
+  getParamFromUrl,
+  INJECTED_JAVASCRIPT,
+  NavProp,
+  Platform,
+} from "@/src/shared";
 import { getAppleToken } from "@/src/entities";
 
 function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
@@ -18,7 +23,7 @@ function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
           if (code === null) return;
           const token = await getAppleToken(code);
           navigation.navigate("oauth/index", {
-            platform: "apple",
+            platform: Platform.APPLE,
             accessToken: token,
           });
         }}

@@ -3,7 +3,12 @@ import { WebView } from "react-native-webview";
 
 import { GOOGLE_OAUTH_CLIENT_ID, REDIRECT_URI } from "@env";
 import { getGoogleToken, GOOGLE_OAUTH_SCOPE } from "@/src/entities";
-import { getParamFromUrl, INJECTED_JAVASCRIPT, NavProp } from "@/src/shared";
+import {
+  getParamFromUrl,
+  INJECTED_JAVASCRIPT,
+  NavProp,
+  Platform,
+} from "@/src/shared";
 
 function GoogleAuthPage({
   navigation,
@@ -24,7 +29,7 @@ function GoogleAuthPage({
 
           const token = await getGoogleToken(code);
           navigation.navigate("oauth/index", {
-            platform: "google",
+            platform: Platform.GOOGLE,
             accessToken: token,
           });
         }}

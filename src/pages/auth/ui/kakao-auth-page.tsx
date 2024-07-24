@@ -3,7 +3,12 @@ import { SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
 
 import { KAKAO_REST_API_KEY, REDIRECT_URI } from "@env";
-import { getParamFromUrl, INJECTED_JAVASCRIPT, NavProp } from "@/src/shared";
+import {
+  getParamFromUrl,
+  INJECTED_JAVASCRIPT,
+  NavProp,
+  Platform,
+} from "@/src/shared";
 
 function KakaoAuthPage({ navigation }: { navigation: NavProp<"oauth/kakao"> }) {
   return (
@@ -18,7 +23,7 @@ function KakaoAuthPage({ navigation }: { navigation: NavProp<"oauth/kakao"> }) {
           if (code === null) return;
           const token = await getKakaoToken(code);
           navigation.navigate("oauth/index", {
-            platform: "kakao",
+            platform: Platform.KAKAO,
             accessToken: token,
           });
         }}
