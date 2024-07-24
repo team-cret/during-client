@@ -6,16 +6,13 @@ import { Platform } from "@/src/shared";
 
 type RootStackParamList = {
   "oauth/index": {
-    platform: Platform | undefined;
-    accessToken: string | undefined;
+    platform: Platform | null;
+    accessToken: string | null;
   };
   "oauth/kakao": undefined;
   "oauth/google": undefined;
   "oauth/naver": undefined;
   "oauth/apple": undefined;
-  // Tasks: undefined;
-  // Task: { id: number };
-  // AddTask: undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> =
