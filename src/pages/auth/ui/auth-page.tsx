@@ -1,7 +1,8 @@
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { NavProp, ScreenProps } from "@/src/shared";
 import { useEffect } from "react";
+import { trySignInUp } from "@/src/entities";
 
 function AuthPage({
   navigation,
@@ -12,9 +13,12 @@ function AuthPage({
 }) {
   useEffect(() => {
     if (params === undefined) return;
-    if (params.platform === undefined || params.accessToken === undefined)
-      return;
-    Alert.alert(params!.platform, params.accessToken);
+    if (params.platform === null || params.accessToken === null) return;
+
+    trySignInUp({
+      accessToken: params.accessToken,
+      platform: params.platform,
+    });
   }, [params]);
 
   return (
