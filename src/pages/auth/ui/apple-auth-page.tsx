@@ -1,11 +1,9 @@
-import { Alert, SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
 
-import { APPLE_CLIENT_ID, NAVER_CLIENT_ID, REDIRECT_URI } from "@env";
-import { getParamFromUrl, NavProp } from "@/src/shared";
-import { getAppleToken, getGoogleToken, getNaverToken } from "@/src/entities";
-
-const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage("redirected")`;
+import { APPLE_CLIENT_ID, REDIRECT_URI } from "@env";
+import { getParamFromUrl, INJECTED_JAVASCRIPT, NavProp } from "@/src/shared";
+import { getAppleToken } from "@/src/entities";
 
 function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
   return (
