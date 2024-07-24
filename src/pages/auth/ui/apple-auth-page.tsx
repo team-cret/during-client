@@ -8,7 +8,6 @@ import {
   NavProp,
   Platform,
 } from "@/src/shared";
-import { getAppleToken } from "@/src/entities";
 
 function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
   return (
@@ -21,10 +20,9 @@ function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
         onMessage={async (event) => {
           const code = getParamFromUrl(event.nativeEvent.url, "code");
           if (code === null) return;
-          const token = await getAppleToken(code);
           navigation.navigate("oauth/index", {
             platform: Platform.APPLE,
-            accessToken: token,
+            accessToken: code,
           });
         }}
       />
