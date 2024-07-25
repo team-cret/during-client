@@ -2,7 +2,12 @@ import { SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
 
 import { NAVER_CLIENT_ID, REDIRECT_URI } from "@env";
-import { getParamFromUrl, INJECTED_JAVASCRIPT, NavProp } from "@/src/shared";
+import {
+  getParamFromUrl,
+  INJECTED_JAVASCRIPT,
+  NavProp,
+  Platform,
+} from "@/src/shared";
 import { getNaverToken, NAVER_OAUTH_STATE } from "@/src/entities";
 
 function NaverAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
@@ -18,7 +23,7 @@ function NaverAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
           if (code === null) return;
           const token = await getNaverToken(code);
           navigation.navigate("oauth/index", {
-            platform: "naver",
+            platform: Platform.NAVER,
             accessToken: token,
           });
         }}
