@@ -10,7 +10,7 @@ import {
   Platform,
 } from "@/src/shared";
 
-function KakaoAuthPage({ navigation }: { navigation: NavProp<"oauth/kakao"> }) {
+function KakaoAuthPage({ navigation }: { navigation: NavProp<"oauth/KAKAO"> }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView

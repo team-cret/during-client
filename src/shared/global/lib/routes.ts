@@ -9,10 +9,11 @@ type RootStackParamList = {
     platform: Platform | null;
     accessToken: string | null;
   };
-  "oauth/kakao": undefined;
-  "oauth/google": undefined;
-  "oauth/naver": undefined;
-  "oauth/apple": undefined;
+  "oauth/KAKAO": undefined;
+  "oauth/GOOGLE": undefined;
+  "oauth/NAVER": undefined;
+  "oauth/APPLE": undefined;
+  "info-setup/terms-of-service": undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> =

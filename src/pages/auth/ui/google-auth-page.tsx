@@ -13,7 +13,7 @@ import {
 function GoogleAuthPage({
   navigation,
 }: {
-  navigation: NavProp<"oauth/kakao">;
+  navigation: NavProp<"oauth/GOOGLE">;
 }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>

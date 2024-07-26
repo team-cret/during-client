@@ -9,7 +9,7 @@ import {
   Platform,
 } from "@/src/shared";
 
-function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
+function AppleAuthPage({ navigation }: { navigation: NavProp<"oauth/APPLE"> }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView

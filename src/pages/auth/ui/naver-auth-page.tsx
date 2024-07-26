@@ -10,7 +10,7 @@ import {
 } from "@/src/shared";
 import { getNaverToken, NAVER_OAUTH_STATE } from "@/src/entities";
 
-function NaverAuthPage({ navigation }: { navigation: NavProp<"oauth/naver"> }) {
+function NaverAuthPage({ navigation }: { navigation: NavProp<"oauth/NAVER"> }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
