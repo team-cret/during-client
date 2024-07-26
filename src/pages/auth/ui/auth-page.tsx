@@ -1,8 +1,15 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-import { NavProp, ScreenProps } from "@/src/shared";
 import { useEffect } from "react";
+
+import {
+  HeadLineText,
+  NavProp,
+  Platform,
+  ScreenProps,
+  SpaceFlexBox,
+} from "@/src/shared";
 import { trySignInUp } from "@/src/entities";
+import { OauthButtonRow } from "@/src/widgets";
 
 function AuthPage({
   navigation,
@@ -21,36 +28,20 @@ function AuthPage({
     });
   }, [params]);
 
+  function navigateToOAuth(platform: Platform) {
+    navigation.navigate(`oauth/${platform}`);
+  }
+
   return (
     <View style={styles.container}>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("oauth/kakao");
-        }}
-      >
-        <Text style={styles.text}>kakao</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("oauth/google");
-        }}
-      >
-        <Text style={styles.text}>google</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("oauth/naver");
-        }}
-      >
-        <Text style={styles.text}>naver</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("oauth/apple");
-        }}
-      >
-        <Text style={styles.text}>apple</Text>
-      </Pressable>
+      <SpaceFlexBox flex={12.31} />
+      <HeadLineText
+        title={`사용자 인증을\n완료해 주세요.`}
+        subTitle={`듀링에 오신 것을 환영합니다.`}
+      />
+      <SpaceFlexBox flex={51.23} />
+      <OauthButtonRow navigateToOAuth={navigateToOAuth} />
+      <SpaceFlexBox flex={5.42} />
     </View>
   );
 }
@@ -58,12 +49,9 @@ function AuthPage({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
-  },
-
-  text: {
-    fontSize: 20,
   },
 });
 
