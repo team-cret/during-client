@@ -7,6 +7,7 @@ import {
   GoogleAuthPage,
   KakaoAuthPage,
   NaverAuthPage,
+  TermsOfServicePage,
 } from "@/src/pages";
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -22,29 +23,36 @@ export default function RootLayout() {
         }}
       />
       <RootStack.Screen
-        name="oauth/kakao"
+        name="oauth/KAKAO"
         component={KakaoAuthPage}
         options={{
           headerShown: false,
         }}
       />
       <RootStack.Screen
-        name="oauth/google"
+        name="oauth/GOOGLE"
         component={GoogleAuthPage}
         options={{
           headerShown: false,
         }}
       />
       <RootStack.Screen
-        name="oauth/naver"
+        name="oauth/NAVER"
         component={NaverAuthPage}
         options={{
           headerShown: false,
         }}
       />
       <RootStack.Screen
-        name="oauth/apple"
+        name="oauth/APPLE"
         component={AppleAuthPage}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <RootStack.Screen
+        name="info-setup/terms-of-service"
+        component={TermsOfServicePage}
         options={{
           headerShown: false,
         }}
