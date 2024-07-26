@@ -1,0 +1,4 @@
+const DESIGN_WIDTH = 375;
+const DESIGN_HEIGHT = 731;
+
+export { DESIGN_HEIGHT, DESIGN_WIDTH };
