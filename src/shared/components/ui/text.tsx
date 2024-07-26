@@ -48,7 +48,7 @@ function TitleText({ text }: { text: string }) {
     <Text
       style={{
         fontSize: 30,
-        fontWeight: 600,
+        fontFamily: "Pretendard-SemiBold",
         color: BASE_1,
       }}
     >
@@ -62,7 +62,7 @@ function SubTitleText({ text }: { text: string }) {
     <Text
       style={{
         fontSize: 14,
-        fontWeight: 500,
+        fontFamily: "Pretendard-Medium",
         color: BASE_2,
       }}
     >

@@ -39,7 +39,7 @@ const stylesTermTotalBar = StyleSheet.create({
 
   title: {
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Pretendard-SemiBold",
     color: BASE_1,
   },
 });
@@ -93,13 +93,13 @@ const stylesTermBar = StyleSheet.create({
 
   TextRequired: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "Pretendard-SemiBold",
     color: PRIMARY_GREEN_DARK,
   },
 
   TextOption: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "Pretendard-SemiBold",
     color: BASE_2,
   },
 
@@ -116,14 +116,14 @@ const stylesTermBar = StyleSheet.create({
 
   TermTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "Pretendard-SemiBold",
     color: BASE_1,
   },
 
   TermSubTitle: {
     marginTop: Dimensions.get("window").height * (5 / DESIGN_HEIGHT),
     fontSize: 12,
-    fontWeight: "400",
+    fontFamily: "Pretendard-Regular",
     color: BASE_2,
   },
 });

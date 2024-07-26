@@ -49,8 +49,8 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
       <Text
         style={{
           fontSize: 12,
-          fontWeight: 400,
           color: BASE_2,
+          fontFamily: "Pretendard-Regular",
 
           lineHeight: Dimensions.get("window").height * (12 / DESIGN_HEIGHT),
         }}
@@ -133,10 +133,9 @@ function BarButtonGreen({
       <Text
         style={{
           fontSize: 16,
-          fontWeight: 600,
+          fontFamily: "Pretendard-SemiBold",
           color: ifDisabled ? BASE_2 : BASE_1,
           opacity: ifDisabled ? 0.3 : 1,
-          fontFamily: "Pretendard-SemiBold",
         }}
       >
         {text}
