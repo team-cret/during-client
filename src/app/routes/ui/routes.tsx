@@ -12,7 +12,7 @@ import {
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-export default function RootLayout() {
+function RootLayout() {
   return (
     <RootStack.Navigator>
       <RootStack.Screen
@@ -60,3 +60,5 @@ export default function RootLayout() {
     </RootStack.Navigator>
   );
 }
+
+export { RootLayout };

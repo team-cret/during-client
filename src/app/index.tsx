@@ -1,4 +1,5 @@
-import RootLayout from "./routes";
+import { Text, View } from "react-native";
+import { RootLayout } from "./routes/index";
 import { useFonts } from "expo-font";
 
 export default function App() {
