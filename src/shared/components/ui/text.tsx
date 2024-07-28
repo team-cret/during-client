@@ -3,8 +3,8 @@ import { Dimensions, Text, View } from "react-native";
 import {
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
-  BASE_2,
-  BASE_1,
+  COLOR_BASE_2,
+  COLOR_BASE_1,
 } from "../../global/index";
 
 function HeadLineText({
@@ -49,7 +49,7 @@ function TitleText({ text }: { text: string }) {
       style={{
         fontSize: 30,
         fontFamily: "Pretendard-SemiBold",
-        color: BASE_1,
+        color: COLOR_BASE_1,
       }}
     >
       {text}
@@ -63,7 +63,7 @@ function SubTitleText({ text }: { text: string }) {
       style={{
         fontSize: 14,
         fontFamily: "Pretendard-Medium",
-        color: BASE_2,
+        color: COLOR_BASE_2,
       }}
     >
       {text}

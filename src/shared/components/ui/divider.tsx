@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { BASE_3 } from "../../global";
+import { COLOR_BASE_3 } from "../../global";
 import { SpaceFlexBox } from "./container";
 
 function HorizontalDivider({
@@ -8,7 +8,7 @@ function HorizontalDivider({
   lineWidth,
   upperFlex,
   lowerFlex,
-  color = BASE_3,
+  color = COLOR_BASE_3,
 }: {
   width: number;
   height: number;

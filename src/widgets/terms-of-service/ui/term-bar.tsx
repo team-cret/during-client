@@ -1,10 +1,10 @@
 import {
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
-  BASE_1,
+  COLOR_BASE_1,
   RadioButton,
-  PRIMARY_GREEN_DARK,
-  BASE_2,
+  COLOR_PRIMARY_GREEN_DARK,
+  COLOR_BASE_2,
   HorizontalSizedBox,
   SpaceFlexBox,
 } from "@/src/shared";
@@ -40,7 +40,7 @@ const stylesTermTotalBar = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: "Pretendard-SemiBold",
-    color: BASE_1,
+    color: COLOR_BASE_1,
   },
 });
 
@@ -94,13 +94,13 @@ const stylesTermBar = StyleSheet.create({
   TextRequired: {
     fontSize: 14,
     fontFamily: "Pretendard-SemiBold",
-    color: PRIMARY_GREEN_DARK,
+    color: COLOR_PRIMARY_GREEN_DARK,
   },
 
   TextOption: {
     fontSize: 14,
     fontFamily: "Pretendard-SemiBold",
-    color: BASE_2,
+    color: COLOR_BASE_2,
   },
 
   TermsContainer: {
@@ -117,14 +117,14 @@ const stylesTermBar = StyleSheet.create({
   TermTitle: {
     fontSize: 14,
     fontFamily: "Pretendard-SemiBold",
-    color: BASE_1,
+    color: COLOR_BASE_1,
   },
 
   TermSubTitle: {
     marginTop: Dimensions.get("window").height * (5 / DESIGN_HEIGHT),
     fontSize: 12,
     fontFamily: "Pretendard-Regular",
-    color: BASE_2,
+    color: COLOR_BASE_2,
   },
 });
 

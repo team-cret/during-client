@@ -3,11 +3,11 @@ import { Dimensions, Pressable, Text, View } from "react-native";
 import {
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
-  BASE_2,
-  BASE_3,
-  PRIMARY_GREEN_DARK,
-  PRIMARY_GREEN,
-  BASE_1,
+  COLOR_BASE_2,
+  COLOR_BASE_3,
+  COLOR_PRIMARY_GREEN_DARK,
+  COLOR_PRIMARY_GREEN,
+  COLOR_BASE_1,
 } from "../../global/index";
 
 import CloseIcon from "@/src/shared/assets/icons/navigation/close.svg";
@@ -49,7 +49,7 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
       <Text
         style={{
           fontSize: 12,
-          color: BASE_2,
+          color: COLOR_BASE_2,
           fontFamily: "Pretendard-Regular",
 
           lineHeight: Dimensions.get("window").height * (12 / DESIGN_HEIGHT),
@@ -81,13 +81,13 @@ function RadioButton({
           justifyContent: "center",
           alignItems: "center",
 
-          backgroundColor: BASE_3,
+          backgroundColor: COLOR_BASE_3,
         },
         ...(isSelected
           ? {
               backgroundColor: "white",
               borderWidth: 3,
-              borderColor: PRIMARY_GREEN_DARK,
+              borderColor: COLOR_PRIMARY_GREEN_DARK,
             }
           : {}),
       }}
@@ -99,7 +99,7 @@ function RadioButton({
             height: Dimensions.get("window").height * (10 / DESIGN_HEIGHT),
             borderRadius: 100,
 
-            backgroundColor: PRIMARY_GREEN_DARK,
+            backgroundColor: COLOR_PRIMARY_GREEN_DARK,
           }}
         />
       )}
@@ -127,14 +127,14 @@ function BarButtonGreen({
         justifyContent: "center",
         alignItems: "center",
 
-        backgroundColor: ifDisabled ? BASE_3 : PRIMARY_GREEN,
+        backgroundColor: ifDisabled ? COLOR_BASE_3 : COLOR_PRIMARY_GREEN,
       }}
     >
       <Text
         style={{
           fontSize: 16,
           fontFamily: "Pretendard-SemiBold",
-          color: ifDisabled ? BASE_2 : BASE_1,
+          color: ifDisabled ? COLOR_BASE_2 : COLOR_BASE_1,
           opacity: ifDisabled ? 0.3 : 1,
         }}
       >
