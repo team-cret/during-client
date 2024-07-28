@@ -25,6 +25,8 @@ function AuthPage({
     trySignInUp({
       accessToken: params.accessToken,
       platform: params.platform,
+    }).then((res) => {
+      console.log(res);
     });
   }, [params]);
 
