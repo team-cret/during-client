@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
 
 import {
+  COLOR_BACKGROUND,
   HeadLineText,
   NavProp,
   Platform,
@@ -54,6 +55,8 @@ const styles = StyleSheet.create({
 
     justifyContent: "center",
     alignItems: "center",
+
+    backgroundColor: COLOR_BACKGROUND,
   },
 });
 
