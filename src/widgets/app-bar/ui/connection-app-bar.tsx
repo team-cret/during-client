@@ -1,9 +1,9 @@
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 
 import {
-  BackIconTextButton,
   CloseButton,
   DESIGN_HEIGHT,
+  SCREEN_HEIGHT,
   SpaceFlexBox,
 } from "@/src/shared";
 
@@ -12,7 +12,7 @@ function ConnectionAppBar() {
     <View
       style={{
         width: "100%",
-        height: Dimensions.get("window").height * (66 / DESIGN_HEIGHT),
+        height: SCREEN_HEIGHT * (66 / DESIGN_HEIGHT),
 
         flexDirection: "row",
         justifyContent: "space-between",

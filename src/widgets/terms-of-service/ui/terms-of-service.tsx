@@ -1,6 +1,11 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { TermBar, TermTotalBar } from "./term-bar";
-import { DESIGN_HEIGHT, HorizontalDivider } from "@/src/shared";
+import {
+  DESIGN_HEIGHT,
+  HorizontalDivider,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+} from "@/src/shared";
 import { useState } from "react";
 
 function TermsOfService() {
@@ -52,8 +57,8 @@ function TermsOfService() {
         }
       />
       <HorizontalDivider
-        width={Dimensions.get("window").width}
-        height={Dimensions.get("window").height * (15 / DESIGN_HEIGHT)}
+        width={SCREEN_WIDTH}
+        height={SCREEN_HEIGHT * (15 / DESIGN_HEIGHT)}
         lineWidth={1}
         upperFlex={3}
         lowerFlex={11}
@@ -77,7 +82,7 @@ function TermsOfService() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: Dimensions.get("window").height * (320 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (320 / DESIGN_HEIGHT),
 
     alignItems: "center",
   },

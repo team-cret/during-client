@@ -3,9 +3,11 @@ import {
   COLOR_BASE_4,
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
   SpaceFlexBox,
 } from "@/src/shared";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { TextContainer } from "./my-code.text-container";
 import { CopyButton } from "./my-code.copy-button";
 
@@ -27,14 +29,14 @@ function MyInvitationCode() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOR_BASE_4,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height * (187 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT * (187 / DESIGN_HEIGHT),
     alignItems: "center",
   },
 
   invitationCodeContainer: {
-    width: Dimensions.get("window").width * (329 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (67 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (329 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (67 / DESIGN_HEIGHT),
 
     flexDirection: "row",
     justifyContent: "space-between",

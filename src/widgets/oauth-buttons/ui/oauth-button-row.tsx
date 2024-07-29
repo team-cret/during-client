@@ -1,6 +1,6 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AuthIconButton } from "./oauth-button";
-import { DESIGN_WIDTH, Platform } from "@/src/shared";
+import { DESIGN_WIDTH, Platform, SCREEN_WIDTH } from "@/src/shared";
 
 function OauthButtonRow({
   navigateToOAuth,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    width: Dimensions.get("window").width * (249 / DESIGN_WIDTH),
+    width: SCREEN_WIDTH * (249 / DESIGN_WIDTH),
 
     display: "flex",
     flexDirection: "row",

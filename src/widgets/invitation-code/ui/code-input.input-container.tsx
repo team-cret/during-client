@@ -5,11 +5,12 @@ import {
   COLOR_WHITE,
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
   SpaceFlexBox,
 } from "@/src/shared";
 import { useState } from "react";
 import {
-  Dimensions,
   KeyboardAvoidingView,
   Pressable,
   StyleSheet,
@@ -50,18 +51,18 @@ function InputContainer() {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("window").width * (331 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (51 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (51 / DESIGN_HEIGHT),
     backgroundColor: COLOR_WHITE,
-    borderRadius: Dimensions.get("window").height * (10 / DESIGN_HEIGHT),
+    borderRadius: SCREEN_HEIGHT * (10 / DESIGN_HEIGHT),
 
     flexDirection: "row",
     alignItems: "center",
   },
 
   input: {
-    width: Dimensions.get("window").width * (210 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (25 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (210 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (25 / DESIGN_HEIGHT),
 
     fontSize: 16,
     fontFamily: "Pretendard-SemiBold",
@@ -71,9 +72,9 @@ const styles = StyleSheet.create({
 
   button: {
     backgroundColor: COLOR_BASE_3,
-    borderRadius: Dimensions.get("window").height * (8 / DESIGN_HEIGHT),
-    width: Dimensions.get("window").width * (66 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (37 / DESIGN_HEIGHT),
+    borderRadius: SCREEN_HEIGHT * (8 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (66 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (37 / DESIGN_HEIGHT),
 
     justifyContent: "center",
     alignItems: "center",

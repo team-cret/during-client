@@ -1,11 +1,4 @@
-import {
-  Dimensions,
-  Pressable,
-  StyleProp,
-  Text,
-  TextStyle,
-  View,
-} from "react-native";
+import { Pressable, StyleProp, Text, TextStyle, View } from "react-native";
 
 import {
   DESIGN_HEIGHT,
@@ -15,6 +8,8 @@ import {
   COLOR_PRIMARY_GREEN_DARK,
   COLOR_PRIMARY_GREEN,
   COLOR_BASE_1,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
 } from "../../global/index";
 
 import CloseIcon from "@/src/shared/assets/icons/navigation/close.svg";
@@ -26,7 +21,7 @@ function CloseButton({ onPress }: { onPress: () => void }) {
     <Pressable
       onPress={onPress}
       style={{
-        height: Dimensions.get("window").height * (20 / DESIGN_HEIGHT),
+        height: SCREEN_HEIGHT * (20 / DESIGN_HEIGHT),
         justifyContent: "center",
       }}
     >
@@ -45,13 +40,11 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
         justifyContent: "space-between",
         alignItems: "center",
 
-        height: Dimensions.get("window").height * (16 / DESIGN_HEIGHT),
-        width: Dimensions.get("window").width * (53 / DESIGN_WIDTH),
+        height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
+        width: SCREEN_WIDTH * (53 / DESIGN_WIDTH),
       }}
     >
-      <BackIcon
-        height={Dimensions.get("window").height * (6 / DESIGN_HEIGHT)}
-      />
+      <BackIcon height={SCREEN_HEIGHT * (6 / DESIGN_HEIGHT)} />
 
       <Text
         style={{
@@ -59,7 +52,7 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
           color: COLOR_BASE_2,
           fontFamily: "Pretendard-Regular",
 
-          lineHeight: Dimensions.get("window").height * (12 / DESIGN_HEIGHT),
+          lineHeight: SCREEN_HEIGHT * (12 / DESIGN_HEIGHT),
         }}
       >
         뒤로가기
@@ -81,7 +74,7 @@ function RadioButton({
       onPress={onPress}
       style={{
         ...{
-          height: Dimensions.get("window").height * (20 / DESIGN_HEIGHT),
+          height: SCREEN_HEIGHT * (20 / DESIGN_HEIGHT),
           aspectRatio: 1,
           borderRadius: 100,
           // borderColor: isSelected ? "black" : "gray",
@@ -102,8 +95,8 @@ function RadioButton({
       {isSelected && (
         <View
           style={{
-            width: Dimensions.get("window").width * (10 / DESIGN_WIDTH),
-            height: Dimensions.get("window").height * (10 / DESIGN_HEIGHT),
+            width: SCREEN_WIDTH * (10 / DESIGN_WIDTH),
+            height: SCREEN_HEIGHT * (10 / DESIGN_HEIGHT),
             borderRadius: 100,
 
             backgroundColor: COLOR_PRIMARY_GREEN_DARK,
@@ -128,8 +121,8 @@ function BarButtonGreen({
     <Pressable
       onPress={onPress}
       style={{
-        height: Dimensions.get("window").height * (42 / DESIGN_HEIGHT),
-        width: Dimensions.get("window").width * (331 / DESIGN_WIDTH),
+        height: SCREEN_HEIGHT * (42 / DESIGN_HEIGHT),
+        width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
         borderRadius: 100,
         justifyContent: "center",
         alignItems: "center",

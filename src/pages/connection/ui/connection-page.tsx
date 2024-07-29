@@ -2,6 +2,7 @@ import {
   COLOR_BACKGROUND,
   DESIGN_HEIGHT,
   HeadLineText,
+  SCREEN_HEIGHT,
   SpaceFlexBox,
   TextButton,
   textStyles,
@@ -11,7 +12,7 @@ import {
   InvitationCodeInput,
   MyInvitationCode,
 } from "@/src/widgets";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 function ConnectionPage() {
   return (
@@ -50,37 +51,37 @@ const styles = StyleSheet.create({
 
   appBarContainer: {
     width: "100%",
-    height: Dimensions.get("window").height * (66 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (66 / DESIGN_HEIGHT),
     backgroundColor: "tomato",
   },
 
   headLineContainer: {
     width: "100%",
-    height: Dimensions.get("window").height * (142 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (142 / DESIGN_HEIGHT),
     backgroundColor: "tomato",
   },
 
   invitationCodeContainer: {
     width: "100%",
-    height: Dimensions.get("window").height * (187 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (187 / DESIGN_HEIGHT),
     backgroundColor: "tomato",
   },
 
   orContainer: {
     width: "100%",
-    height: Dimensions.get("window").height * (16 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
     backgroundColor: "tomato",
   },
 
   invitationCodeInputContainer: {
     width: "100%",
-    height: Dimensions.get("window").height * (140 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (140 / DESIGN_HEIGHT),
     backgroundColor: "tomato",
   },
 
   restoreContainer: {
     width: "100%",
-    height: Dimensions.get("window").height * (16 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
     backgroundColor: "tomato",
   },
 });

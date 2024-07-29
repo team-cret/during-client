@@ -1,10 +1,10 @@
-import { Dimensions, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import {
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
-  COLOR_BASE_2,
-  COLOR_BASE_1,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
 } from "../../global/index";
 import { textStyles } from "../../styles/lib/text";
 
@@ -18,8 +18,8 @@ function HeadLineText({
   return (
     <View
       style={{
-        width: Dimensions.get("window").width * (331 / DESIGN_WIDTH),
-        height: Dimensions.get("window").height * (129 / DESIGN_HEIGHT),
+        width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
+        height: SCREEN_HEIGHT * (129 / DESIGN_HEIGHT),
 
         justifyContent: "space-between",
       }}

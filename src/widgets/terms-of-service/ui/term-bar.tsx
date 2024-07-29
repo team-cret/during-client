@@ -6,10 +6,11 @@ import {
   COLOR_PRIMARY_GREEN_DARK,
   COLOR_BASE_2,
   HorizontalSizedBox,
-  SpaceFlexBox,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
 } from "@/src/shared";
 import { Pressable } from "react-native";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import NavigateIcon from "@/src/shared/assets/icons/navigation/navigate.svg";
 
@@ -30,8 +31,8 @@ function TermTotalBar({
 
 const stylesTermTotalBar = StyleSheet.create({
   container: {
-    width: Dimensions.get("window").width * (327 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (44 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (327 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (44 / DESIGN_HEIGHT),
 
     flexDirection: "row",
     justifyContent: "space-between",
@@ -67,12 +68,8 @@ function TermBar({
       <View style={stylesTermBar.TermsContainer}>
         <Pressable style={stylesTermBar.TermButtonContainer}>
           <Text style={stylesTermBar.TermTitle}>{term.title}</Text>
-          <HorizontalSizedBox
-            width={Dimensions.get("window").width * (9 / DESIGN_WIDTH)}
-          />
-          <NavigateIcon
-            height={Dimensions.get("window").height * (6 / DESIGN_HEIGHT)}
-          />
+          <HorizontalSizedBox width={SCREEN_WIDTH * (9 / DESIGN_WIDTH)} />
+          <NavigateIcon height={SCREEN_HEIGHT * (6 / DESIGN_HEIGHT)} />
         </Pressable>
         <Text style={stylesTermBar.TermSubTitle}>{term.subTitle}</Text>
       </View>
@@ -83,9 +80,9 @@ function TermBar({
 
 const stylesTermBar = StyleSheet.create({
   container: {
-    width: Dimensions.get("window").width * (327 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (44 / DESIGN_HEIGHT),
-    marginTop: Dimensions.get("window").height * (21 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (327 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (44 / DESIGN_HEIGHT),
+    marginTop: SCREEN_HEIGHT * (21 / DESIGN_HEIGHT),
 
     flexDirection: "row",
     justifyContent: "space-between",
@@ -104,7 +101,7 @@ const stylesTermBar = StyleSheet.create({
   },
 
   TermsContainer: {
-    width: Dimensions.get("window").width * (244 / DESIGN_WIDTH),
+    width: SCREEN_WIDTH * (244 / DESIGN_WIDTH),
     height: "100%",
   },
 
@@ -121,7 +118,7 @@ const stylesTermBar = StyleSheet.create({
   },
 
   TermSubTitle: {
-    marginTop: Dimensions.get("window").height * (5 / DESIGN_HEIGHT),
+    marginTop: SCREEN_HEIGHT * (5 / DESIGN_HEIGHT),
     fontSize: 12,
     fontFamily: "Pretendard-Regular",
     color: COLOR_BASE_2,

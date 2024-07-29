@@ -3,19 +3,18 @@ import {
   COLOR_WHITE,
   DESIGN_HEIGHT,
   DESIGN_WIDTH,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
   SpaceFlexBox,
-  textStyles,
 } from "@/src/shared";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import CopyIcon from "@/src/shared/assets/icons/interaction/copy.svg";
 
 function CopyButton() {
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={13} />
-      <CopyIcon
-        height={Dimensions.get("window").height * (11 / DESIGN_HEIGHT)}
-      />
+      <CopyIcon height={SCREEN_HEIGHT * (11 / DESIGN_HEIGHT)} />
       <SpaceFlexBox flex={4} />
       <Text style={styles.text}>코드 복사하기</Text>
       <SpaceFlexBox flex={10} />
@@ -26,10 +25,10 @@ function CopyButton() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOR_WHITE,
-    width: Dimensions.get("window").width * (91 / DESIGN_WIDTH),
-    height: Dimensions.get("window").height * (26 / DESIGN_HEIGHT),
+    width: SCREEN_WIDTH * (91 / DESIGN_WIDTH),
+    height: SCREEN_HEIGHT * (26 / DESIGN_HEIGHT),
 
-    borderRadius: Dimensions.get("window").height * (13 / DESIGN_HEIGHT),
+    borderRadius: SCREEN_HEIGHT * (13 / DESIGN_HEIGHT),
 
     flexDirection: "row",
     alignItems: "center",
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     fontFamily: "Pretendard-SemiBold",
     color: COLOR_BASE_2,
 
-    lineHeight: Dimensions.get("window").height * (11 / DESIGN_HEIGHT),
+    lineHeight: SCREEN_HEIGHT * (11 / DESIGN_HEIGHT),
   },
 });
 

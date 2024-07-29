@@ -1,6 +1,6 @@
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
-import { DESIGN_HEIGHT, Platform } from "@/src/shared";
+import { DESIGN_HEIGHT, Platform, SCREEN_HEIGHT } from "@/src/shared";
 
 import AuthIconNaver from "@/src/shared/assets/icons/oauth/naver.svg";
 import AuthIconKakao from "@/src/shared/assets/icons/oauth/kakao.svg";
@@ -38,7 +38,7 @@ function AuthIconButton({
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get("window").height * (51 / DESIGN_HEIGHT),
+    height: SCREEN_HEIGHT * (51 / DESIGN_HEIGHT),
     aspectRatio: 1,
   },
 });
