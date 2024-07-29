@@ -4,6 +4,7 @@ import { RootStackParamList } from "@/src/shared";
 import {
   AppleAuthPage,
   AuthPage,
+  ConnectionPage,
   GoogleAuthPage,
   KakaoAuthPage,
   NaverAuthPage,
@@ -14,49 +15,18 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 function RootLayout() {
   return (
-    <RootStack.Navigator>
-      <RootStack.Screen
-        name="oauth/index"
-        component={AuthPage}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootStack.Screen
-        name="oauth/KAKAO"
-        component={KakaoAuthPage}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootStack.Screen
-        name="oauth/GOOGLE"
-        component={GoogleAuthPage}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootStack.Screen
-        name="oauth/NAVER"
-        component={NaverAuthPage}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootStack.Screen
-        name="oauth/APPLE"
-        component={AppleAuthPage}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootStack.Screen
-        name="info-setup/terms-of-service"
-        component={TermsOfServicePage}
-        options={{
-          headerShown: false,
-        }}
-      />
+    <RootStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <RootStack.Screen name="connection/index" component={ConnectionPage} />
+      <RootStack.Screen name="info-setup/term" component={TermsOfServicePage} />
+      <RootStack.Screen name="oauth/index" component={AuthPage} />
+      <RootStack.Screen name="oauth/KAKAO" component={KakaoAuthPage} />
+      <RootStack.Screen name="oauth/GOOGLE" component={GoogleAuthPage} />
+      <RootStack.Screen name="oauth/NAVER" component={NaverAuthPage} />
+      <RootStack.Screen name="oauth/APPLE" component={AppleAuthPage} />
     </RootStack.Navigator>
   );
 }
