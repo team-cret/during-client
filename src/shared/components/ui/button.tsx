@@ -1,4 +1,11 @@
-import { Dimensions, Pressable, Text, View } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  StyleProp,
+  Text,
+  TextStyle,
+  View,
+} from "react-native";
 
 import {
   DESIGN_HEIGHT,
@@ -111,11 +118,11 @@ function RadioButton({
 function BarButtonGreen({
   onPress,
   text,
-  ifDisabled,
+  ifDisabled = false,
 }: {
   onPress: () => void;
   text: string;
-  ifDisabled: boolean;
+  ifDisabled?: boolean;
 }) {
   return (
     <Pressable
@@ -144,4 +151,27 @@ function BarButtonGreen({
   );
 }
 
-export { CloseButton, BackIconTextButton, RadioButton, BarButtonGreen };
+////Text Buttons
+function TextButton({
+  onPress,
+  text,
+  textStyle,
+}: {
+  onPress: () => void;
+  text: string;
+  textStyle: StyleProp<TextStyle>;
+}) {
+  return (
+    <Pressable onPress={onPress}>
+      <Text style={textStyle}>{text}</Text>
+    </Pressable>
+  );
+}
+
+export {
+  CloseButton,
+  BackIconTextButton,
+  RadioButton,
+  BarButtonGreen,
+  TextButton,
+};
