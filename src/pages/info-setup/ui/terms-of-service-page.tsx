@@ -6,12 +6,12 @@ import {
   HeadLineText,
   SpaceFlexBox,
 } from "@/src/shared";
-import { InfoSetupAppBar, TermsOfService } from "@/src/widgets";
+import { BackCancelAppBar, TermsOfService } from "@/src/widgets";
 
 function TermsOfServicePage() {
   return (
     <View style={styles.container}>
-      <InfoSetupAppBar />
+      <BackCancelAppBar />
       <SpaceFlexBox flex={34} />
       <HeadLineText
         title={`동의 후 듀링의 다양한\n기능을 사용해 보세요.`}

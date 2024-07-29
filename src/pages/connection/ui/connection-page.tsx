@@ -8,7 +8,7 @@ import {
   textStyles,
 } from "@/src/shared";
 import {
-  ConnectionAppBar,
+  BackCancelAppBar,
   InvitationCodeInput,
   MyInvitationCode,
 } from "@/src/widgets";
@@ -17,7 +17,7 @@ import { StyleSheet, Text, View } from "react-native";
 function ConnectionPage() {
   return (
     <View style={styles.container}>
-      <ConnectionAppBar />
+      <BackCancelAppBar backDisabled />
       <SpaceFlexBox flex={34} />
       <HeadLineText
         title={`듀링에 연인을 초대하고\n행복한 대화를 나눠요.`}
