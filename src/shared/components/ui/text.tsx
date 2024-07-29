@@ -6,6 +6,7 @@ import {
   COLOR_BASE_2,
   COLOR_BASE_1,
 } from "../../global/index";
+import { textStyles } from "../../styles/lib/text";
 
 function HeadLineText({
   title,
@@ -23,51 +24,29 @@ function HeadLineText({
         justifyContent: "space-between",
       }}
     >
-      <View
+      <Text
         style={{
-          width: "100%",
-          height: "59.15%",
+          ...textStyles.title,
+          ...{
+            width: "100%",
+            height: "59.15%",
+          },
         }}
       >
-        <TitleText text={title} />
-      </View>
-      <View
+        {title}
+      </Text>
+      <Text
         style={{
-          width: "100%",
-          height: "30.98%",
+          ...textStyles.subTitle,
+          ...{
+            width: "100%",
+            height: "30.98%",
+          },
         }}
       >
-        <SubTitleText text={subTitle} />
-      </View>
+        {subTitle}
+      </Text>
     </View>
-  );
-}
-
-function TitleText({ text }: { text: string }) {
-  return (
-    <Text
-      style={{
-        fontSize: 30,
-        fontFamily: "Pretendard-SemiBold",
-        color: COLOR_BASE_1,
-      }}
-    >
-      {text}
-    </Text>
-  );
-}
-
-function SubTitleText({ text }: { text: string }) {
-  return (
-    <Text
-      style={{
-        fontSize: 14,
-        fontFamily: "Pretendard-Medium",
-        color: COLOR_BASE_2,
-      }}
-    >
-      {text}
-    </Text>
   );
 }
 
