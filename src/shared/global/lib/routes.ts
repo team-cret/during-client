@@ -13,8 +13,9 @@ type RootStackParamList = {
   "oauth/GOOGLE": undefined;
   "oauth/NAVER": undefined;
   "oauth/APPLE": undefined;
-  "info-setup/term": undefined;
+  "terms-of-service/index": undefined;
   "connection/index": undefined;
+  "info-setup/index": undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> =
