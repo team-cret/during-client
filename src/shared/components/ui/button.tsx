@@ -13,6 +13,7 @@ import {
 } from "../../global/index";
 
 import CloseIcon from "@/src/shared/assets/icons/navigation/close.svg";
+import DeleteIcon from "@/src/shared/assets/icons/interaction/delete.svg";
 import BackIcon from "@/src/shared/assets/icons/navigation/back.svg";
 
 ////Icon Buttons
@@ -26,6 +27,21 @@ function CloseButton({ onPress }: { onPress: () => void }) {
       }}
     >
       <CloseIcon />
+    </Pressable>
+  );
+}
+
+function DeleteButton({ onPress }: { onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
+        aspectRatio: 1,
+        justifyContent: "center",
+      }}
+    >
+      <DeleteIcon />
     </Pressable>
   );
 }
@@ -163,6 +179,7 @@ function TextButton({
 
 export {
   CloseButton,
+  DeleteButton,
   BackIconTextButton,
   RadioButton,
   BarButtonGreen,
