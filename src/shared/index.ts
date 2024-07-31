@@ -1,3 +1,5 @@
 export * from "./global/index";
 export * from "./convert/index";
 export * from "./auth/index";
+export * from "./components/index";
+export * from "./styles/index";
