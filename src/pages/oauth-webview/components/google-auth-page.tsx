@@ -1,20 +1,13 @@
-import { SafeAreaView } from "react-native";
-import { WebView } from "react-native-webview";
+import { SafeAreaView } from 'react-native';
+import { WebView } from 'react-native-webview';
 
-import { GOOGLE_OAUTH_CLIENT_ID, REDIRECT_URI } from "@env";
-import { getGoogleToken, GOOGLE_OAUTH_SCOPE } from "@/src/entities";
-import {
-  getParamFromUrl,
-  INJECTED_JAVASCRIPT,
-  NavProp,
-  Platform,
-} from "@/src/shared";
+import { GOOGLE_OAUTH_CLIENT_ID, REDIRECT_URI } from '@env';
+import { getGoogleToken, GOOGLE_OAUTH_SCOPE } from '@/src/entities';
+import { getParamFromUrl, NavProp } from '@/src/shared';
 
-function GoogleAuthPage({
-  navigation,
-}: {
-  navigation: NavProp<"oauth/GOOGLE">;
-}) {
+const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage("redirected")`;
+
+function GoogleOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -24,12 +17,12 @@ function GoogleAuthPage({
         }}
         injectedJavaScriptBeforeContentLoaded={INJECTED_JAVASCRIPT}
         onMessage={async (event) => {
-          const code = getParamFromUrl(event.nativeEvent.url, "code");
+          const code = getParamFromUrl(event.nativeEvent.url, 'code');
           if (code === null) return;
 
           const token = await getGoogleToken(code);
-          navigation.navigate("oauth/index", {
-            platform: Platform.GOOGLE,
+          navigation.navigate('auth/index', {
+            platform: 'GOOGLE',
             accessToken: token,
           });
         }}
@@ -38,4 +31,4 @@ function GoogleAuthPage({
   );
 }
 
-export { GoogleAuthPage };
+export { GoogleOAuth };

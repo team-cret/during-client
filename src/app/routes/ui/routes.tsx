@@ -2,13 +2,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { RootStackParamList } from '@/src/shared';
 import {
-  AppleAuthPage,
   AuthPage,
   ConnectionPage,
-  GoogleAuthPage,
   InfoSetupPage,
-  KakaoAuthPage,
-  NaverAuthPage,
+  OauthWebVewPage,
   TermsOfServicePage,
 } from '@/src/pages';
 
@@ -21,12 +18,9 @@ function RootLayout() {
         headerShown: false,
       }}
     >
+      <RootStack.Screen name="auth/index" component={AuthPage} />
       <RootStack.Screen name="info-setup/index" component={InfoSetupPage} />
-      <RootStack.Screen name="oauth/index" component={AuthPage} />
-      <RootStack.Screen name="oauth/KAKAO" component={KakaoAuthPage} />
-      <RootStack.Screen name="oauth/GOOGLE" component={GoogleAuthPage} />
-      <RootStack.Screen name="oauth/NAVER" component={NaverAuthPage} />
-      <RootStack.Screen name="oauth/APPLE" component={AppleAuthPage} />
+      <RootStack.Screen name="oauth/index" component={OauthWebVewPage} />
 
       <RootStack.Screen name="terms-of-service/index" component={TermsOfServicePage} />
 

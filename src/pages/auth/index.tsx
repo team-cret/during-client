@@ -1,23 +1,16 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useEffect } from "react";
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
 
-import {
-  COLOR_BACKGROUND,
-  HeadLineText,
-  NavProp,
-  Platform,
-  ScreenProps,
-  SpaceFlexBox,
-} from "@/src/shared";
-import { trySignInUp } from "@/src/entities";
-import { OauthButtonRow } from "@/src/widgets";
+import { COLOR_BACKGROUND, HeadLineText, NavProp, ScreenProps, SpaceFlexBox } from '@/src/shared';
+import { trySignInUp } from '@/src/entities';
+import { ButtonRow } from './components/button-row';
 
 function AuthPage({
   navigation,
   route: { params },
 }: {
-  navigation: NavProp<"oauth/index">;
-  route: ScreenProps<"oauth/index">["route"];
+  navigation: NavProp<'auth/index'>;
+  route: ScreenProps<'auth/index'>['route'];
 }) {
   useEffect(() => {
     if (params === undefined) return;
@@ -31,8 +24,8 @@ function AuthPage({
     });
   }, [params]);
 
-  function navigateToOAuth(platform: Platform) {
-    navigation.navigate(`oauth/${platform}`);
+  function navigateToOAuth(platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE') {
+    navigation.navigate(`oauth/index`, { platform });
   }
 
   return (
@@ -43,7 +36,7 @@ function AuthPage({
         subTitle={`듀링에 오신 것을 환영합니다.`}
       />
       <SpaceFlexBox flex={51.23} />
-      <OauthButtonRow navigateToOAuth={navigateToOAuth} />
+      <ButtonRow navigateToOAuth={navigateToOAuth} />
       <SpaceFlexBox flex={5.42} />
     </View>
   );
@@ -53,8 +46,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     backgroundColor: COLOR_BACKGROUND,
   },
