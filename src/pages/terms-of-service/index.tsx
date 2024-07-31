@@ -6,13 +6,16 @@ import {
   HeadLineText,
   SpaceFlexBox,
 } from "@/src/shared";
-import { BackCancelAppBar, TermsOfService } from "@/src/widgets";
+import { BackCancelAppBar } from "@/src/widgets";
+import { TermsOfService } from "./components/terms-of-service";
 
 function TermsOfServicePage() {
   return (
     <View style={styles.container}>
       <BackCancelAppBar />
       <SpaceFlexBox flex={34} />
+      {/* <div style={flex: 34}></div> */}
+
       <HeadLineText
         title={`동의 후 듀링의 다양한\n기능을 사용해 보세요.`}
         subTitle={`듀링에 오신 것을 환영합니다.`}
