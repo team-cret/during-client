@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { DESIGN_WIDTH, SCREEN_WIDTH } from '@/src/shared';
+import { convertWidth } from '@/src/shared';
 import {
   AuthButtonAPPLE,
   AuthButtonGOOGLE,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    width: SCREEN_WIDTH * (249 / DESIGN_WIDTH),
+    width: convertWidth(249),
 
     display: 'flex',
     flexDirection: 'row',

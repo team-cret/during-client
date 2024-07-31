@@ -1,5 +1,5 @@
-import { DESIGN_HEIGHT, SCREEN_HEIGHT, textStyles } from "@/src/shared";
-import { StyleSheet, Text, View } from "react-native";
+import { convertHeight, textStyles } from '@/src/shared';
+import { StyleSheet, Text, View } from 'react-native';
 
 function TextContainer() {
   return (
@@ -12,19 +12,19 @@ function TextContainer() {
 
 const styles = StyleSheet.create({
   container: {
-    height: SCREEN_HEIGHT * (67 / DESIGN_HEIGHT),
-    alignItems: "flex-start",
-    justifyContent: "space-between",
+    height: convertHeight(67),
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
 
   titleText: {
     ...textStyles.miniTitle,
-    lineHeight: SCREEN_HEIGHT * (22 / DESIGN_HEIGHT),
+    lineHeight: convertHeight(22),
   },
 
   contentText: {
     ...textStyles.title,
-    lineHeight: SCREEN_HEIGHT * (42 / DESIGN_HEIGHT),
+    lineHeight: convertHeight(42),
   },
 });
 

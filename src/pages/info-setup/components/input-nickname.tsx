@@ -1,10 +1,4 @@
-import {
-  DESIGN_HEIGHT,
-  HeadLineText,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-  SpaceFlexBox,
-} from '@/src/shared';
+import { convertHeight, convertWidth, HeadLineText, SpaceFlexBox } from '@/src/shared';
 import { StyleSheet, View } from 'react-native';
 import { NicknameTextInput } from './input-nickname.text-input';
 
@@ -25,8 +19,8 @@ function InputNickname() {
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * (613 / DESIGN_HEIGHT),
+    width: convertWidth(375),
+    height: convertHeight(613),
 
     alignItems: 'center',
   },

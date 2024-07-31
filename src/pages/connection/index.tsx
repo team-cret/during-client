@@ -1,8 +1,7 @@
 import {
   COLOR_BACKGROUND,
-  DESIGN_HEIGHT,
+  convertHeight,
   HeadLineText,
-  SCREEN_HEIGHT,
   SpaceFlexBox,
   TextButton,
   textStyles,
@@ -45,37 +44,37 @@ const styles = StyleSheet.create({
 
   appBarContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT * (66 / DESIGN_HEIGHT),
+    height: convertHeight(66),
     backgroundColor: 'tomato',
   },
 
   headLineContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT * (142 / DESIGN_HEIGHT),
+    height: convertHeight(142),
     backgroundColor: 'tomato',
   },
 
   invitationCodeContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT * (187 / DESIGN_HEIGHT),
+    height: convertHeight(187),
     backgroundColor: 'tomato',
   },
 
   orContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
+    height: convertHeight(16),
     backgroundColor: 'tomato',
   },
 
   invitationCodeInputContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT * (140 / DESIGN_HEIGHT),
+    height: convertHeight(140),
     backgroundColor: 'tomato',
   },
 
   restoreContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
+    height: convertHeight(16),
     backgroundColor: 'tomato',
   },
 });

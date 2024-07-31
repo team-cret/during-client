@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import { DESIGN_HEIGHT, SCREEN_HEIGHT } from '@/src/shared';
+import { convertHeight } from '@/src/shared';
 
 import AuthIconNaver from '@/src/shared/assets/icons/oauth/naver.svg';
 import AuthIconKakao from '@/src/shared/assets/icons/oauth/kakao.svg';
@@ -41,7 +41,7 @@ function AuthButtonAPPLE({ onPress }: { onPress: () => void }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: SCREEN_HEIGHT * (51 / DESIGN_HEIGHT),
+    height: convertHeight(51),
     aspectRatio: 1,
   },
 });

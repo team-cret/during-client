@@ -1,18 +1,16 @@
 import {
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
   COLOR_BASE_1,
   RadioButton,
   COLOR_PRIMARY_GREEN_DARK,
   COLOR_BASE_2,
   HorizontalSizedBox,
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-} from "@/src/shared";
-import { Pressable } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+  convertWidth,
+  convertHeight,
+} from '@/src/shared';
+import { Pressable } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import NavigateIcon from "@/src/shared/assets/icons/navigation/navigate.svg";
+import NavigateIcon from '@/src/shared/assets/icons/navigation/navigate.svg';
 
 function TermTotalBar({
   isSelected,
@@ -31,16 +29,16 @@ function TermTotalBar({
 
 const stylesTermTotalBar = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH * (327 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (44 / DESIGN_HEIGHT),
+    width: convertWidth(327),
+    height: convertHeight(44),
 
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   title: {
     fontSize: 16,
-    fontFamily: "Pretendard-SemiBold",
+    fontFamily: 'Pretendard-SemiBold',
     color: COLOR_BASE_1,
   },
 });
@@ -52,7 +50,7 @@ function TermBar({
 }: {
   isSelected: boolean;
   term: {
-    type: "required" | "optional";
+    type: 'required' | 'optional';
     title: string;
     subTitle: string;
   };
@@ -60,7 +58,7 @@ function TermBar({
 }) {
   return (
     <View style={stylesTermBar.container}>
-      {term.type === "required" ? (
+      {term.type === 'required' ? (
         <Text style={stylesTermBar.TextRequired}>필수</Text>
       ) : (
         <Text style={stylesTermBar.TextOption}>선택</Text>
@@ -68,8 +66,8 @@ function TermBar({
       <View style={stylesTermBar.TermsContainer}>
         <Pressable style={stylesTermBar.TermButtonContainer}>
           <Text style={stylesTermBar.TermTitle}>{term.title}</Text>
-          <HorizontalSizedBox width={SCREEN_WIDTH * (9 / DESIGN_WIDTH)} />
-          <NavigateIcon height={SCREEN_HEIGHT * (6 / DESIGN_HEIGHT)} />
+          <HorizontalSizedBox width={convertWidth(9)} />
+          <NavigateIcon height={convertHeight(6)} />
         </Pressable>
         <Text style={stylesTermBar.TermSubTitle}>{term.subTitle}</Text>
       </View>
@@ -80,47 +78,47 @@ function TermBar({
 
 const stylesTermBar = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH * (327 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (44 / DESIGN_HEIGHT),
-    marginTop: SCREEN_HEIGHT * (21 / DESIGN_HEIGHT),
+    width: convertWidth(327),
+    height: convertHeight(44),
+    marginTop: convertHeight(21),
 
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   TextRequired: {
     fontSize: 14,
-    fontFamily: "Pretendard-SemiBold",
+    fontFamily: 'Pretendard-SemiBold',
     color: COLOR_PRIMARY_GREEN_DARK,
   },
 
   TextOption: {
     fontSize: 14,
-    fontFamily: "Pretendard-SemiBold",
+    fontFamily: 'Pretendard-SemiBold',
     color: COLOR_BASE_2,
   },
 
   TermsContainer: {
-    width: SCREEN_WIDTH * (244 / DESIGN_WIDTH),
-    height: "100%",
+    width: convertWidth(244),
+    height: '100%',
   },
 
   TermButtonContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
 
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   TermTitle: {
     fontSize: 14,
-    fontFamily: "Pretendard-SemiBold",
+    fontFamily: 'Pretendard-SemiBold',
     color: COLOR_BASE_1,
   },
 
   TermSubTitle: {
-    marginTop: SCREEN_HEIGHT * (5 / DESIGN_HEIGHT),
+    marginTop: convertHeight(5),
     fontSize: 12,
-    fontFamily: "Pretendard-Regular",
+    fontFamily: 'Pretendard-Regular',
     color: COLOR_BASE_2,
   },
 });

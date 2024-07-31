@@ -3,11 +3,9 @@ import {
   COLOR_BASE_2,
   COLOR_BASE_4,
   COLOR_SECONDARY_PINK_DARK,
+  convertHeight,
+  convertWidth,
   DeleteButton,
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
   SpaceFlexBox,
 } from '@/src/shared';
 import { Text, View } from 'react-native';
@@ -33,16 +31,16 @@ function NicknameTextInput() {
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (85 / DESIGN_HEIGHT),
+    width: convertWidth(331),
+    height: convertHeight(85),
 
     alignItems: 'center',
   },
 
   inputContainer: {
-    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (51 / DESIGN_HEIGHT),
-    borderRadius: SCREEN_HEIGHT * (10 / DESIGN_HEIGHT),
+    width: convertWidth(331),
+    height: convertHeight(51),
+    borderRadius: convertHeight(10),
 
     backgroundColor: COLOR_BASE_4,
 
@@ -52,8 +50,8 @@ const styles = StyleSheet.create({
   },
 
   textInput: {
-    width: SCREEN_WIDTH * (245 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (25 / DESIGN_HEIGHT),
+    width: convertWidth(245),
+    height: convertHeight(25),
 
     fontSize: 16,
     fontFamily: 'Pretendard-SemiBold',
@@ -63,14 +61,14 @@ const styles = StyleSheet.create({
   },
 
   errorLine: {
-    width: SCREEN_WIDTH * (302 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (1 / DESIGN_HEIGHT),
+    width: convertWidth(302),
+    height: convertHeight(1),
     backgroundColor: COLOR_SECONDARY_PINK_DARK,
   },
 
   subTextBox: {
-    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
+    width: convertWidth(331),
+    height: convertHeight(16),
   },
 
   errorText: {

@@ -1,20 +1,18 @@
-import { Pressable, StyleProp, Text, TextStyle, View } from "react-native";
+import { Pressable, StyleProp, Text, TextStyle, View } from 'react-native';
 
 import {
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
   COLOR_BASE_2,
   COLOR_BASE_3,
   COLOR_PRIMARY_GREEN_DARK,
   COLOR_PRIMARY_GREEN,
   COLOR_BASE_1,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-} from "../../global/index";
+  convertWidth,
+  convertHeight,
+} from '../../global/index';
 
-import CloseIcon from "@/src/shared/assets/icons/navigation/close.svg";
-import DeleteIcon from "@/src/shared/assets/icons/interaction/delete.svg";
-import BackIcon from "@/src/shared/assets/icons/navigation/back.svg";
+import CloseIcon from '@/src/shared/assets/icons/navigation/close.svg';
+import DeleteIcon from '@/src/shared/assets/icons/interaction/delete.svg';
+import BackIcon from '@/src/shared/assets/icons/navigation/back.svg';
 
 ////Icon Buttons
 function CloseButton({ onPress }: { onPress: () => void }) {
@@ -22,8 +20,8 @@ function CloseButton({ onPress }: { onPress: () => void }) {
     <Pressable
       onPress={onPress}
       style={{
-        height: SCREEN_HEIGHT * (20 / DESIGN_HEIGHT),
-        justifyContent: "center",
+        height: convertHeight(20),
+        justifyContent: 'center',
       }}
     >
       <CloseIcon />
@@ -36,9 +34,9 @@ function DeleteButton({ onPress }: { onPress: () => void }) {
     <Pressable
       onPress={onPress}
       style={{
-        height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
+        height: convertHeight(16),
         aspectRatio: 1,
-        justifyContent: "center",
+        justifyContent: 'center',
       }}
     >
       <DeleteIcon />
@@ -52,23 +50,23 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
     <Pressable
       onPress={onPress}
       style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
 
-        height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
-        width: SCREEN_WIDTH * (53 / DESIGN_WIDTH),
+        height: convertHeight(16),
+        width: convertWidth(53),
       }}
     >
-      <BackIcon height={SCREEN_HEIGHT * (6 / DESIGN_HEIGHT)} />
+      <BackIcon height={convertHeight(6)} />
 
       <Text
         style={{
           fontSize: 12,
           color: COLOR_BASE_2,
-          fontFamily: "Pretendard-Regular",
+          fontFamily: 'Pretendard-Regular',
 
-          lineHeight: SCREEN_HEIGHT * (12 / DESIGN_HEIGHT),
+          lineHeight: convertHeight(12),
         }}
       >
         뒤로가기
@@ -78,30 +76,24 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
 }
 
 ////Toggle Buttons
-function RadioButton({
-  onPress,
-  isSelected,
-}: {
-  onPress: () => void;
-  isSelected: boolean;
-}) {
+function RadioButton({ onPress, isSelected }: { onPress: () => void; isSelected: boolean }) {
   return (
     <Pressable
       onPress={onPress}
       style={{
         ...{
-          height: SCREEN_HEIGHT * (20 / DESIGN_HEIGHT),
+          height: convertHeight(20),
           aspectRatio: 1,
           borderRadius: 100,
           // borderColor: isSelected ? "black" : "gray",
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
 
           backgroundColor: COLOR_BASE_3,
         },
         ...(isSelected
           ? {
-              backgroundColor: "white",
+              backgroundColor: 'white',
               borderWidth: 3,
               borderColor: COLOR_PRIMARY_GREEN_DARK,
             }
@@ -111,8 +103,8 @@ function RadioButton({
       {isSelected && (
         <View
           style={{
-            width: SCREEN_WIDTH * (10 / DESIGN_WIDTH),
-            height: SCREEN_HEIGHT * (10 / DESIGN_HEIGHT),
+            width: convertWidth(10),
+            height: convertHeight(10),
             borderRadius: 100,
 
             backgroundColor: COLOR_PRIMARY_GREEN_DARK,
@@ -137,11 +129,11 @@ function BarButtonGreen({
     <Pressable
       onPress={onPress}
       style={{
-        height: SCREEN_HEIGHT * (42 / DESIGN_HEIGHT),
-        width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
+        height: convertHeight(42),
+        width: convertWidth(331),
         borderRadius: 100,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
 
         backgroundColor: ifDisabled ? COLOR_BASE_3 : COLOR_PRIMARY_GREEN,
       }}
@@ -149,7 +141,7 @@ function BarButtonGreen({
       <Text
         style={{
           fontSize: 16,
-          fontFamily: "Pretendard-SemiBold",
+          fontFamily: 'Pretendard-SemiBold',
           color: ifDisabled ? COLOR_BASE_2 : COLOR_BASE_1,
           opacity: ifDisabled ? 0.3 : 1,
         }}
@@ -177,11 +169,4 @@ function TextButton({
   );
 }
 
-export {
-  CloseButton,
-  DeleteButton,
-  BackIconTextButton,
-  RadioButton,
-  BarButtonGreen,
-  TextButton,
-};
+export { CloseButton, DeleteButton, BackIconTextButton, RadioButton, BarButtonGreen, TextButton };

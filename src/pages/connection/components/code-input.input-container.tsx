@@ -3,31 +3,22 @@ import {
   COLOR_BASE_2,
   COLOR_BASE_3,
   COLOR_WHITE,
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
+  convertHeight,
+  convertWidth,
   SpaceFlexBox,
-} from "@/src/shared";
-import { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+} from '@/src/shared';
+import { useState } from 'react';
+import { KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 function convertInvitationCode(val: string) {
   return val
-    .replace(/[^a-zA-Z0-9]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, '')
     .toUpperCase()
     .substring(0, 10);
 }
 
 function InputContainer() {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
   return (
     <View style={styles.container}>
@@ -51,38 +42,38 @@ function InputContainer() {
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (51 / DESIGN_HEIGHT),
+    width: convertWidth(331),
+    height: convertHeight(51),
     backgroundColor: COLOR_WHITE,
-    borderRadius: SCREEN_HEIGHT * (10 / DESIGN_HEIGHT),
+    borderRadius: convertHeight(10),
 
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   input: {
-    width: SCREEN_WIDTH * (210 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (25 / DESIGN_HEIGHT),
+    width: convertWidth(210),
+    height: convertHeight(25),
 
     fontSize: 16,
-    fontFamily: "Pretendard-SemiBold",
+    fontFamily: 'Pretendard-SemiBold',
     color: COLOR_BASE_1,
-    fontWeight: "normal",
+    fontWeight: 'normal',
   },
 
   button: {
     backgroundColor: COLOR_BASE_3,
-    borderRadius: SCREEN_HEIGHT * (8 / DESIGN_HEIGHT),
-    width: SCREEN_WIDTH * (66 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (37 / DESIGN_HEIGHT),
+    borderRadius: convertHeight(8),
+    width: convertWidth(66),
+    height: convertHeight(37),
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   buttonText: {
     fontSize: 14,
-    fontFamily: "Pretendard-SemiBold",
+    fontFamily: 'Pretendard-SemiBold',
     color: COLOR_BASE_2,
     opacity: 0.3,
   },
