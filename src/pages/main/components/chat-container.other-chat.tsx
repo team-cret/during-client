@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
   chatText: {
     fontSize: 14,
-    fontFamily: 'Pretendart-Medium',
+    fontFamily: 'Pretendard-Medium',
     color: COLOR_BASE_1,
   },
 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
 
   timeText: {
     fontSize: 12,
-    fontFamily: 'Pretendart-Medium',
+    fontFamily: 'Pretendard-Medium',
     color: COLOR_BASE_2,
 
     marginLeft: convertWidth(7),

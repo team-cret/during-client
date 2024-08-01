@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     height: convertHeight(20),
 
     fontSize: convertWidth(14),
-    fontFamily: 'Pretendart-Medium',
+    fontFamily: 'Pretendard-Medium',
     color: COLOR_BASE_1,
 
     fontWeight: 'medium',
