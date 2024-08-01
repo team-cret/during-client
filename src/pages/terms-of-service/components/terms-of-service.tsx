@@ -48,7 +48,7 @@ function TermsOfService() {
       <HorizontalDivider
         width={convertWidth(375)}
         height={convertHeight(15)}
-        lineWidth={1}
+        lineHeight={1}
         upperFlex={3}
         lowerFlex={11}
       />
