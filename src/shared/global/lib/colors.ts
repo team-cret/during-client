@@ -13,6 +13,10 @@ const COLOR_PRIMARY_GREEN_LIGHT = '#EDF798';
 const COLOR_SECONDARY_PINK_DARK = '#FF7989';
 const COLOR_SECONDARY_PINK_LIGHT = '#FFD6DB';
 
+function colorWithOpacity(color: string, opacity: number) {
+  return color + Math.round(opacity * 255).toString(16);
+}
+
 export {
   COLOR_BASE_1,
   COLOR_BASE_2,
@@ -26,4 +30,5 @@ export {
   COLOR_PRIMARY_GREEN_LIGHT,
   COLOR_SECONDARY_PINK_DARK,
   COLOR_SECONDARY_PINK_LIGHT,
+  colorWithOpacity,
 };
