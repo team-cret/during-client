@@ -1,10 +1,4 @@
-import {
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-  SpaceFlexBox,
-} from '@/src/shared';
+import { convertWidth, SpaceFlexBox } from '@/src/shared';
 import { StyleSheet, View } from 'react-native';
 import { Step } from './stepper.step';
 
@@ -19,7 +13,7 @@ function InfoSetupStepper() {
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH * (77 / DESIGN_WIDTH),
+    width: convertWidth(77),
 
     flexDirection: 'row',
     justifyContent: 'space-between',

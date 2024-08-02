@@ -1,35 +1,24 @@
-import { Text, View } from "react-native";
+import { Text, View } from 'react-native';
 
-import {
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-} from "../../global/index";
-import { textStyles } from "../../styles/lib/text";
+import { convertHeight, convertWidth } from '../../global/index';
+import { textStyles } from '../../styles/lib/text';
 
-function HeadLineText({
-  title,
-  subTitle,
-}: {
-  title: string;
-  subTitle: string;
-}) {
+function HeadLineText({ title, subTitle }: { title: string; subTitle: string }) {
   return (
     <View
       style={{
-        width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
-        height: SCREEN_HEIGHT * (129 / DESIGN_HEIGHT),
+        width: convertWidth(331),
+        height: convertHeight(129),
 
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
       }}
     >
       <Text
         style={{
           ...textStyles.title,
           ...{
-            width: "100%",
-            height: "59.15%",
+            width: '100%',
+            height: '59.15%',
           },
         }}
       >
@@ -39,8 +28,8 @@ function HeadLineText({
         style={{
           ...textStyles.subTitle,
           ...{
-            width: "100%",
-            height: "30.98%",
+            width: '100%',
+            height: '30.98%',
           },
         }}
       >

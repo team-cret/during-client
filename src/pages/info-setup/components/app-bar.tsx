@@ -1,11 +1,4 @@
-import {
-  CloseButton,
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-  SpaceFlexBox,
-} from '@/src/shared';
+import { CloseButton, convertHeight, convertWidth, SpaceFlexBox } from '@/src/shared';
 import { StyleSheet, View } from 'react-native';
 import { InfoSetupStepper } from './stepper';
 
@@ -30,14 +23,14 @@ function InfoSetupAppBar() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: SCREEN_HEIGHT * (66 / DESIGN_HEIGHT),
+    height: convertHeight(66),
     flexDirection: 'row',
     alignItems: 'center',
   },
 
   stepperContainer: {
-    width: SCREEN_WIDTH * (77 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (66 / DESIGN_HEIGHT),
+    width: convertWidth(77),
+    height: convertHeight(66),
     justifyContent: 'flex-end',
   },
 });

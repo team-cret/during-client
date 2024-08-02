@@ -1,14 +1,6 @@
-import {
-  COLOR_BASE_4,
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-  SpaceFlexBox,
-  textStyles,
-} from "@/src/shared";
-import { StyleSheet, Text, View } from "react-native";
-import { InputContainer } from "./code-input.input-container";
+import { COLOR_BASE_4, convertHeight, convertWidth, SpaceFlexBox, textStyles } from '@/src/shared';
+import { StyleSheet, Text, View } from 'react-native';
+import { InputContainer } from './code-input.input-container';
 
 function InvitationCodeInput() {
   return (
@@ -25,20 +17,20 @@ function InvitationCodeInput() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOR_BASE_4,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * (140 / DESIGN_HEIGHT),
-    alignItems: "center",
+    width: convertWidth(375),
+    height: convertHeight(140),
+    alignItems: 'center',
   },
 
   titleText: {
     ...textStyles.miniTitle,
-    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
+    width: convertWidth(331),
   },
 
   inputContainer: {
-    width: SCREEN_WIDTH * (331 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (51 / DESIGN_HEIGHT),
-    backgroundColor: "tomato",
+    width: convertWidth(331),
+    height: convertHeight(51),
+    backgroundColor: 'tomato',
   },
 });
 

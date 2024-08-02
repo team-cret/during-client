@@ -4,3 +4,7 @@ export * from './oauth-webview/index';
 export * from './info-setup/index';
 export * from './connection/index';
 export * from './terms-of-service/index';
+export * from './main/index';
+export * from './menu/index';
+export * from './setting/index';
+export * from './profile/index';

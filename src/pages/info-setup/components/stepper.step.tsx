@@ -1,11 +1,5 @@
-import {
-  COLOR_BASE_2,
-  DESIGN_HEIGHT,
-  DESIGN_WIDTH,
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-} from "@/src/shared";
-import { StyleSheet, Text, View } from "react-native";
+import { COLOR_BASE_2, convertHeight, convertWidth } from '@/src/shared';
+import { StyleSheet, Text, View } from 'react-native';
 
 function Step() {
   return (
@@ -20,34 +14,34 @@ function Step() {
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH * (26 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (40 / DESIGN_HEIGHT),
+    width: convertWidth(26),
+    height: convertHeight(40),
 
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 
   iconContainer: {
-    height: SCREEN_HEIGHT * (20 / DESIGN_HEIGHT),
+    height: convertHeight(20),
     aspectRatio: 1,
     borderRadius: 100,
 
-    backgroundColor: "blue",
+    backgroundColor: 'blue',
   },
 
   textContainer: {
-    width: SCREEN_WIDTH * (26 / DESIGN_WIDTH),
-    height: SCREEN_HEIGHT * (16 / DESIGN_HEIGHT),
-    justifyContent: "center",
-    alignItems: "center",
+    width: convertWidth(26),
+    height: convertHeight(16),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   text: {
     fontSize: 10,
-    fontFamily: "Pretendard-Regular",
+    fontFamily: 'Pretendard-Regular',
     color: COLOR_BASE_2,
 
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

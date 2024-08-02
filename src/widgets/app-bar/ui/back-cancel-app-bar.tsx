@@ -1,12 +1,6 @@
-import { View } from "react-native";
+import { View } from 'react-native';
 
-import {
-  BackIconTextButton,
-  CloseButton,
-  DESIGN_HEIGHT,
-  SCREEN_HEIGHT,
-  SpaceFlexBox,
-} from "@/src/shared";
+import { BackIconTextButton, CloseButton, convertHeight, SpaceFlexBox } from '@/src/shared';
 
 function BackCancelAppBar({
   backDisabled = true,
@@ -18,16 +12,16 @@ function BackCancelAppBar({
   return (
     <View
       style={{
-        width: "100%",
-        height: SCREEN_HEIGHT * (66 / DESIGN_HEIGHT),
+        width: '100%',
+        height: convertHeight(66),
 
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}
     >
       <SpaceFlexBox flex={24} />
-      <View style={{ display: backDisabled ? "flex" : "none" }}>
+      <View style={{ display: backDisabled ? 'flex' : 'none' }}>
         <BackIconTextButton
           onPress={() => {
             //enable 안됐을 때 처리하기
@@ -35,7 +29,7 @@ function BackCancelAppBar({
         />
       </View>
       <SpaceFlexBox flex={245} />
-      <View style={{ display: cancelDisabled ? "flex" : "none" }}>
+      <View style={{ display: cancelDisabled ? 'flex' : 'none' }}>
         <CloseButton
           onPress={() => {
             //enable 안됐을 때 처리하기

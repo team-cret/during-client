@@ -14,6 +14,10 @@ type RootStackParamList = {
   'terms-of-service/index': undefined;
   'connection/index': undefined;
   'info-setup/index': undefined;
+  'main/index': undefined;
+  'menu/index': undefined;
+  'setting/index': undefined;
+  'profile/index': undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

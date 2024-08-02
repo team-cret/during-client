@@ -5,7 +5,11 @@ import {
   AuthPage,
   ConnectionPage,
   InfoSetupPage,
+  MainPage,
+  MenuPage,
   OauthWebVewPage,
+  ProfilePage,
+  SettingPage,
   TermsOfServicePage,
 } from '@/src/pages';
 
@@ -18,13 +22,15 @@ function RootLayout() {
         headerShown: false,
       }}
     >
-      <RootStack.Screen name="auth/index" component={AuthPage} />
+      <RootStack.Screen name="profile/index" component={ProfilePage} />
+      <RootStack.Screen name="setting/index" component={SettingPage} />
       <RootStack.Screen name="info-setup/index" component={InfoSetupPage} />
+      <RootStack.Screen name="auth/index" component={AuthPage} />
       <RootStack.Screen name="oauth/index" component={OauthWebVewPage} />
-
       <RootStack.Screen name="terms-of-service/index" component={TermsOfServicePage} />
-
       <RootStack.Screen name="connection/index" component={ConnectionPage} />
+      <RootStack.Screen name="main/index" component={MainPage} />
+      <RootStack.Screen name="menu/index" component={MenuPage} />
     </RootStack.Navigator>
   );
 }
