@@ -21,7 +21,7 @@ function MainPage() {
       <ChatFloatingButton />
       <ChatInputBar />
       <DownFloatingButton />
-      {/* <SideBar /> */}
+      <SideBar />
     </View>
   );
 }

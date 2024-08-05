@@ -1,20 +1,57 @@
 import {
   COLOR_BASE_1,
   COLOR_BASE_2_30,
+  COLOR_BASE_4,
   COLOR_PRIMARY_GREEN,
   COLOR_WHITE,
   convertHeight,
   convertWidth,
 } from '@/src/shared';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
+const animatinonConfig = {
+  duration: 200,
+  easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
+};
 function AIToggle() {
+  const [isAIOn, setIsAIOn] = useState(false);
+
+  //animation Values
+  const handleMarginLeft = useSharedValue<number>(2);
+  const backgroundColor = useSharedValue<string>(COLOR_PRIMARY_GREEN);
+
+  function toggleAI() {
+    if (isAIOn) {
+      setIsAIOn(false);
+      handleMarginLeft.value = withTiming(convertWidth(2), animatinonConfig);
+      backgroundColor.value = withTiming(COLOR_PRIMARY_GREEN, animatinonConfig);
+    } else {
+      setIsAIOn(true);
+      handleMarginLeft.value = withTiming(convertWidth(17), animatinonConfig);
+      backgroundColor.value = withTiming(COLOR_BASE_4, animatinonConfig);
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.handle}>
-        <Text style={styles.text}>AI</Text>
-      </View>
-    </View>
+    <Pressable onPress={toggleAI}>
+      <Animated.View
+        style={{
+          backgroundColor,
+          ...styles.container,
+        }}
+      >
+        <Animated.View
+          style={{
+            marginLeft: handleMarginLeft,
+            ...styles.handle,
+          }}
+        >
+          <Text style={styles.text}>AI</Text>
+        </Animated.View>
+      </Animated.View>
+    </Pressable>
   );
 }
 
@@ -22,7 +59,6 @@ const styles = StyleSheet.create({
   container: {
     width: convertWidth(36),
     height: convertHeight(22),
-    backgroundColor: COLOR_PRIMARY_GREEN,
 
     marginTop: convertHeight(16),
     borderRadius: 100,
@@ -39,8 +75,6 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
     alignItems: 'center',
-
-    marginHorizontal: convertWidth(2),
 
     shadowColor: COLOR_BASE_1,
     shadowOffset: {
