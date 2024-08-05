@@ -1,15 +1,12 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View } from 'react-native';
 
-import {
-  BarButtonGreen,
-  COLOR_BACKGROUND,
-  HeadLineText,
-  SpaceFlexBox,
-} from "@/src/shared";
-import { BackCancelAppBar } from "@/src/widgets";
-import { TermsOfService } from "./components/terms-of-service";
+import { BarButtonGreen, COLOR_BACKGROUND, HeadLineText, SpaceFlexBox } from '@/src/shared';
+import { BackCancelAppBar } from '@/src/widgets';
+import { TermsOfService } from './components/terms-of-service';
+import { useTermsOfServiceInputStore } from '@/src/features';
 
 function TermsOfServicePage() {
+  const { ifRequiredAllAgreed } = useTermsOfServiceInputStore();
   return (
     <View style={styles.container}>
       <BackCancelAppBar />
@@ -26,7 +23,7 @@ function TermsOfServicePage() {
       <BarButtonGreen
         text="동의하고 계속하기"
         onPress={() => {}}
-        ifDisabled={false}
+        ifDisabled={!ifRequiredAllAgreed}
       />
       <SpaceFlexBox flex={10} />
     </View>
@@ -36,7 +33,7 @@ function TermsOfServicePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: COLOR_BACKGROUND,
   },
 });

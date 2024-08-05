@@ -1,13 +1,20 @@
 import { convertHeight, convertWidth } from '@/src/shared';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import HamburgerIcon from '@/src/shared/assets/icons/navigation/hamburger.svg';
+import { useSideBarStore } from '@/src/features';
 
 function HamburgerButton() {
+  const { openSideBar } = useSideBarStore();
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        openSideBar();
+      }}
+    >
       <HamburgerIcon />
-    </View>
+    </Pressable>
   );
 }
 

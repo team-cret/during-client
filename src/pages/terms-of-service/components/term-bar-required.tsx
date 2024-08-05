@@ -12,71 +12,35 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import NavigateIcon from '@/src/shared/assets/icons/navigation/navigate.svg';
 
-function TermTotalBar({
-  isSelected,
-  radioOnPress,
-}: {
-  isSelected: boolean;
-  radioOnPress: () => void;
-}) {
-  return (
-    <View style={stylesTermTotalBar.container}>
-      <Text style={stylesTermTotalBar.title}>약관 전체동의</Text>
-      <RadioButton onPress={radioOnPress} isSelected={isSelected} />
-    </View>
-  );
-}
-
-const stylesTermTotalBar = StyleSheet.create({
-  container: {
-    width: convertWidth(327),
-    height: convertHeight(44),
-
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
-  title: {
-    fontSize: 16,
-    fontFamily: 'Pretendard-SemiBold',
-    color: COLOR_BASE_1,
-  },
-});
-
-function TermBar({
+function TermBarRequired({
   isSelected,
   term,
   radioOnPress,
 }: {
   isSelected: boolean;
   term: {
-    type: 'required' | 'optional';
     title: string;
     subTitle: string;
   };
   radioOnPress: () => void;
 }) {
   return (
-    <View style={stylesTermBar.container}>
-      {term.type === 'required' ? (
-        <Text style={stylesTermBar.TextRequired}>필수</Text>
-      ) : (
-        <Text style={stylesTermBar.TextOption}>선택</Text>
-      )}
-      <View style={stylesTermBar.TermsContainer}>
-        <Pressable style={stylesTermBar.TermButtonContainer}>
-          <Text style={stylesTermBar.TermTitle}>{term.title}</Text>
+    <View style={styles.container}>
+      <Text style={styles.TextRequired}>필수</Text>
+      <View style={styles.TermsContainer}>
+        <Pressable style={styles.TermButtonContainer}>
+          <Text style={styles.TermTitle}>{term.title}</Text>
           <HorizontalSizedBox width={convertWidth(9)} />
           <NavigateIcon height={convertHeight(6)} />
         </Pressable>
-        <Text style={stylesTermBar.TermSubTitle}>{term.subTitle}</Text>
+        <Text style={styles.TermSubTitle}>{term.subTitle}</Text>
       </View>
       <RadioButton onPress={radioOnPress} isSelected={isSelected} />
     </View>
   );
 }
 
-const stylesTermBar = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: convertWidth(327),
     height: convertHeight(44),
@@ -123,4 +87,4 @@ const stylesTermBar = StyleSheet.create({
   },
 });
 
-export { TermTotalBar, TermBar };
+export { TermBarRequired };

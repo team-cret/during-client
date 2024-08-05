@@ -3,16 +3,18 @@ import { InfoSetupAppBar } from './components/app-bar';
 import { StyleSheet, View } from 'react-native';
 import { InputBirthday } from './components/input-birthday';
 import { InputNickname } from './components/input-nickname';
+import { useInfoInputStore } from '@/src/features';
 
 function InfoSetupPage() {
+  const { curStep, ifCurStepValid, continueStep } = useInfoInputStore();
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={45} />
       <InfoSetupAppBar />
 
-      <InputBirthday />
+      {curStep === 'birthDay' ? <InputBirthday /> : <InputNickname />}
 
-      <BarButtonGreen text="완료" onPress={() => {}} />
+      <BarButtonGreen text="완료" onPress={continueStep} ifDisabled={!ifCurStepValid} />
       <SpaceFlexBox flex={10} />
     </View>
   );

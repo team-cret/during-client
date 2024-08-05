@@ -37,5 +37,45 @@
     "prefix": "font",
     "body": ["fontSize: $1,", "fontFamily: 'Pretendard-$2',", "color: $3,"],
     "description": "Basic Template for a Text style(only style)"
+  },
+
+  "Zustand Store Template": {
+    "prefix": "store",
+    "body": [
+      "import { create } from 'zustand';",
+      "",
+      "type State = {",
+      "  // state1: boolean;",
+      "  // state2: Array<boolean>;",
+      "};",
+      "",
+      "const defaultState: State = {",
+      "  // state1: false,",
+      "  // state2: [],",
+      "};",
+      "",
+      "type Action = {",
+      "  // action1: () => void;",
+      "  // action2: (idx: number) => void;",
+      "};",
+      "",
+      "const use$1Store = create<State & Action>((set) => ({",
+      "  ...defaultState,",
+      "",
+      "  // //actions",
+      "  // action1: () =>",
+      "  //   set((state) => ({",
+      "  //    ...state",
+      "  //   })),",
+      "  // action2: (idx) =>",
+      "  //   set((state) => ({",
+      "  //    ...state",
+      "  //   })),",
+      "",
+      "}));",
+      "",
+      "export { use$1Store };"
+    ],
+    "description": "Template for a Zustand store with default state and actions"
   }
 }
