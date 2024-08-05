@@ -1,4 +1,4 @@
-import { Pressable, StyleProp, Text, TextStyle, View } from 'react-native';
+import { Image, Pressable, StyleProp, Text, TextStyle, View } from 'react-native';
 
 import {
   COLOR_BASE_2,
@@ -8,11 +8,19 @@ import {
   COLOR_BASE_1,
   convertWidth,
   convertHeight,
+  COLOR_WHITE,
 } from '../../global/index';
 
 import CloseIcon from '@/src/shared/assets/icons/navigation/close.svg';
 import DeleteIcon from '@/src/shared/assets/icons/interaction/delete.svg';
 import BackIcon from '@/src/shared/assets/icons/navigation/back.svg';
+import Animated, {
+  Easing,
+  ReduceMotion,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useEffect } from 'react';
 
 ////Icon Buttons
 function CloseButton({ onPress }: { onPress: () => void }) {
@@ -76,41 +84,53 @@ function BackIconTextButton({ onPress }: { onPress: () => void }) {
 }
 
 ////Toggle Buttons
+const toggleAnimationConfig = {
+  duration: 200,
+  easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
+};
+
 function RadioButton({ onPress, isSelected }: { onPress: () => void; isSelected: boolean }) {
+  const innerCirlcleWidth = useSharedValue<number>(0);
+  const borderWidth = useSharedValue<number>(0);
+  const backgroundColor = useSharedValue<string>(COLOR_BASE_3);
+
+  useEffect(() => {
+    if (isSelected) {
+      innerCirlcleWidth.value = withTiming(convertWidth(10), toggleAnimationConfig);
+      borderWidth.value = withTiming(convertWidth(3), toggleAnimationConfig);
+      backgroundColor.value = withTiming(COLOR_WHITE, toggleAnimationConfig);
+    } else {
+      innerCirlcleWidth.value = withTiming(0, toggleAnimationConfig);
+      borderWidth.value = withTiming(0, toggleAnimationConfig);
+      backgroundColor.value = withTiming(COLOR_BASE_3, toggleAnimationConfig);
+    }
+    innerCirlcleWidth.value = withTiming(isSelected ? convertWidth(10) : 0, toggleAnimationConfig);
+  }, [isSelected]);
+
   return (
-    <Pressable
-      onPress={onPress}
-      style={{
-        ...{
+    <Pressable onPress={onPress}>
+      <Animated.View
+        style={{
           height: convertHeight(20),
           aspectRatio: 1,
           borderRadius: 100,
-          // borderColor: isSelected ? "black" : "gray",
           justifyContent: 'center',
           alignItems: 'center',
+          borderColor: COLOR_PRIMARY_GREEN_DARK,
 
-          backgroundColor: COLOR_BASE_3,
-        },
-        ...(isSelected
-          ? {
-              backgroundColor: 'white',
-              borderWidth: 3,
-              borderColor: COLOR_PRIMARY_GREEN_DARK,
-            }
-          : {}),
-      }}
-    >
-      {isSelected && (
-        <View
+          backgroundColor,
+          borderWidth,
+        }}
+      >
+        <Animated.View
           style={{
-            width: convertWidth(10),
-            height: convertHeight(10),
+            width: innerCirlcleWidth,
+            aspectRatio: 1,
             borderRadius: 100,
-
             backgroundColor: COLOR_PRIMARY_GREEN_DARK,
           }}
         />
-      )}
+      </Animated.View>
     </Pressable>
   );
 }
@@ -127,7 +147,7 @@ function BarButtonGreen({
 }) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={ifDisabled ? null : onPress}
       style={{
         height: convertHeight(42),
         width: convertWidth(331),
