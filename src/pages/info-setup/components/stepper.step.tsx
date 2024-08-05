@@ -1,12 +1,42 @@
-import { COLOR_BASE_2, convertHeight, convertWidth } from '@/src/shared';
+import {
+  COLOR_BASE_2,
+  COLOR_BASE_2_30,
+  COLOR_BASE_3,
+  COLOR_BASE_4,
+  convertHeight,
+  convertWidth,
+} from '@/src/shared';
 import { StyleSheet, Text, View } from 'react-native';
 
-function Step() {
+import CheckIconLight from '@/src/shared/assets/icons/info-input/check-light.svg';
+import CheckIconDark from '@/src/shared/assets/icons/info-input/check-dark.svg';
+
+function Step({
+  ifCurStep,
+  ifValid,
+  stepNum,
+  stepText,
+}: {
+  ifCurStep: boolean;
+  ifValid: boolean;
+  stepNum: number;
+  stepText: string;
+}) {
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}></View>
+      {ifValid ? (
+        ifCurStep ? (
+          <CheckDark />
+        ) : (
+          <CheckLight />
+        )
+      ) : ifCurStep ? (
+        <NumDark num={stepNum} />
+      ) : (
+        <NumLight num={stepNum} />
+      )}
       <View style={styles.textContainer}>
-        <Text style={styles.text}>닉네임</Text>
+        <Text style={styles.text}>{stepText}</Text>
       </View>
     </View>
   );
@@ -19,14 +49,6 @@ const styles = StyleSheet.create({
 
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-
-  iconContainer: {
-    height: convertHeight(20),
-    aspectRatio: 1,
-    borderRadius: 100,
-
-    backgroundColor: 'blue',
   },
 
   textContainer: {
@@ -44,5 +66,89 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+//
+
+function CheckLight() {
+  return (
+    <View
+      style={{
+        height: convertHeight(20),
+        aspectRatio: 1,
+        borderRadius: 100,
+      }}
+    >
+      <CheckIconLight />
+    </View>
+  );
+}
+
+function CheckDark() {
+  return (
+    <View
+      style={{
+        height: convertHeight(20),
+        aspectRatio: 1,
+        borderRadius: 100,
+      }}
+    >
+      <CheckIconDark />
+    </View>
+  );
+}
+
+function NumLight({ num }: { num: number }) {
+  return (
+    <View
+      style={{
+        height: convertHeight(20),
+        aspectRatio: 1,
+        borderRadius: 100,
+
+        backgroundColor: COLOR_BASE_3,
+
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 13,
+          fontFamily: 'Pretendard-SemiBold',
+          color: COLOR_BASE_4,
+        }}
+      >
+        {num}
+      </Text>
+    </View>
+  );
+}
+
+function NumDark({ num }: { num: number }) {
+  return (
+    <View
+      style={{
+        height: convertHeight(20),
+        aspectRatio: 1,
+        borderRadius: 100,
+
+        backgroundColor: COLOR_BASE_2_30,
+
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 13,
+          fontFamily: 'Pretendard-SemiBold',
+          color: COLOR_BASE_2,
+        }}
+      >
+        {num}
+      </Text>
+    </View>
+  );
+}
 
 export { Step };

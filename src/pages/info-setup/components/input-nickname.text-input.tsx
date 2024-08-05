@@ -1,3 +1,4 @@
+import { useInfoInputStore } from '@/src/features';
 import {
   COLOR_BASE_1,
   COLOR_BASE_2,
@@ -8,23 +9,53 @@ import {
   DeleteButton,
   SpaceFlexBox,
 } from '@/src/shared';
-import { Text, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { NativeSyntheticEvent, Text, TextInputChangeEventData, View } from 'react-native';
 import { StyleSheet, TextInput } from 'react-native';
 
 function NicknameTextInput() {
+  const refNickNameInput = useRef<TextInput>(null);
+  const {
+    nickName: { nickName, ifValid },
+    setNickName,
+    clearNickName,
+  } = useInfoInputStore();
+
+  const [ifFocused, setIfFocused] = useState(true);
+
+  function InputNicknameOnChange(e: NativeSyntheticEvent<TextInputChangeEventData>) {
+    setNickName(e.nativeEvent.text);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.textInput} cursorColor={COLOR_BASE_1} />
-        <DeleteButton onPress={() => {}} />
+        <TextInput
+          ref={refNickNameInput}
+          style={styles.textInput}
+          cursorColor={COLOR_BASE_1}
+          value={nickName}
+          onChange={InputNicknameOnChange}
+          onFocus={() => setIfFocused(true)}
+          onBlur={() => setIfFocused(false)}
+        />
+        <DeleteButton
+          onPress={() => {
+            clearNickName();
+            refNickNameInput.current?.blur();
+          }}
+        />
       </View>
-      <View style={styles.errorLine} />
-      <SpaceFlexBox flex={1} />
-      <View style={styles.subTextBox}>
-        <Text style={styles.errorText}>
-          {` · 닉네임은 한글, 영어 대소문자, 숫자만 입력가능합니다.`}
-        </Text>
-      </View>
+      {!ifFocused && !ifValid && (
+        <>
+          <View style={styles.errorLine} />
+          <SpaceFlexBox flex={1} />
+          <View style={styles.subTextBox}>
+            <Text style={styles.errorText}>
+              {` · 닉네임은 한글, 영어 대소문자, 숫자만 입력가능합니다.`}
+            </Text>
+          </View>
+        </>
+      )}
     </View>
   );
 }

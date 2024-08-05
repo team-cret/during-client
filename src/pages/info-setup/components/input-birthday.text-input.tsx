@@ -1,3 +1,4 @@
+import { useInfoInputStore, useTermsOfServiceInputStore } from '@/src/features';
 import {
   COLOR_BASE_1,
   COLOR_BASE_2,
@@ -7,6 +8,7 @@ import {
   convertHeight,
   convertWidth,
   DeleteButton,
+  SpaceFlexBox,
 } from '@/src/shared';
 import { useRef, useState } from 'react';
 import {
@@ -23,56 +25,64 @@ function BirthdayTextInput() {
   const refMonthInput = useRef<TextInput>(null);
   const refDayInput = useRef<TextInput>(null);
 
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
+  const {
+    birthDay: { year, month, day, ifValid },
+    setBirthDay,
+    clearBrithDay,
+  } = useInfoInputStore();
+
+  const [ifFocused, setIfFocused] = useState(true);
 
   function inputYearOnChange(e: NativeSyntheticEvent<TextInputChangeEventData>) {
+    if (refYearInput.current == null) return;
     if (e.nativeEvent.text.length === 0 && year.length === 0) {
-      refYearInput.current?.blur();
+      refYearInput.current.blur();
       return;
     }
-    setYear(e.nativeEvent.text);
+    // setBirthday({year: e.nativeEvent.text});
+    setBirthDay({ year: e.nativeEvent.text });
 
     if (e.nativeEvent.text.length === 4) {
       refMonthInput.current?.focus();
     }
   }
   function inputMonthOnChange(e: NativeSyntheticEvent<TextInputChangeEventData>) {
+    if (refMonthInput.current == null) return;
     if (e.nativeEvent.text.length === 0 && month.length === 0) {
       refYearInput.current?.focus();
       return;
     }
 
-    setMonth(e.nativeEvent.text);
+    setBirthDay({ month: e.nativeEvent.text });
     if (e.nativeEvent.text.length === 2) {
       refDayInput.current?.focus();
     }
   }
   function inputDayOnChange(e: NativeSyntheticEvent<TextInputChangeEventData>) {
+    if (refDayInput.current == null) return;
     if (e.nativeEvent.text.length === 0 && day.length === 0) {
       refMonthInput.current?.focus();
       return;
     }
 
-    setDay(e.nativeEvent.text);
+    setBirthDay({ day: e.nativeEvent.text });
     if (e.nativeEvent.text.length === 2) {
       refDayInput.current?.blur();
     }
   }
 
   function inputYearOnKeyPress(e: NativeSyntheticEvent<TextInputKeyPressEventData>) {
-    if (e.nativeEvent.key === 'Backspace' && year.length === 1) {
+    if (e.nativeEvent.key === 'Backspace' && year.length <= 1) {
       refYearInput.current?.blur();
     }
   }
   function inputMonthOnKeyPress(e: NativeSyntheticEvent<TextInputKeyPressEventData>) {
-    if (e.nativeEvent.key === 'Backspace' && month.length === 1) {
+    if (e.nativeEvent.key === 'Backspace' && month.length <= 1) {
       refYearInput.current?.focus();
     }
   }
   function inputDayOnKeyPress(e: NativeSyntheticEvent<TextInputKeyPressEventData>) {
-    if (e.nativeEvent.key === 'Backspace' && day.length === 1) {
+    if (e.nativeEvent.key === 'Backspace' && day.length <= 1) {
       refMonthInput.current?.focus();
     }
   }
@@ -91,6 +101,8 @@ function BirthdayTextInput() {
             value={year}
             onChange={inputYearOnChange}
             onKeyPress={inputYearOnKeyPress}
+            onFocus={() => setIfFocused(true)}
+            onBlur={() => setIfFocused(false)}
           />
           <Text style={styles.textInputIndex}>년</Text>
           <TextInput
@@ -103,6 +115,8 @@ function BirthdayTextInput() {
             value={month}
             onChange={inputMonthOnChange}
             onKeyPress={inputMonthOnKeyPress}
+            onFocus={() => setIfFocused(true)}
+            onBlur={() => setIfFocused(false)}
           />
           <Text style={styles.textInputIndex}>월</Text>
           <TextInput
@@ -115,18 +129,29 @@ function BirthdayTextInput() {
             value={day}
             onChange={inputDayOnChange}
             onKeyPress={inputDayOnKeyPress}
+            onFocus={() => setIfFocused(true)}
+            onBlur={() => setIfFocused(false)}
           />
           <Text style={styles.textInputIndex}>일</Text>
         </View>
-        <DeleteButton onPress={() => {}} />
+        <DeleteButton
+          onPress={() => {
+            clearBrithDay();
+            refYearInput.current?.blur();
+            refMonthInput.current?.blur();
+            refDayInput.current?.blur();
+          }}
+        />
       </View>
-      {/* <View style={styles.errorLine} />
-      <SpaceFlexBox flex={1} />
-      <View style={styles.subTextBox}>
-        <Text style={styles.errorText}>
-          {` · 닉네임은 한글, 영어 대소문자, 숫자만 입력가능합니다.`}
-        </Text>
-      </View> */}
+      {!ifFocused && !ifValid && (
+        <>
+          <View style={styles.errorLine} />
+          <SpaceFlexBox flex={1} />
+          <View style={styles.subTextBox}>
+            <Text style={styles.errorText}>{` · 올바른 생일을 입력해주세요.`}</Text>
+          </View>
+        </>
+      )}
     </View>
   );
 }
