@@ -4,6 +4,7 @@ import type {
 } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
+  'splash/index': undefined;
   'auth/index': {
     platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE' | null;
     accessToken: string | null;
