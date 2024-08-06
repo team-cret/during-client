@@ -1,5 +1,6 @@
 import { termsOptional, termsRequired } from '@/src/shared';
 import { create } from 'zustand';
+import { useUserStore } from '../../user';
 
 type State = {
   ifAllAgreed: boolean;
@@ -21,7 +22,7 @@ type Action = {
   toggleIfOptionalAgreed: (idx: number) => void;
 };
 
-const useTermsOfServiceInputStore = create<State & Action>((set) => ({
+const useTermsOfServiceInputStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   // actions
