@@ -14,7 +14,7 @@ export default function App() {
     'Pretendard-Thin': require('@/src/shared/assets/font/Pretendard-Thin.otf'),
   });
 
-  if (!fontsLoaded) return <SplashPage />;
+  // if (!fontsLoaded) return <SplashPage />;
 
   return <RootLayout />;
 }
