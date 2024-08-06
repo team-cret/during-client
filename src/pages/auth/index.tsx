@@ -10,24 +10,22 @@ import {
   ScreenProps,
   SpaceFlexBox,
 } from '@/src/shared';
-import { trySignInUp } from '@/src/entities';
+import { trySignInUpAPI } from '@/src/entities';
+import { useNavigation } from 'expo-router';
 
-function AuthPage({
-  navigation,
-  route: { params },
-}: {
-  navigation: NavProp<'auth/index'>;
-  route: ScreenProps<'auth/index'>['route'];
-}) {
+function AuthPage({ route: { params } }: { route: ScreenProps<'auth/index'>['route'] }) {
+  const navigation = useNavigation<NavProp<'auth/index'>>();
+
   useEffect(() => {
     if (params === undefined) return;
     if (params.platform === null || params.accessToken === null) return;
 
-    trySignInUp({
+    trySignInUpAPI({
       accessToken: params.accessToken,
       platform: params.platform,
     }).then((res) => {
-      console.log(res);
+      if (!res) return;
+      navigation.navigate('splash/index');
     });
   }, [params]);
 
