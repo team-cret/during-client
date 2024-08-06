@@ -1,45 +1,46 @@
-import { Platform } from "@/src/shared";
-import { DURING_SERVER_URL } from "@env";
-import { Alert } from "react-native";
+import { DURING_SERVER_URL } from '@env';
+import { logError, setUserToken } from '@/src/shared';
 
-async function trySignInUp({
+async function trySignInUpAPI({
   accessToken,
   platform,
 }: {
   accessToken: string;
-  platform: Platform;
+  platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE';
 }) {
-  try {
-    return await fetch(`${DURING_SERVER_URL}/api/v0/auth/oauth`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        accessToken,
-        provider: platform.toString(),
-      }),
+  return fetch(`${DURING_SERVER_URL}/api/v0/auth/oauth`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      accessToken,
+      provider: platform,
+    }),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        logError(`${DURING_SERVER_URL}/api/v0/auth/oauth ${res.status}`);
+        return false;
+      }
+      return res.json();
     })
-      .then((res) => {
-        console.log(res);
-        switch (res.status) {
-          case 200:
-            return res.json();
-          case 401:
-            throw new Error("unauthorized");
-          case 500:
-            throw new Error("Internal Server Error");
-        }
-      })
-      .then((res) => {
-        Alert.alert("로그인 성공");
-        return "";
-        // return res.access_token;
+    .then((res) => {
+      switch (res.code) {
+        case 1:
+          return res.result;
+        default:
+          logError(`${DURING_SERVER_URL}/api/v0/auth/oauth ${res.code}`);
+          return false;
+      }
+    })
+    .then((res) => {
+      setUserToken({
+        accessToken: res.tokenInfo.accessToken,
+        refreshToken: res.tokenInfo.refreshToken,
       });
-  } catch (e) {
-    console.error(e);
-  }
-  return "";
+      return true;
+    });
 }
 
-export { trySignInUp };
+export { trySignInUpAPI };
