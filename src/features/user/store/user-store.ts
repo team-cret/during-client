@@ -1,27 +1,25 @@
-import { getMemberProfileInfo, updateMemberProfileInfo } from '@/src/entities';
+import { getMemberProfileInfoAPI, updateMemberProfileInfoAPI } from '@/src/entities';
 import { termsOptional, termsRequired } from '@/src/shared';
 import { create } from 'zustand';
 
 type State = {
-  birth: Date | null;
-  coupleId: string;
   id: string;
+  birth: Date | null;
   invitationCode: string;
   lastReadChatId: number;
   name: string | null;
   requiredTermsAgreed: boolean;
-  role: 'ROLE_SINGLE' | 'ROLE_COUPLE';
+  role: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null;
 };
 
 const defaultState: State = {
-  birth: null,
-  coupleId: '',
   id: '',
+  birth: null,
   invitationCode: '',
   lastReadChatId: 0,
   name: null,
   requiredTermsAgreed: false,
-  role: 'ROLE_SINGLE',
+  role: null,
 };
 
 type Action = {
@@ -48,16 +46,22 @@ const useUserStore = create<State & Action>((set, get) => ({
 
   //actions
   getUserInfo: async () => {
-    const memberInfo = await getMemberProfileInfo();
+    const memberInfo = await getMemberProfileInfoAPI();
     if (memberInfo === null) return false;
-
-    set(memberInfo);
+    set({
+      id: memberInfo.id,
+      birth: memberInfo.birth == null ? null : new Date(memberInfo.birth),
+      invitationCode: memberInfo.invitationCode,
+      lastReadChatId: memberInfo.lastReadChatId,
+      name: memberInfo.name,
+      requiredTermsAgreed: memberInfo.requiredTermsAgreed,
+      role: memberInfo.role,
+    });
     return true;
   },
 
   updateUserInfo: async ({ nickname, birthday, ifRequiredAgreed, ifOptionalAgreed }) => {
-    const result = await updateMemberProfileInfo({
-      memberId: get().id,
+    const result = await updateMemberProfileInfoAPI({
       nickname,
       birthday,
       agreedTermsId: [
