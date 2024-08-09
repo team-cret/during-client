@@ -1,24 +1,18 @@
-import {
-  GOOGLE_OAUTH_CLIENT_ID,
-  GOOGLE_OAUTH_CLIENT_SECRET,
-  REDIRECT_URI,
-} from "@env";
-
-const GOOGLE_OAUTH_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
+const GOOGLE_OAUTH_SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
 
 async function getGoogleToken(code: string) {
   try {
-    return await fetch("https://oauth2.googleapis.com/token", {
-      method: "POST",
+    return await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
       headers: {
-        "Content-type": "application/x-www-form-urlencoded",
+        'Content-type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
         code: code,
-        client_id: GOOGLE_OAUTH_CLIENT_ID,
-        client_secret: GOOGLE_OAUTH_CLIENT_SECRET,
-        redirect_uri: REDIRECT_URI,
-        grant_type: "authorization_code",
+        client_id: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_CLIENT_ID!,
+        client_secret: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET!,
+        redirect_uri: process.env.EXPO_PUBLIC_REDIRECT_URI!,
+        grant_type: 'authorization_code',
       }).toString(),
     })
       .then((res) => {
@@ -26,9 +20,9 @@ async function getGoogleToken(code: string) {
           case 200:
             return res.json();
           case 401:
-            throw new Error("unauthorized");
+            throw new Error('unauthorized');
           case 500:
-            throw new Error("Internal Server Error");
+            throw new Error('Internal Server Error');
         }
       })
       .then((res) => {
@@ -37,7 +31,7 @@ async function getGoogleToken(code: string) {
   } catch (e) {
     console.error(e);
   }
-  return "";
+  return '';
 }
 
 export { getGoogleToken, GOOGLE_OAUTH_SCOPE };

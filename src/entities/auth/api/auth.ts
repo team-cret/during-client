@@ -1,4 +1,3 @@
-import { DURING_SERVER_URL } from '@env';
 import { logError, setUserToken } from '@/src/shared';
 
 async function trySignInUpAPI({
@@ -8,7 +7,7 @@ async function trySignInUpAPI({
   accessToken: string;
   platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE';
 }) {
-  return fetch(`${DURING_SERVER_URL}/api/v0/auth/oauth`, {
+  return fetch(`${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/oauth`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -20,7 +19,7 @@ async function trySignInUpAPI({
   })
     .then((res) => {
       if (!res.ok) {
-        logError(`${DURING_SERVER_URL}/api/v0/auth/oauth ${res.status}`);
+        logError(`${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/oauth ${res.status}`);
         return false;
       }
       return res.json();
@@ -30,7 +29,7 @@ async function trySignInUpAPI({
         case 1:
           return res.result;
         default:
-          logError(`${DURING_SERVER_URL}/api/v0/auth/oauth ${res.code}`);
+          logError(`${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/oauth ${res.code}`);
           return false;
       }
     })

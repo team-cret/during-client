@@ -1,20 +1,18 @@
-import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from "@env";
-
-const NAVER_OAUTH_STATE = "test";
+const NAVER_OAUTH_STATE = 'test';
 
 async function getNaverToken(code: string) {
   try {
-    return await fetch("https://nid.naver.com/oauth2.0/token", {
-      method: "POST",
+    return await fetch('https://nid.naver.com/oauth2.0/token', {
+      method: 'POST',
       headers: {
-        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
       },
       body: new URLSearchParams({
-        grant_type: "authorization_code",
-        client_id: NAVER_CLIENT_ID,
-        client_secret: NAVER_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        client_id: process.env.EXPO_PUBLIC_NAVER_CLIENT_ID!,
+        client_secret: process.env.EXPO_PUBLIC_NAVER_CLIENT_SECRET!,
         code: code,
-        state: "test",
+        state: 'test',
       }).toString(),
     })
       .then((res) => {
@@ -22,9 +20,9 @@ async function getNaverToken(code: string) {
           case 200:
             return res.json();
           case 401:
-            throw new Error("unauthorized");
+            throw new Error('unauthorized');
           case 500:
-            throw new Error("Internal Server Error");
+            throw new Error('Internal Server Error');
         }
       })
       .then((res) => {
@@ -33,7 +31,7 @@ async function getNaverToken(code: string) {
   } catch (e) {
     console.error(e);
   }
-  return "";
+  return '';
 }
 
 export { getNaverToken, NAVER_OAUTH_STATE };

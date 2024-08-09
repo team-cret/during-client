@@ -1,5 +1,4 @@
 import { getUserToken, logError, logInfo, NavProp, setUserToken } from '@/src/shared';
-import { DURING_SERVER_URL } from '@env';
 
 async function fetchAPI({
   method,
@@ -16,7 +15,7 @@ async function fetchAPI({
   enableAuth?: boolean;
 }) {
   //요청
-  const url = new URL(`${DURING_SERVER_URL}/${path}`);
+  const url = new URL(`${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/${path}`);
   logInfo(`http [${method}] ${url}`);
   url.search = new URLSearchParams({ ...params }).toString();
 
@@ -95,7 +94,7 @@ async function fetchAPI({
 }
 
 async function refreshTokensAPI() {
-  logInfo('http [POST] ${DURING_SERVER_URL}/api/v0/auth/token/refresh');
+  logInfo('http [POST] ${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/token/refresh');
 
   const token = await getUserToken();
   if (token === null) {
@@ -107,13 +106,16 @@ async function refreshTokensAPI() {
     return false;
   }
 
-  const newToken = await fetch(`${DURING_SERVER_URL}/api/v0/auth/token/refresh`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token.refreshToken}`,
-    },
-  })
+  const newToken = await fetch(
+    `${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/token/refresh`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.refreshToken}`,
+      },
+    }
+  )
     .then((res) => {
       if (!res.ok) {
         logError(res.statusText);

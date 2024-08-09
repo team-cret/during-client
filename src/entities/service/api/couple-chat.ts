@@ -1,6 +1,5 @@
 import { convertDateToStringFullDate, getUserToken, logError, logInfo } from '@/src/shared';
 import { fetchAPI } from '../../auth/api/middleware';
-import { DURING_WEBSOCKET_URL } from '@env';
 
 async function getCoupleChatAPI({
   coupleChatId,
@@ -84,7 +83,9 @@ async function chatWebSocketOpen({ appendMessage }: { appendMessage: (message: a
   }
 
   const ws = new WebSocket(
-    `${DURING_WEBSOCKET_URL}/ws/couple-chat/connect?token=${token.accessToken}`
+    `${process.env.EXPO_PUBLIC_DURING_WEBSOCKET_URL!}/ws/couple-chat/connect?token=${
+      token.accessToken
+    }`
   );
   ws.onopen = () => {
     logInfo('websocket connected');
