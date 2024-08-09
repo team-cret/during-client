@@ -1,14 +1,19 @@
+import { useConnectionStore } from '@/src/features';
 import {
   COLOR_BASE_1,
-  COLOR_BASE_2,
+  COLOR_BASE_2_30,
   COLOR_BASE_3,
+  COLOR_PRIMARY_GREEN,
   COLOR_WHITE,
   convertHeight,
   convertWidth,
+  NavProp,
   SpaceFlexBox,
 } from '@/src/shared';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
+import { KeyboardAvoidingView, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 function convertInvitationCode(val: string) {
   return val
@@ -17,8 +22,24 @@ function convertInvitationCode(val: string) {
     .substring(0, 10);
 }
 
+const animationConfig = {
+  duration: 300,
+  easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
+};
+
 function InputContainer() {
-  const [inputValue, setInputValue] = useState('');
+  const navigation = useNavigation<NavProp<'connection/index'>>();
+  const { invitationCode, ifValid, setInvitationCode, requestConnection } = useConnectionStore();
+
+  const buttonBackgroundColor = useSharedValue<string>(COLOR_BASE_3);
+  const buttonTextColor = useSharedValue<string>(COLOR_BASE_2_30);
+  useEffect(() => {
+    buttonBackgroundColor.value = withTiming(
+      ifValid ? COLOR_PRIMARY_GREEN : COLOR_BASE_3,
+      animationConfig
+    );
+    buttonTextColor.value = withTiming(ifValid ? COLOR_BASE_1 : COLOR_BASE_2_30, animationConfig);
+  }, [ifValid]);
 
   return (
     <View style={styles.container}>
@@ -27,13 +48,28 @@ function InputContainer() {
         <TextInput
           style={styles.input}
           cursorColor={COLOR_BASE_1}
-          value={inputValue}
-          onChangeText={(val) => setInputValue(convertInvitationCode(val))}
+          value={invitationCode}
+          onChangeText={(val) => setInvitationCode(convertInvitationCode(val))}
         />
       </KeyboardAvoidingView>
       <SpaceFlexBox flex={23} />
-      <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>확인</Text>
+      <Pressable
+        onPress={() => {
+          requestConnection().then((res) => {
+            if (res) navigation.navigate('main/index');
+          });
+        }}
+      >
+        <Animated.View
+          style={{
+            ...styles.button,
+            backgroundColor: buttonBackgroundColor,
+          }}
+        >
+          <Animated.Text style={{ ...styles.buttonText, color: buttonTextColor }}>
+            확인
+          </Animated.Text>
+        </Animated.View>
       </Pressable>
       <SpaceFlexBox flex={8} />
     </View>
@@ -62,7 +98,6 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: COLOR_BASE_3,
     borderRadius: convertHeight(8),
     width: convertWidth(66),
     height: convertHeight(37),
@@ -74,8 +109,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     fontFamily: 'Pretendard-SemiBold',
-    color: COLOR_BASE_2,
-    opacity: 0.3,
   },
 });
 
