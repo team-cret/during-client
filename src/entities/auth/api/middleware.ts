@@ -1,6 +1,5 @@
 import { getUserToken, logError, logInfo, NavProp, setUserToken } from '@/src/shared';
 import { DURING_SERVER_URL } from '@env';
-import { useNavigation } from 'expo-router';
 
 async function fetchAPI({
   method,
@@ -16,23 +15,20 @@ async function fetchAPI({
   headers?: object;
   enableAuth?: boolean;
 }) {
+  //요청
+  const url = new URL(`${DURING_SERVER_URL}/${path}`);
+  logInfo(`http [${method}] ${url}`);
+  url.search = new URLSearchParams({ ...params }).toString();
+
   //토큰 가져오기
   const token = await getUserToken();
   if (token === null) {
-    logError('token is null');
-    return null;
-  }
-  if (token.accessToken === null) {
     logError('accessToken is null');
     return null;
   }
 
-  //요청
-  const url = new URL(`${DURING_SERVER_URL}/${path}`);
-  url.search = new URLSearchParams({ ...params }).toString();
-  logInfo(`http [${method}] ${url}`);
-
-  const fetchConfig = {
+  //결과
+  const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -40,10 +36,7 @@ async function fetchAPI({
       ...headers,
     },
     body: JSON.stringify(body),
-  };
-
-  //결과
-  const res = await fetch(url, fetchConfig);
+  });
 
   if (!res.ok) {
     logError(`${url} ${res.status}`);
@@ -51,6 +44,8 @@ async function fetchAPI({
   }
 
   const resBody: any = await res.json();
+
+  if (resBody.code < 0) logError(`${url} ${resBody.code}`);
 
   switch (resBody.code) {
     case 1:
@@ -63,8 +58,23 @@ async function fetchAPI({
         return null;
       }
 
+      //새토큰 가져오기
+      const newToken = await getUserToken();
+      if (newToken === null) {
+        logError('accessToken is null');
+        return null;
+      }
+
       //재요청
-      const newRes = await fetch(url, fetchConfig);
+      const newRes = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${newToken.accessToken}`,
+          ...headers,
+        },
+        body: JSON.stringify(body),
+      });
       if (!newRes.ok) {
         logError(`${url} ${newRes.status}`);
         return null;
@@ -85,17 +95,19 @@ async function fetchAPI({
 }
 
 async function refreshTokensAPI() {
+  logInfo('http [POST] ${DURING_SERVER_URL}/api/v0/auth/token/refresh');
+
   const token = await getUserToken();
   if (token === null) {
     logError('token is null');
-    return null;
+    return false;
   }
   if (token.refreshToken === null) {
     logError('refreshToken is null');
-    return null;
+    return false;
   }
 
-  return await fetch(`${DURING_SERVER_URL}/api/v0/auth/token/refresh`, {
+  const newToken = await fetch(`${DURING_SERVER_URL}/api/v0/auth/token/refresh`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -112,19 +124,21 @@ async function refreshTokensAPI() {
     .then((res) => {
       switch (res.code) {
         case 1:
-          setUserToken({
-            accessToken: res.tokenInfo.accessToken,
-            refreshToken: res.tokenInfo.refreshToken,
-          });
-          return true;
+          return {
+            accessToken: res.result.tokenInfo.accessToken,
+            refreshToken: res.result.tokenInfo.refreshToken,
+          };
         case -40:
         //리프레시도 만료된 상황.
         //로직 처리하기
         default:
-          logError(res.code);
+          logError(`/api/v0/auth/token/refresh ${res.code}`);
           return null;
       }
     });
+  if (newToken === null) return false;
+  await setUserToken(newToken);
+  return true;
 }
 
 export { fetchAPI };
