@@ -7,6 +7,7 @@ import {
   InfoSetupPage,
   MainPage,
   MenuPage,
+  NotificationPage,
   OauthWebVewPage,
   ProfilePage,
   SettingPage,
@@ -33,6 +34,7 @@ function RootLayout() {
       <RootStack.Screen name="terms-of-service/index" component={TermsOfServicePage} />
       <RootStack.Screen name="connection/index" component={ConnectionPage} />
       <RootStack.Screen name="menu/index" component={MenuPage} />
+      <RootStack.Screen name="notification/index" component={NotificationPage} />
     </RootStack.Navigator>
   );
 }

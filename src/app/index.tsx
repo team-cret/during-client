@@ -1,6 +1,7 @@
 import { RootLayout } from './routes/index';
 import { useFonts } from 'expo-font';
-import { SplashPage } from '@/src/pages';
+import { SplashPage, SplashPageBeforeLoaded } from '@/src/pages';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -14,7 +15,11 @@ export default function App() {
     'Pretendard-Thin': require('@/src/shared/assets/font/Pretendard-Thin.otf'),
   });
 
-  // if (!fontsLoaded) return <SplashPage />;
+  if (!fontsLoaded) return <SplashPageBeforeLoaded />;
 
-  return <RootLayout />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <RootLayout />
+    </GestureHandlerRootView>
+  );
 }
