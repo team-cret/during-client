@@ -19,6 +19,7 @@ type RootStackParamList = {
   'menu/index': undefined;
   'setting/index': undefined;
   'profile/index': undefined;
+  'notification/index': undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

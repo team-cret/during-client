@@ -26,4 +26,8 @@ function isValidNickName(nickName: string): boolean {
   return nickName.length > 0;
 }
 
-export { isValidDate, isValidNickName };
+function isValidInvitationCode(code: string): boolean {
+  return code.length === 10;
+}
+
+export { isValidDate, isValidNickName, isValidInvitationCode };

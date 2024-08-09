@@ -9,38 +9,32 @@ async function setUserToken({
   accessToken: string;
   refreshToken: string;
 }) {
-  try {
-    AsyncStorage.setItem('auth/token', JSON.stringify({ accessToken, refreshToken }));
-    // await EncryptedStorage.setItem(
-    //   'auth/token',
-    //   JSON.stringify({
-    //     accessToken,
-    //     refreshToken,
-    //   })
-    // );
-  } catch (error) {
-    console.error(error);
-  }
+  AsyncStorage.setItem('auth/token', JSON.stringify({ accessToken, refreshToken }));
+  // await EncryptedStorage.setItem(
+  //   'auth/token',
+  //   JSON.stringify({
+  //     accessToken,
+  //     refreshToken,
+  //   })
+  // );
 }
 
-async function getUserToken() {
-  try {
-    // const token = await EncryptedStorage.getItem('auth/token');
-    const token = await AsyncStorage.getItem('auth/token');
-    if (token === null) return null;
-    const tokenJson = JSON.parse(token);
+async function getUserToken(): Promise<{
+  accessToken: string;
+  refreshToken: string;
+} | null> {
+  // const token = await EncryptedStorage.getItem('auth/token');
+  const token = await AsyncStorage.getItem('auth/token');
+  if (token === null) return null;
+  const tokenJson = JSON.parse(token);
 
-    if (tokenJson['accessToken'] === null) return null;
-    if (tokenJson['refreshToken'] === null) return null;
+  if (tokenJson['accessToken'] === null) return null;
+  if (tokenJson['refreshToken'] === null) return null;
 
-    return {
-      accessToken: tokenJson['accessToken'],
-      refreshToken: tokenJson['refreshToken'],
-    };
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  return {
+    accessToken: tokenJson['accessToken'],
+    refreshToken: tokenJson['refreshToken'],
+  };
 }
 
 export { setUserToken, getUserToken };
