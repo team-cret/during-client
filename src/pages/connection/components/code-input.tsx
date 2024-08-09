@@ -26,12 +26,6 @@ const styles = StyleSheet.create({
     ...textStyles.miniTitle,
     width: convertWidth(331),
   },
-
-  inputContainer: {
-    width: convertWidth(331),
-    height: convertHeight(51),
-    backgroundColor: 'tomato',
-  },
 });
 
 export { InvitationCodeInput };
