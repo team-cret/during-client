@@ -1,57 +1,216 @@
+import { deleteCoupleChatAPI, getCoupleChatAPI, sendCoupleChatAPI } from '@/src/entities';
+import { MESSAGE_PAGE_SIZE } from '@/src/shared';
 import { create } from 'zustand';
 
 type State = {
-  chats: Array<{
-    text: string;
-    ifRead: boolean;
-    time: Date;
-    ifMy: boolean;
+  input: {
+    message: string;
+    ifValid: boolean;
+  };
+  chatCollection: Array<{
+    topId: number;
+    bottomId: number;
+    chatList: Array<{
+      id: number;
+      type: 'TEXT' | 'IMAGE' | 'VIDEO';
+      content: string;
+      date: Date;
+      sendMemberInfo: {
+        id: string;
+        name: string;
+      };
+      readCount: number;
+      replyInfo: {
+        id: number;
+        messageType: 'TEXT' | 'IMAGE' | 'VIDEO';
+        content: string;
+      } | null;
+    }>;
   }>;
 };
 
 const defaultState: State = {
-  // chats: [],
-  chats: [
-    {
-      text: '오늘 밥 뭐먹었어?',
-      ifRead: true,
-      time: new Date('2024-08-05T10:00:00'),
-      ifMy: false,
-    },
-    {
-      text: '비밀임 ㅋㅋ',
-      ifRead: true,
-      time: new Date('2024-08-05T10:01:00'),
-      ifMy: true,
-    },
-    {
-      text: '오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?오늘 밥 뭐먹었어?',
-      ifRead: true,
-      time: new Date('2024-08-05T10:02:00'),
-      ifMy: false,
-    },
-    {
-      text: '🤬',
-      ifRead: true,
-      time: new Date('2024-08-05T10:03:00'),
-      ifMy: true,
-    },
-  ],
+  input: {
+    message: '',
+    ifValid: false,
+  },
+  chatCollection: [],
 };
 
 type Action = {
-  addChat: (chat: { text: string; ifRead: boolean; time: Date; ifMy: boolean }) => void;
+  setInputMessage: ({ message }: { message: string }) => void;
+  sendMessage: ({ ifAi }: { ifAi: boolean }) => void;
+  getMessages: ({
+    basisChatId,
+    type,
+  }: {
+    basisChatId: string;
+    type: 'before' | 'after' | 'both';
+  }) => void;
+  appendMessage: ({
+    id,
+    type,
+    content,
+    date,
+    sendMemberInfo,
+    readCount,
+    replyInfo,
+  }: {
+    id: number;
+    type: 'TEXT' | 'IMAGE' | 'VIDEO';
+    content: string;
+    date: Date;
+    sendMemberInfo: {
+      id: string;
+      name: string;
+    };
+    readCount: number;
+    replyInfo: {
+      id: number;
+      messageType: 'TEXT' | 'IMAGE' | 'VIDEO';
+      content: string;
+    } | null;
+  }) => void;
+  deleteMessage: ({ messageId }: { messageId: number }) => void;
 };
 
-const useChatStore = create<State & Action>((set) => ({
+const useChatStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  addChat: (chat) =>
+  setInputMessage: ({ message }) => {
     set((state) => ({
       ...state,
-      chats: [...state.chats, chat],
-    })),
+      input: {
+        message,
+        ifValid: message.length > 0,
+      },
+    }));
+  },
+  sendMessage: ({ ifAi }) => {
+    sendCoupleChatAPI({
+      type: 'TEXT',
+      content: get().input.message,
+      date: new Date(),
+      aiToggle: ifAi,
+      replyId: null,
+    });
+  },
+
+  getMessages: ({ basisChatId, type }) => {
+    getCoupleChatAPI({ coupleChatId: basisChatId, size: MESSAGE_PAGE_SIZE, type }).then((res) => {
+      if (res === null || res.length === 0) return;
+
+      //새로운 메시지 삽입
+      const newChatCollection = get().chatCollection;
+      for (var i = 0; i < newChatCollection.length; i++) {
+        if (newChatCollection[i].bottomId < res[0].id) continue;
+        newChatCollection.splice(i, 0, {
+          topId: res[0].id,
+          bottomId: res[res.length - 1].id,
+          chatList: res,
+        });
+        break;
+      }
+
+      //메시지 콜렉션끼리 겹치는 부분 합치기
+      for (var i = 0; i < newChatCollection.length - 1; i++) {
+        if (newChatCollection[i].bottomId < newChatCollection[i + 1].topId) continue;
+        newChatCollection[i].chatList = newChatCollection[i].chatList.concat(
+          newChatCollection[i + 1].chatList
+        );
+        //id 중복되는것 빼기
+        newChatCollection[i].chatList = newChatCollection[i].chatList.filter(
+          (chat, index, self) => self.findIndex((t) => t.id === chat.id) === index
+        );
+        newChatCollection[i].chatList.sort((a, b) => a.id - b.id);
+        newChatCollection[i].topId = newChatCollection[i].chatList[0].id;
+        newChatCollection[i].bottomId =
+          newChatCollection[i].chatList[newChatCollection[i].chatList.length - 1].id;
+
+        newChatCollection.splice(i + 1, 1);
+        i--;
+      }
+
+      set((state) => ({
+        ...state,
+        chatCollection: newChatCollection.filter((collection) => collection.chatList.length > 0),
+      }));
+    });
+  },
+
+  appendMessage: ({ id, type, content, date, sendMemberInfo, readCount, replyInfo }) => {
+    if (get().chatCollection.length === 0) {
+      set((state) => ({
+        ...state,
+        chatCollection: [
+          {
+            topId: id,
+            bottomId: id,
+            chatList: [
+              {
+                id,
+                type,
+                content,
+                date,
+                sendMemberInfo,
+                readCount,
+                replyInfo,
+              },
+            ],
+          },
+        ],
+      }));
+    } else {
+      set((state) => ({
+        ...state,
+        chatCollection: state.chatCollection.splice(state.chatCollection.length - 1, 1, {
+          topId: state.chatCollection[state.chatCollection.length - 1].topId,
+          bottomId: id,
+          chatList: state.chatCollection[state.chatCollection.length - 1].chatList.concat({
+            id,
+            type,
+            content,
+            date,
+            sendMemberInfo,
+            readCount,
+            replyInfo,
+          }),
+        }),
+      }));
+    }
+  },
+
+  deleteMessage: ({ messageId }) => {
+    deleteCoupleChatAPI({ deleteId: messageId }).then((res) => {
+      if (res !== null) {
+        set((state) => ({
+          ...state,
+          chatCollection: state.chatCollection
+            .map((collection) => {
+              if (!(collection.topId <= messageId && messageId <= collection.bottomId))
+                return collection;
+              else {
+                const newChatList = collection.chatList.filter((chat) => chat.id !== messageId);
+                if (newChatList.length === 0)
+                  return {
+                    topId: 0,
+                    bottomId: 0,
+                    chatList: [],
+                  };
+
+                return {
+                  topId: newChatList[0].id,
+                  bottomId: newChatList[newChatList.length - 1].id,
+                  chatList: newChatList,
+                };
+              }
+            })
+            .filter((collection) => collection.chatList.length > 0),
+        }));
+      }
+    });
+  },
 }));
 
 export { useChatStore };
