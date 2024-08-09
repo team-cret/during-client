@@ -1,11 +1,18 @@
-import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth } from '@/src/shared';
+import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth, NavProp } from '@/src/shared';
 import { Pressable, StyleSheet } from 'react-native';
 
 import ChatIcon from '@/src/shared/assets/icons/chat/chat.svg';
+import { useNavigation } from '@react-navigation/native';
 
 function ChatFloatingButton() {
+  const navigation = useNavigation<NavProp<'main/index'>>();
   return (
-    <Pressable style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        navigation.navigate('notification/index');
+      }}
+    >
       <ChatIcon width={convertWidth(convertWidth(16))} height={convertHeight(16)} />
     </Pressable>
   );
