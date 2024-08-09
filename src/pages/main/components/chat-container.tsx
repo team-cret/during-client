@@ -1,34 +1,44 @@
-import { colorWithOpacity, convertDateToString, convertHeight, convertWidth } from '@/src/shared';
+import { convertDateToStringHSS, convertHeight, convertWidth } from '@/src/shared';
 import { StyleSheet, View } from 'react-native';
-import { OtherChat } from './chat-container.other-chat';
-import { MyChat } from './chat-container.my-chat';
-import { useChatStore } from '@/src/features';
+import { OtherTextChat } from './chat-container.other-chat';
+import { MyTextChat } from './chat-container.my-chat';
+import { useChatStore, useUserStore } from '@/src/features';
 
 function ChatContainer() {
-  const { chats } = useChatStore();
+  const { id: userId } = useUserStore();
+  const { chatCollection } = useChatStore();
 
   return (
     <View style={styles.container}>
-      {chats.map((chat, index) => {
-        if (chat.ifMy)
-          return (
-            <MyChat
-              key={index}
-              text={chat.text}
-              ifRead={chat.ifRead}
-              time={convertDateToString(chat.time)}
-            />
-          );
-        else
-          return (
-            <OtherChat
-              key={index}
-              text={chat.text}
-              ifRead={chat.ifRead}
-              time={convertDateToString(chat.time)}
-            />
-          );
-      })}
+      {chatCollection.map((collection) =>
+        collection.chatList.map((chat) => {
+          if (chat.sendMemberInfo.id === userId) {
+            switch (chat.type) {
+              case 'TEXT':
+                return (
+                  <MyTextChat
+                    key={chat.id}
+                    text={chat.content}
+                    ifRead={chat.readCount === 0}
+                    time={convertDateToStringHSS(chat.date)}
+                  />
+                );
+            }
+          } else {
+            switch (chat.type) {
+              case 'TEXT':
+                return (
+                  <OtherTextChat
+                    key={chat.id}
+                    text={chat.content}
+                    ifRead={chat.readCount === 0}
+                    time={convertDateToStringHSS(chat.date)}
+                  />
+                );
+            }
+          }
+        })
+      )}
     </View>
   );
 }

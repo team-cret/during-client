@@ -10,8 +10,16 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import PlusIcon from '@/src/shared/assets/icons/chat/plus.svg';
 import SmileIcon from '@/src/shared/assets/icons/chat/smile.svg';
 import SendIcon from '@/src/shared/assets/icons/chat/send.svg';
+import { useChatAIStore, useChatStore } from '@/src/features';
 
 function ChatInputBar() {
+  const {
+    input: { message, ifValid },
+    setInputMessage,
+    sendMessage,
+  } = useChatStore();
+  const { isAIOn } = useChatAIStore();
+
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={17} />
@@ -19,13 +27,26 @@ function ChatInputBar() {
         <PlusIcon />
       </Pressable>
       <SpaceFlexBox flex={8} />
-      <TextInput style={styles.chatInput} cursorColor={COLOR_BASE_1} />
+      <TextInput
+        style={styles.chatInput}
+        cursorColor={COLOR_BASE_1}
+        value={message}
+        onChange={(e) => {
+          setInputMessage({ message: e.nativeEvent.text });
+        }}
+      />
       <SpaceFlexBox flex={8} />
       <Pressable style={styles.ImoticonContainer}>
         <SmileIcon />
       </Pressable>
       <SpaceFlexBox flex={10} />
-      <Pressable style={styles.sendContainer}>
+      <Pressable
+        style={styles.sendContainer}
+        onPress={() => {
+          sendMessage({ ifAi: isAIOn });
+          setInputMessage({ message: '' });
+        }}
+      >
         <SendIcon />
       </Pressable>
       <SpaceFlexBox flex={11} />
