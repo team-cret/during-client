@@ -13,7 +13,7 @@ function ChatContainer() {
       {chatCollection.map((collection) =>
         collection.chatList.map((chat) => {
           if (chat.sendMemberInfo.id === userId) {
-            switch (chat.type) {
+            switch (chat.messageType) {
               case 'TEXT':
                 return (
                   <MyTextChat
@@ -25,7 +25,7 @@ function ChatContainer() {
                 );
             }
           } else {
-            switch (chat.type) {
+            switch (chat.messageType) {
               case 'TEXT':
                 return (
                   <OtherTextChat

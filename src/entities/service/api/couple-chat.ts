@@ -1,38 +1,39 @@
-import { convertDateToStringFullDate, getUserToken, logError, logInfo } from '@/src/shared';
+import {
+  convertDateToStringFullDate,
+  getUserToken,
+  logError,
+  logInfo,
+  MESSAGE_PAGE_SIZE,
+} from '@/src/shared';
 import { fetchAPI } from '../../auth/api/middleware';
 
 async function getCoupleChatAPI({
-  coupleChatId,
-  size,
-  type,
+  chatId,
+  size = MESSAGE_PAGE_SIZE,
+  scrollType,
 }: {
-  coupleChatId: string;
-  size: number;
-  type: 'before' | 'after' | 'both';
-}): Promise<Array<{
-  id: number;
-  type: 'TEXT' | 'IMAGE' | 'VIDEO';
-  content: string;
-  date: Date;
-  sendMemberInfo: {
-    id: string;
-    name: string;
-  };
-  readCount: number;
-  replyInfo: {
-    id: number;
-    messageType: 'TEXT' | 'IMAGE' | 'VIDEO';
-    content: string;
-  } | null;
-}> | null> {
+  chatId: number;
+  size?: number;
+  scrollType: 'BEFORE' | 'AFTER' | 'BOTH';
+}): Promise<Array<Chat> | null> {
   return fetchAPI({
-    path: `api/v0/service/couple-chat/${coupleChatId}`,
+    path: `api/v0/service/couple-chat`,
     params: {
+      chatId,
       size,
-      type,
+      scrollType,
     },
     method: 'GET',
-  });
+  }).then(
+    (
+      res: {
+        chatInfo: Array<Chat> | null;
+      } | null
+    ) => {
+      if (res === null) return null;
+      return Array<Chat>().concat(res.chatInfo ? res.chatInfo : []);
+    }
+  );
 }
 
 async function sendCoupleChatAPI({
@@ -92,26 +93,11 @@ async function chatWebSocketOpen({ appendMessage }: { appendMessage: (message: a
   };
   ws.onmessage = (e) => {
     const message = JSON.parse(e.data);
-    console.log(message);
-    appendMessage({
-      id: message.id,
-      type: message.messageType,
-      content: message.content,
-      date: new Date(message.date),
-      sendMemberInfo: {
-        id: message.sendMemberInfo.id,
-        name: message.sendMemberInfo.name,
-      },
-      readCount: message.readCount,
-      // replyInfo: {
-      //   id: message.replyInfo.id,
-      //   content: message.replyInfo.content,
-      // },
-      replyInfo: {
-        id: null,
-        content: null,
-      },
-    });
+    switch (message.actionType) {
+      case 'SEND':
+        appendMessage(message.messageInfo);
+        break;
+    }
   };
   ws.onclose = () => {
     logInfo('websocket closed');

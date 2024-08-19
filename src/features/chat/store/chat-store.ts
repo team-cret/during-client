@@ -1,4 +1,9 @@
-import { deleteCoupleChatAPI, getCoupleChatAPI, sendCoupleChatAPI } from '@/src/entities';
+import {
+  chatWebSocketOpen,
+  deleteCoupleChatAPI,
+  getCoupleChatAPI,
+  sendCoupleChatAPI,
+} from '@/src/entities';
 import { MESSAGE_PAGE_SIZE } from '@/src/shared';
 import { create } from 'zustand';
 
@@ -10,22 +15,7 @@ type State = {
   chatCollection: Array<{
     topId: number;
     bottomId: number;
-    chatList: Array<{
-      id: number;
-      type: 'TEXT' | 'IMAGE' | 'VIDEO';
-      content: string;
-      date: Date;
-      sendMemberInfo: {
-        id: string;
-        name: string;
-      };
-      readCount: number;
-      replyInfo: {
-        id: number;
-        messageType: 'TEXT' | 'IMAGE' | 'VIDEO';
-        content: string;
-      } | null;
-    }>;
+    chatList: Array<Chat>;
   }>;
 };
 
@@ -40,38 +30,17 @@ const defaultState: State = {
 type Action = {
   setInputMessage: ({ message }: { message: string }) => void;
   sendMessage: ({ ifAi }: { ifAi: boolean }) => void;
+  deleteMessage: ({ messageId }: { messageId: number }) => void;
   getMessages: ({
     basisChatId,
-    type,
+    scrollType,
   }: {
-    basisChatId: string;
-    type: 'before' | 'after' | 'both';
+    basisChatId: number;
+    scrollType: 'BEFORE' | 'AFTER' | 'BOTH';
   }) => void;
-  appendMessage: ({
-    id,
-    type,
-    content,
-    date,
-    sendMemberInfo,
-    readCount,
-    replyInfo,
-  }: {
-    id: number;
-    type: 'TEXT' | 'IMAGE' | 'VIDEO';
-    content: string;
-    date: Date;
-    sendMemberInfo: {
-      id: string;
-      name: string;
-    };
-    readCount: number;
-    replyInfo: {
-      id: number;
-      messageType: 'TEXT' | 'IMAGE' | 'VIDEO';
-      content: string;
-    } | null;
-  }) => void;
-  deleteMessage: ({ messageId }: { messageId: number }) => void;
+  appendMessage: (chat: Chat) => void;
+  removeMessage: ({ messageId }: { messageId: number }) => void;
+  startChat: ({ lastChatId }: { lastChatId: number }) => void;
 };
 
 const useChatStore = create<State & Action>((set, get) => ({
@@ -96,9 +65,12 @@ const useChatStore = create<State & Action>((set, get) => ({
       replyId: null,
     });
   },
+  deleteMessage: ({ messageId }) => {
+    deleteCoupleChatAPI({ deleteId: messageId });
+  },
 
-  getMessages: ({ basisChatId, type }) => {
-    getCoupleChatAPI({ coupleChatId: basisChatId, size: MESSAGE_PAGE_SIZE, type }).then((res) => {
+  getMessages: ({ basisChatId, scrollType }) => {
+    getCoupleChatAPI({ chatId: basisChatId, scrollType }).then((res) => {
       if (res === null || res.length === 0) return;
 
       //새로운 메시지 삽입
@@ -139,76 +111,77 @@ const useChatStore = create<State & Action>((set, get) => ({
     });
   },
 
-  appendMessage: ({ id, type, content, date, sendMemberInfo, readCount, replyInfo }) => {
+  appendMessage: (chat: Chat) => {
     if (get().chatCollection.length === 0) {
       set((state) => ({
         ...state,
         chatCollection: [
           {
-            topId: id,
-            bottomId: id,
-            chatList: [
-              {
-                id,
-                type,
-                content,
-                date,
-                sendMemberInfo,
-                readCount,
-                replyInfo,
-              },
-            ],
+            topId: chat.id,
+            bottomId: chat.id,
+            chatList: [chat],
           },
         ],
       }));
     } else {
-      set((state) => ({
-        ...state,
-        chatCollection: state.chatCollection.splice(state.chatCollection.length - 1, 1, {
+      set((state) => {
+        state.chatCollection.splice(state.chatCollection.length - 1, 1, {
           topId: state.chatCollection[state.chatCollection.length - 1].topId,
-          bottomId: id,
-          chatList: state.chatCollection[state.chatCollection.length - 1].chatList.concat({
-            id,
-            type,
-            content,
-            date,
-            sendMemberInfo,
-            readCount,
-            replyInfo,
-          }),
-        }),
-      }));
+          bottomId: chat.id,
+          chatList: state.chatCollection[state.chatCollection.length - 1].chatList.concat(chat),
+        });
+        return {
+          ...state,
+          chatCollection: state.chatCollection,
+        };
+      });
     }
   },
 
-  deleteMessage: ({ messageId }) => {
-    deleteCoupleChatAPI({ deleteId: messageId }).then((res) => {
-      if (res !== null) {
-        set((state) => ({
-          ...state,
-          chatCollection: state.chatCollection
-            .map((collection) => {
-              if (!(collection.topId <= messageId && messageId <= collection.bottomId))
-                return collection;
-              else {
-                const newChatList = collection.chatList.filter((chat) => chat.id !== messageId);
-                if (newChatList.length === 0)
-                  return {
-                    topId: 0,
-                    bottomId: 0,
-                    chatList: [],
-                  };
+  removeMessage: ({ messageId }) => {
+    // deleteCoupleChatAPI({ deleteId: messageId }).then((res) => {
+    //   if (res !== null) {
+    //     set((state) => ({
+    //       ...state,
+    //       chatCollection: state.chatCollection
+    //         .map((collection) => {
+    //           if (!(collection.topId <= messageId && messageId <= collection.bottomId))
+    //             return collection;
+    //           else {
+    //             const newChatList = collection.chatList.filter((chat) => chat.id !== messageId);
+    //             if (newChatList.length === 0)
+    //               return {
+    //                 topId: 0,
+    //                 bottomId: 0,
+    //                 chatList: [],
+    //               };
+    //             return {
+    //               topId: newChatList[0].id,
+    //               bottomId: newChatList[newChatList.length - 1].id,
+    //               chatList: newChatList,
+    //             };
+    //           }
+    //         })
+    //         .filter((collection) => collection.chatList.length > 0),
+    //     }));
+    //   }
+    // });
+  },
 
-                return {
-                  topId: newChatList[0].id,
-                  bottomId: newChatList[newChatList.length - 1].id,
-                  chatList: newChatList,
-                };
-              }
-            })
-            .filter((collection) => collection.chatList.length > 0),
-        }));
-      }
+  startChat: ({ lastChatId }: { lastChatId: number }) => {
+    getCoupleChatAPI({ chatId: lastChatId, scrollType: 'BOTH' }).then((res) => {
+      if (res === null || res.length === 0) return;
+      set((state) => ({
+        ...state,
+        chatCollection: [
+          {
+            topId: res[0].id,
+            bottomId: res[res.length - 1].id,
+            chatList: res,
+          },
+        ],
+      }));
+      chatWebSocketOpen({ appendMessage: get().appendMessage });
     });
   },
 }));
