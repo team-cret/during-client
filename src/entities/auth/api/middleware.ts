@@ -44,6 +44,10 @@ async function fetchAPI({
 
   const resBody: any = await res.json();
 
+  if (resBody.code === undefined) {
+    logError(`${url} unknown error`);
+    return null;
+  }
   if (resBody.code < 0) logError(`${url} ${resBody.code}`);
 
   switch (resBody.code) {
@@ -79,6 +83,10 @@ async function fetchAPI({
         return null;
       } else {
         const newResBody: any = await newRes.json();
+        if (newResBody.code === undefined) {
+          logError(`${url} unknown error`);
+          return null;
+        }
         if (newResBody.code === 1) {
           if (newResBody.result === null) return true;
           return newResBody.result;
@@ -94,7 +102,7 @@ async function fetchAPI({
 }
 
 async function refreshTokensAPI() {
-  logInfo('http [POST] ${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/token/refresh');
+  logInfo(`http [POST] ${process.env.EXPO_PUBLIC_DURING_SERVER_URL!}/api/v0/auth/token/refresh`);
 
   const token = await getUserToken();
   if (token === null) {
@@ -124,6 +132,10 @@ async function refreshTokensAPI() {
       return res.json();
     })
     .then((res) => {
+      if (res.code === undefined) {
+        logError(`refresh token API : unknown error`);
+        return null;
+      }
       switch (res.code) {
         case 1:
           return {
