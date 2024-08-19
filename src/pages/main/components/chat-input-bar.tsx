@@ -63,10 +63,19 @@ const styles = StyleSheet.create({
     borderRadius: convertHeight(10),
 
     position: 'absolute',
-    bottom: 0,
+    bottom: convertHeight(20),
 
     flexDirection: 'row',
     alignItems: 'center',
+
+    elevation: 3,
+    shadowColor: COLOR_BASE_1,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
 
   plusContainer: {
