@@ -21,7 +21,11 @@ function TermsOfServicePage() {
   const navigation = useNavigation<NavProp<'terms-of-service/index'>>();
   return (
     <View style={styles.container}>
-      <BackCancelAppBar />
+      <BackCancelAppBar
+        onCancelPressed={() => {
+          navigation.navigate('auth/index', { platform: null, accessToken: null });
+        }}
+      />
       <SpaceFlexBox flex={34} />
 
       <HeadLineText
