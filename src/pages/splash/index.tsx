@@ -5,7 +5,7 @@ import { useCallback, useEffect } from 'react';
 import { Text, View } from 'react-native';
 
 function SplashPage() {
-  const { requiredTermsAgreed, birth, name, getUserInfo, role } = useUserStore();
+  const { requiredTermsAgreed, birth, name, getUserInfo, role, id } = useUserStore();
   const { getCoupleInfo } = useCoupleStore();
   const navigation = useNavigation<NavProp<'splash/index'>>();
 
@@ -17,16 +17,18 @@ function SplashPage() {
     }, [])
   );
 
-  useEffect(() => {
-    if (!requiredTermsAgreed) navigation.navigate('terms-of-service/index');
-    else if (birth === null || name === null) navigation.navigate('info-setup/index');
-    else if (role === 'ROLE_COUPLE') {
-      getCoupleInfo().then((res) => {
-        if (!res) navigation.navigate('auth/index', { platform: null, accessToken: null });
-        else navigation.navigate('main/index');
-      });
-    } else navigation.navigate('main/index');
-  }, [role]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!requiredTermsAgreed) navigation.navigate('terms-of-service/index');
+      else if (birth === null || name === null) navigation.navigate('info-setup/index');
+      else if (role === 'ROLE_COUPLE') {
+        getCoupleInfo().then((res) => {
+          if (!res) navigation.navigate('auth/index', { platform: null, accessToken: null });
+          else navigation.navigate('main/index');
+        });
+      } else navigation.navigate('main/index');
+    }, [id])
+  );
 
   return (
     <View>
