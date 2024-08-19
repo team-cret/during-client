@@ -10,7 +10,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import ReadIcon from '@/src/shared/assets/icons/chat/read.svg';
 import UnReadIcon from '@/src/shared/assets/icons/chat/unread.svg';
 
-function OtherChat({ text, ifRead, time }: { text: string; ifRead: boolean; time: string }) {
+function OtherTextChat({ text, ifRead, time }: { text: string; ifRead: boolean; time: string }) {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -82,4 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { OtherChat };
+export { OtherTextChat };

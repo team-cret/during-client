@@ -1,7 +1,6 @@
 import { SafeAreaView } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { NAVER_CLIENT_ID, REDIRECT_URI } from '@env';
 import { getParamFromUrl, NavProp } from '@/src/shared';
 import { getNaverToken, NAVER_OAUTH_STATE } from '@/src/entities';
 
@@ -12,7 +11,9 @@ function NaverOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
         source={{
-          uri: `https://nid.naver.com/oauth2.0/authorize?client_id=${NAVER_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=${NAVER_OAUTH_STATE}`,
+          uri: `https://nid.naver.com/oauth2.0/authorize?client_id=${process.env
+            .EXPO_PUBLIC_NAVER_CLIENT_ID!}&redirect_uri=${process.env
+            .EXPO_PUBLIC_REDIRECT_URI!}&response_type=code&state=${NAVER_OAUTH_STATE}`,
         }}
         injectedJavaScriptBeforeContentLoaded={INJECTED_JAVASCRIPT}
         onMessage={async (event) => {

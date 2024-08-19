@@ -4,6 +4,7 @@ import type {
 } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
+  'splash/index': undefined;
   'auth/index': {
     platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE' | null;
     accessToken: string | null;
@@ -18,6 +19,7 @@ type RootStackParamList = {
   'menu/index': undefined;
   'setting/index': undefined;
   'profile/index': undefined;
+  'notification/index': undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

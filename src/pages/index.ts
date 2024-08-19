@@ -8,3 +8,4 @@ export * from './main/index';
 export * from './menu/index';
 export * from './setting/index';
 export * from './profile/index';
+export * from './notification-temp/index';

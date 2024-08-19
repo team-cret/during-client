@@ -14,72 +14,122 @@ import RoomIcon from '@/src/shared/assets/icons/menu/room.svg';
 import AvatarIcon from '@/src/shared/assets/icons/menu/avatar.svg';
 import SettingIcon from '@/src/shared/assets/icons/menu/setting.svg';
 import { useSideBarStore } from '@/src/features';
-import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  runOnJS,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { useEffect } from 'react';
+import { MenuPage } from '../../menu';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-const animatinonConfig = {
-  duration: 200,
-  easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
+const sideBarConfig = {
+  animatinonConfig: {
+    duration: 300,
+    easing: Easing.bezier(0.1, 0.71, 0.37, 0.9),
+    // easing: Easing.inOut(Easing.ease),
+  },
+  sideBarLeft: {
+    open: convertWidth(300),
+    close: convertWidth(375),
+    expand: convertWidth(-75),
+  },
+  velocityBoundary: 100,
 };
+
 function SideBar() {
   const { closeSideBar, ifSideBarOpen } = useSideBarStore();
-  const right = useSharedValue(0);
+  const left = useSharedValue(sideBarConfig.sideBarLeft.close);
+  const leftStartOffset = useSharedValue(0);
 
   useEffect(() => {
     if (ifSideBarOpen) {
-      right.value = withTiming(convertWidth(-75), animatinonConfig);
+      left.value = withTiming(sideBarConfig.sideBarLeft.open, sideBarConfig.animatinonConfig);
     } else {
-      right.value = withTiming(convertWidth(-150), animatinonConfig);
+      left.value = withTiming(sideBarConfig.sideBarLeft.close, sideBarConfig.animatinonConfig);
     }
   }, [ifSideBarOpen]);
 
-  return (
-    <Animated.View style={{ ...styles.container, right }}>
-      <SpaceFlexBox flex={10} />
-      <Pressable style={styles.iconContainer} onPress={closeSideBar}>
-        <CloseIcon width={convertWidth(20)} height={convertHeight(20)} />
-      </Pressable>
-      <HorizontalDivider
-        width={convertWidth(46)}
-        height={convertHeight(32)}
-        lineHeight={convertHeight(0.34)}
-        upperFlex={16}
-        lowerFlex={16}
-        color={COLOR_BASE_2_30}
-      />
-      <View style={styles.iconContainer}>
-        <RoomIcon width={convertWidth(22)} height={convertHeight(25)} />
-      </View>
-      <SpaceFlexBox flex={10} />
-      <View style={styles.iconContainer}>
-        <AvatarIcon width={convertWidth(25)} height={convertHeight(25)} />
-      </View>
-      <HorizontalDivider
-        width={convertWidth(46)}
-        height={convertHeight(51)}
-        lineHeight={convertHeight(0.34)}
-        upperFlex={25}
-        lowerFlex={25}
-        color={COLOR_BASE_2_30}
-      />
+  const gesturePan = Gesture.Pan()
+    .onBegin((event) => {
+      leftStartOffset.value = event.x;
+    })
+    .onEnd((event) => {
+      if (Math.abs(event.velocityX) > sideBarConfig.velocityBoundary) {
+        if (event.velocityX > 0) {
+          runOnJS(closeSideBar)();
+        } else {
+          left.value = withTiming(sideBarConfig.sideBarLeft.expand, sideBarConfig.animatinonConfig);
+        }
+      } else {
+        if (event.absoluteX < sideBarConfig.sideBarLeft.close / 2)
+          left.value = withTiming(sideBarConfig.sideBarLeft.expand, sideBarConfig.animatinonConfig);
+        else if (event.absoluteX < sideBarConfig.sideBarLeft.open)
+          left.value = withTiming(sideBarConfig.sideBarLeft.open, sideBarConfig.animatinonConfig);
+        else runOnJS(closeSideBar)();
+      }
+    })
+    .onChange((event) => {
+      if (event.absoluteX - leftStartOffset.value < sideBarConfig.sideBarLeft.expand) return;
+      if (event.absoluteX - leftStartOffset.value > sideBarConfig.sideBarLeft.open) return;
+      left.value = event.absoluteX - leftStartOffset.value;
+    });
 
-      <View style={styles.iconContainer}>
-        <SettingIcon width={convertWidth(23)} height={convertHeight(24)} />
-      </View>
-      <SpaceFlexBox flex={20} />
-    </Animated.View>
+  return (
+    <GestureDetector gesture={gesturePan}>
+      <Animated.View style={{ ...styles.container, left }}>
+        <View style={styles.sideBarContainer}>
+          <SpaceFlexBox flex={10} />
+          <Pressable style={styles.iconContainer} onPress={closeSideBar}>
+            <CloseIcon width={convertWidth(20)} height={convertHeight(20)} />
+          </Pressable>
+          <HorizontalDivider
+            width={convertWidth(46)}
+            height={convertHeight(32)}
+            lineHeight={convertHeight(0.34)}
+            upperFlex={16}
+            lowerFlex={16}
+            color={COLOR_BASE_2_30}
+          />
+          <View style={styles.iconContainer}>
+            <RoomIcon width={convertWidth(22)} height={convertHeight(25)} />
+          </View>
+          <SpaceFlexBox flex={10} />
+          <View style={styles.iconContainer}>
+            <AvatarIcon width={convertWidth(25)} height={convertHeight(25)} />
+          </View>
+          <HorizontalDivider
+            width={convertWidth(46)}
+            height={convertHeight(51)}
+            lineHeight={convertHeight(0.34)}
+            upperFlex={25}
+            lowerFlex={25}
+            color={COLOR_BASE_2_30}
+          />
+          <View style={styles.iconContainer}>
+            <SettingIcon width={convertWidth(23)} height={convertHeight(24)} />
+          </View>
+          <SpaceFlexBox flex={20} />
+        </View>
+        <MenuPage />
+      </Animated.View>
+    </GestureDetector>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: convertWidth(150),
+    position: 'absolute',
+    flexDirection: 'row',
+  },
+
+  sideBarContainer: {
+    width: convertWidth(75),
     height: convertHeight(309),
 
     backgroundColor: COLOR_WHITE,
-
-    position: 'absolute',
-    top: 0,
 
     borderTopLeftRadius: convertWidth(20),
     borderBottomLeftRadius: convertWidth(20),

@@ -1,11 +1,13 @@
+import { useUserStore } from '@/src/features';
 import { convertHeight, textStyles } from '@/src/shared';
 import { StyleSheet, Text, View } from 'react-native';
 
 function TextContainer() {
+  const { invitationCode } = useUserStore();
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>나의 초대코드</Text>
-      <Text style={styles.contentText}>DL3UBODAAD</Text>
+      <Text style={styles.contentText}>{invitationCode}</Text>
     </View>
   );
 }

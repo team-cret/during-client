@@ -1,5 +1,6 @@
 import { isValidDate, isValidNickName } from '@/src/shared';
 import { create } from 'zustand';
+import { useUserStore } from '../../user';
 
 type State = {
   birthDay: {
@@ -12,7 +13,7 @@ type State = {
     nickName: string;
     ifValid: boolean;
   };
-  curStep: 'birthDay' | 'nickName';
+  curStep: 'birthDay' | 'nickName' | 'done';
   ifCurStepValid: boolean;
 };
 
@@ -39,7 +40,7 @@ type Action = {
   continueStep: () => void;
 };
 
-const useInfoInputStore = create<State & Action>((set) => ({
+const useInfoInputStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
@@ -71,16 +72,17 @@ const useInfoInputStore = create<State & Action>((set) => ({
     }),
   clearNickName: () =>
     set((state) => ({ ...state, nickName: defaultState.nickName, ifCurStepValid: false })),
-  continueStep: () =>
-    set((state) => {
-      if (!state.ifCurStepValid) return state;
-      switch (state.curStep) {
-        case 'birthDay':
-          return { ...state, curStep: 'nickName', ifCurStepValid: state.nickName.ifValid };
-        case 'nickName':
-          return state;
-      }
-    }),
+  continueStep: async () => {
+    if (!get().ifCurStepValid) return;
+    switch (get().curStep) {
+      case 'birthDay':
+        set({ curStep: 'nickName' });
+        break;
+      case 'nickName':
+        set({ curStep: 'done' });
+        break;
+    }
+  },
 }));
 
 export { useInfoInputStore };

@@ -41,42 +41,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLOR_BACKGROUND,
   },
-
-  appBarContainer: {
-    width: '100%',
-    height: convertHeight(66),
-    backgroundColor: 'tomato',
-  },
-
-  headLineContainer: {
-    width: '100%',
-    height: convertHeight(142),
-    backgroundColor: 'tomato',
-  },
-
-  invitationCodeContainer: {
-    width: '100%',
-    height: convertHeight(187),
-    backgroundColor: 'tomato',
-  },
-
-  orContainer: {
-    width: '100%',
-    height: convertHeight(16),
-    backgroundColor: 'tomato',
-  },
-
-  invitationCodeInputContainer: {
-    width: '100%',
-    height: convertHeight(140),
-    backgroundColor: 'tomato',
-  },
-
-  restoreContainer: {
-    width: '100%',
-    height: convertHeight(16),
-    backgroundColor: 'tomato',
-  },
 });
 
 export { ConnectionPage };

@@ -1,3 +1,4 @@
+import { useChatAIStore } from '@/src/features';
 import {
   COLOR_BASE_1,
   COLOR_BASE_2_30,
@@ -7,8 +8,7 @@ import {
   convertHeight,
   convertWidth,
 } from '@/src/shared';
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const animatinonConfig = {
@@ -16,7 +16,7 @@ const animatinonConfig = {
   easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
 };
 function AIToggle() {
-  const [isAIOn, setIsAIOn] = useState(false);
+  const { isAIOn, setIsAIOn } = useChatAIStore();
 
   //animation Values
   const handleMarginLeft = useSharedValue<number>(2);

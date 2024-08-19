@@ -5,9 +5,11 @@ import { BackIconTextButton, CloseButton, convertHeight, SpaceFlexBox } from '@/
 function BackCancelAppBar({
   backDisabled = true,
   cancelDisabled = true,
+  onCancelPressed = () => {},
 }: {
   backDisabled?: boolean;
   cancelDisabled?: boolean;
+  onCancelPressed?: () => void;
 }) {
   return (
     <View
@@ -32,7 +34,7 @@ function BackCancelAppBar({
       <View style={{ display: cancelDisabled ? 'flex' : 'none' }}>
         <CloseButton
           onPress={() => {
-            //enable 안됐을 때 처리하기
+            onCancelPressed();
           }}
         />
       </View>
