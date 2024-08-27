@@ -9,3 +9,4 @@ export * from './menu/index';
 export * from './setting/index';
 export * from './profile/index';
 export * from './notification-temp/index';
+export * from './notification-test/index';

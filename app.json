@@ -11,13 +11,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cret.duringclient"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.cret.duringclient"
     },
     "web": {
       "bundler": "metro",
@@ -26,6 +28,14 @@
     "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "fbf5f83e-282a-483a-8020-9eb149e0a517"
+      }
     }
   }
 }

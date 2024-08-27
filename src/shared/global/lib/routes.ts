@@ -5,13 +5,8 @@ import type {
 
 type RootStackParamList = {
   'splash/index': undefined;
-  'auth/index': {
-    platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE' | null;
-    accessToken: string | null;
-  };
-  'oauth/index': {
-    platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE';
-  };
+  'auth/index': undefined;
+  'oauth/index': undefined;
   'terms-of-service/index': undefined;
   'connection/index': undefined;
   'info-setup/index': undefined;

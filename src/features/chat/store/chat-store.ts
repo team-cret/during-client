@@ -170,7 +170,10 @@ const useChatStore = create<State & Action>((set, get) => ({
 
   startChat: ({ lastChatId }: { lastChatId: number }) => {
     getCoupleChatAPI({ chatId: lastChatId, scrollType: 'BOTH' }).then((res) => {
-      if (res === null || res.length === 0) return;
+      if (res === null) return;
+      chatWebSocketOpen({ appendMessage: get().appendMessage });
+
+      if (res.length == 0) return;
       set((state) => ({
         ...state,
         chatCollection: [
@@ -181,7 +184,6 @@ const useChatStore = create<State & Action>((set, get) => ({
           },
         ],
       }));
-      chatWebSocketOpen({ appendMessage: get().appendMessage });
     });
   },
 }));

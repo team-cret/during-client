@@ -84,7 +84,7 @@ async function chatWebSocketOpen({ appendMessage }: { appendMessage: (message: a
   }
 
   const ws = new WebSocket(
-    `${process.env.EXPO_PUBLIC_DURING_WEBSOCKET_URL!}/ws/couple-chat/connect?token=${
+    `${process.env.EXPO_PUBLIC_DURING_WEBSOCKET_URL!}/api/v0/couple-chat/connect?token=${
       token.accessToken
     }`
   );

@@ -3,10 +3,12 @@ import { WebView } from 'react-native-webview';
 
 import { getParamFromUrl, NavProp } from '@/src/shared';
 import { getNaverToken, NAVER_OAUTH_STATE } from '@/src/entities';
+import { useAuthStore } from '@/src/features';
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage("redirected")`;
 
 function NaverOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
+  const { setAuth } = useAuthStore();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -19,11 +21,11 @@ function NaverOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
         onMessage={async (event) => {
           const code = getParamFromUrl(event.nativeEvent.url, 'code');
           if (code === null) return;
+
           const token = await getNaverToken(code);
-          navigation.navigate('auth/index', {
-            platform: 'NAVER',
-            accessToken: token,
-          });
+          setAuth({ accessToken: token });
+
+          navigation.navigate('auth/index');
         }}
       />
     </SafeAreaView>
