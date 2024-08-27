@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import {
   COLOR_BACKGROUND,
@@ -7,30 +7,31 @@ import {
   convertWidth,
   HeadLineText,
   NavProp,
-  ScreenProps,
   SpaceFlexBox,
 } from '@/src/shared';
 import { trySignInUpAPI } from '@/src/entities';
 import { useNavigation } from 'expo-router';
+import { useAuthStore } from '@/src/features';
+import { useFocusEffect } from '@react-navigation/native';
 
-function AuthPage({ route: { params } }: { route: ScreenProps<'auth/index'>['route'] }) {
+function AuthPage() {
   const navigation = useNavigation<NavProp<'auth/index'>>();
+  const { platform, accessToken, setAuth } = useAuthStore();
 
   useEffect(() => {
-    if (params === undefined) return;
-    if (params.platform === null || params.accessToken === null) return;
-
+    if (platform === null || accessToken === null) return;
     trySignInUpAPI({
-      accessToken: params.accessToken,
-      platform: params.platform,
+      accessToken,
+      platform,
     }).then((res) => {
       if (!res) return;
       navigation.navigate('splash/index');
     });
-  }, [params]);
+  }, [platform, accessToken]);
 
   function navigateToOAuth(platform: 'NAVER' | 'KAKAO' | 'APPLE' | 'GOOGLE') {
-    navigation.navigate(`oauth/index`, { platform });
+    setAuth({ platform });
+    navigation.navigate(`oauth/index`);
   }
 
   return (

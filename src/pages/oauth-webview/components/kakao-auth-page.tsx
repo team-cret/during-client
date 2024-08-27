@@ -3,10 +3,12 @@ import { SafeAreaView } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { getParamFromUrl, NavProp } from '@/src/shared';
+import { useAuthStore } from '@/src/features';
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage("redirected")`;
 
 function KakaoOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
+  const { setAuth } = useAuthStore();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -19,11 +21,11 @@ function KakaoOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
         onMessage={async (event) => {
           const code = getParamFromUrl(event.nativeEvent.url, 'code');
           if (code === null) return;
+
           const token = await getKakaoToken(code);
-          navigation.navigate('auth/index', {
-            platform: 'KAKAO',
-            accessToken: token,
-          });
+          setAuth({ accessToken: token });
+
+          navigation.navigate('auth/index');
         }}
       />
     </SafeAreaView>

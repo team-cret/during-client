@@ -3,10 +3,13 @@ import { WebView } from 'react-native-webview';
 
 import { getGoogleToken, GOOGLE_OAUTH_SCOPE } from '@/src/entities';
 import { getParamFromUrl, NavProp } from '@/src/shared';
+import { useAuthStore } from '@/src/features';
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage("redirected")`;
 
 function GoogleOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
+  const { setAuth } = useAuthStore();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -22,10 +25,9 @@ function GoogleOAuth({ navigation }: { navigation: NavProp<'oauth/index'> }) {
           if (code === null) return;
 
           const token = await getGoogleToken(code);
-          navigation.navigate('auth/index', {
-            platform: 'GOOGLE',
-            accessToken: token,
-          });
+          setAuth({ accessToken: token });
+
+          navigation.navigate('auth/index');
         }}
       />
     </SafeAreaView>
