@@ -46,8 +46,8 @@ async function updateMemberProfileInfoAPI({
               2,
               '0'
             )}-${birthday.day.padStart(2, '0')}`
-          : null,
-        profileImageUrl: profileImageUrl ? profileImageUrl : null,
+          : '1900-01-01',
+        profileImageUrl: profileImageUrl ?? null,
       },
       agreedTerms: agreedTermsId?.map((id) => {
         return {
