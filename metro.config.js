@@ -2,12 +2,23 @@ const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-const { transformer, resolver } = config;
+const { resolver, transformer } = config;
 
 config.transformer = {
   ...transformer,
   babelTransformerPath: require.resolve('react-native-svg-transformer'),
 };
+
+['svg', 'glb', 'gltf', 'png', 'jpg', 'fbx'].forEach((ext) => {
+  if (config.resolver.assetExts.indexOf(ext) === -1) {
+    config.resolver.assetExts.push(ext);
+  }
+});
+[('js', 'jsx', 'json', 'ts', 'tsx', 'cjs', 'mjs')].forEach((ext) => {
+  if (config.resolver.sourceExts.indexOf(ext) === -1) {
+    config.resolver.sourceExts.push(ext);
+  }
+});
 
 config.resolver = {
   ...resolver,
