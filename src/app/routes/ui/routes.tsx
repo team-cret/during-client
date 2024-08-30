@@ -4,6 +4,7 @@ import { RootStackParamList } from '@/src/shared';
 import {
   AuthPage,
   ConnectionPage,
+  DecorateRoomPage,
   InfoSetupPage,
   MainPage,
   MenuPage,
@@ -24,6 +25,7 @@ function RootLayout() {
         headerShown: false,
       }}
     >
+      <RootStack.Screen name="decorate-room/index" component={DecorateRoomPage} />
       <RootStack.Screen name="splash/index" component={SplashPage} />
       <RootStack.Screen name="profile/index" component={ProfilePage} />
       <RootStack.Screen name="setting/index" component={SettingPage} />
