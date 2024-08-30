@@ -13,4 +13,4 @@ function convertHeight(height: number): number {
   return SCREEN_HEIGHT * (height / DESIGN_HEIGHT);
 }
 
-export { convertWidth, convertHeight };
+export { convertWidth, convertHeight, DESIGN_HEIGHT };
