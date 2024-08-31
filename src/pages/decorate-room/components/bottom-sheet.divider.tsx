@@ -5,6 +5,7 @@ import {
   convertHeight,
   convertWidth,
   HorizontalDivider,
+  roomDecorationCategories,
 } from '@/src/shared';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -15,18 +16,15 @@ const animatinonConfig = {
   easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
 };
 
-const categoryLineLeftValue = {
-  배경: convertWidth(31),
-  가구: convertWidth(77),
-  소품: convertWidth(123),
-};
-
 function Divider() {
   const { category } = useDecorateRoomStore();
 
-  const categoryLineLeft = useSharedValue<number>(categoryLineLeftValue[category]);
+  const categoryLineLeft = useSharedValue<number>(convertWidth(30));
   useEffect(() => {
-    categoryLineLeft.value = withTiming(categoryLineLeftValue[category], animatinonConfig);
+    categoryLineLeft.value = withTiming(
+      convertWidth(30) + convertWidth(46) * roomDecorationCategories.indexOf(category),
+      animatinonConfig
+    );
   }, [category]);
 
   return (

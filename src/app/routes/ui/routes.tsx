@@ -27,6 +27,7 @@ function RootLayout() {
       }}
     >
       <RootStack.Screen name="decorate-avatar/index" component={DecorateAvatarPage} />
+      <RootStack.Screen name="decorate-room/index" component={DecorateRoomPage} />
       <RootStack.Screen name="splash/index" component={SplashPage} />
       <RootStack.Screen name="profile/index" component={ProfilePage} />
       <RootStack.Screen name="setting/index" component={SettingPage} />
@@ -38,7 +39,6 @@ function RootLayout() {
       <RootStack.Screen name="connection/index" component={ConnectionPage} />
       <RootStack.Screen name="menu/index" component={MenuPage} />
       <RootStack.Screen name="notification/index" component={NotificationPage} />
-      <RootStack.Screen name="decorate-room/index" component={DecorateRoomPage} />
     </RootStack.Navigator>
   );
 }

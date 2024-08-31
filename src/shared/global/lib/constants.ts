@@ -1,3 +1,14 @@
 const MESSAGE_PAGE_SIZE = 20;
 
-export { MESSAGE_PAGE_SIZE };
+const roomDecorationCategories = ['배경', '가구', '소품'] as const;
+const avatarDecorationCategories = ['헤어', '상의', '하의', '신발'] as const;
+type roomDecorationCategoriesType = (typeof roomDecorationCategories)[number];
+type avatarDecorationCategoriesType = (typeof avatarDecorationCategories)[number];
+
+export {
+  MESSAGE_PAGE_SIZE,
+  roomDecorationCategories,
+  avatarDecorationCategories,
+  roomDecorationCategoriesType,
+  avatarDecorationCategoriesType,
+};

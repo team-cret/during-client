@@ -1,18 +1,19 @@
+import { roomDecorationCategories, roomDecorationCategoriesType } from '@/src/shared';
 import { create } from 'zustand';
 
 type State = {
   mode: number; // 0 : shop, 1 : bag
-  category: '배경' | '가구' | '소품';
+  category: roomDecorationCategoriesType;
 };
 
 const defaultState: State = {
   mode: 1,
-  category: '배경',
+  category: roomDecorationCategories[0],
 };
 
 type Action = {
   setMode: (mode: number) => void;
-  setCategory: (category: '배경' | '가구' | '소품') => void;
+  setCategory: (category: roomDecorationCategoriesType) => void;
 };
 
 const useDecorateRoomStore = create<State & Action>((set) => ({

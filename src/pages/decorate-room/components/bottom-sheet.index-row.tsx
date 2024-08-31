@@ -1,7 +1,14 @@
 import { useDecorateRoomStore } from '@/src/features';
-import { COLOR_BASE_1, COLOR_SECONDARY_PINK_DARK, convertHeight, convertWidth } from '@/src/shared';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import {
+  COLOR_BASE_1,
+  COLOR_SECONDARY_PINK_DARK,
+  convertHeight,
+  convertWidth,
+  roomDecorationCategories,
+  roomDecorationCategoriesType,
+} from '@/src/shared';
+import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { Easing, SharedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const animatinonConfig = {
   duration: 200,
@@ -11,49 +18,26 @@ const animatinonConfig = {
 function IndexRow() {
   const { category, setCategory } = useDecorateRoomStore();
 
-  const backgroundTextColor = useSharedValue<string>(
-    category === '배경' ? COLOR_SECONDARY_PINK_DARK : COLOR_BASE_1
-  );
-  const furnitureTextColor = useSharedValue<string>(
-    category === '가구' ? COLOR_SECONDARY_PINK_DARK : COLOR_BASE_1
-  );
-  const accessoryTextColor = useSharedValue<string>(
-    category === '소품' ? COLOR_SECONDARY_PINK_DARK : COLOR_BASE_1
+  const indexTextColors: SharedValue<string>[] = roomDecorationCategories.map((c) =>
+    useSharedValue<string>(category === c ? COLOR_SECONDARY_PINK_DARK : COLOR_BASE_1)
   );
 
-  function changeCategory(category: '배경' | '가구' | '소품') {
+  function changeCategory(category: roomDecorationCategoriesType) {
     setCategory(category);
-
-    switch (category) {
-      case '배경':
-        backgroundTextColor.value = withTiming(COLOR_SECONDARY_PINK_DARK, animatinonConfig);
-        furnitureTextColor.value = withTiming(COLOR_BASE_1, animatinonConfig);
-        accessoryTextColor.value = withTiming(COLOR_BASE_1, animatinonConfig);
-        break;
-      case '가구':
-        backgroundTextColor.value = withTiming(COLOR_BASE_1, animatinonConfig);
-        furnitureTextColor.value = withTiming(COLOR_SECONDARY_PINK_DARK, animatinonConfig);
-        accessoryTextColor.value = withTiming(COLOR_BASE_1, animatinonConfig);
-        break;
-      case '소품':
-        backgroundTextColor.value = withTiming(COLOR_BASE_1, animatinonConfig);
-        furnitureTextColor.value = withTiming(COLOR_BASE_1, animatinonConfig);
-        accessoryTextColor.value = withTiming(COLOR_SECONDARY_PINK_DARK, animatinonConfig);
-        break;
-    }
+    roomDecorationCategories.forEach((c, i) => {
+      if (category === c)
+        indexTextColors[i].value = withTiming(COLOR_SECONDARY_PINK_DARK, animatinonConfig);
+      else indexTextColors[i].value = withTiming(COLOR_BASE_1, animatinonConfig);
+    });
   }
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => changeCategory('배경')}>
-        <Animated.Text style={[styles.text, { color: backgroundTextColor }]}>배경</Animated.Text>
-      </Pressable>
-      <Pressable onPress={() => changeCategory('가구')}>
-        <Animated.Text style={[styles.text, { color: furnitureTextColor }]}>가구</Animated.Text>
-      </Pressable>
-      <Pressable onPress={() => changeCategory('소품')}>
-        <Animated.Text style={[styles.text, { color: accessoryTextColor }]}>소품</Animated.Text>
-      </Pressable>
+      {roomDecorationCategories.map((c, i) => (
+        <Pressable key={i} onPress={() => changeCategory(c)}>
+          <Animated.Text style={[styles.text, { color: indexTextColors[i] }]}>{c}</Animated.Text>
+        </Pressable>
+      ))}
     </View>
   );
 }

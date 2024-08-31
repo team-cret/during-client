@@ -1,7 +1,6 @@
 import { useDecorateRoomStore } from '@/src/features';
 import { COLOR_BASE_1, COLOR_BASE_3, COLOR_WHITE, convertHeight, convertWidth } from '@/src/shared';
-import { useState } from 'react';
-import { Pressable, StyleSheet, View, ViewBase } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const animatinonConfig = {

@@ -1,5 +1,6 @@
 import { useDecorateAvatarStore } from '@/src/features';
 import {
+  avatarDecorationCategories,
   COLOR_BASE_3,
   COLOR_SECONDARY_PINK_DARK,
   convertHeight,
@@ -15,19 +16,15 @@ const animatinonConfig = {
   easing: Easing.bezier(0.57, -0.42, 0.46, 1.56),
 };
 
-const categoryLineLeftValue = {
-  헤어: convertWidth(31),
-  상의: convertWidth(77),
-  하의: convertWidth(123),
-  신발: convertWidth(169),
-};
-
 function Divider() {
   const { category } = useDecorateAvatarStore();
 
-  const categoryLineLeft = useSharedValue<number>(categoryLineLeftValue[category]);
+  const categoryLineLeft = useSharedValue<number>(convertWidth(30));
   useEffect(() => {
-    categoryLineLeft.value = withTiming(categoryLineLeftValue[category], animatinonConfig);
+    categoryLineLeft.value = withTiming(
+      convertWidth(30) + convertWidth(46) * avatarDecorationCategories.indexOf(category),
+      animatinonConfig
+    );
   }, [category]);
 
   return (
