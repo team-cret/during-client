@@ -16,6 +16,7 @@ type RootStackParamList = {
   'profile/index': undefined;
   'notification/index': undefined;
   'decorate-room/index': undefined;
+  'decorate-avatar/index': undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
