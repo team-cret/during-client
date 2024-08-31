@@ -44,6 +44,7 @@ function BottomSection() {
       bottomStartOffset.value = event.y;
     })
     .onEnd((event) => {
+      if (bottomStartOffset.value < bottomSheetConfig.unTocuableArea) return;
       if (Math.abs(event.velocityY) > bottomSheetConfig.velocityBoundary) {
         if (event.velocityY > 0) {
           bottom.value = withTiming(
