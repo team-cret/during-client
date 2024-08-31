@@ -11,3 +11,4 @@ export * from './profile/index';
 export * from './notification-temp/index';
 export * from './notification-test/index';
 export * from './decorate-room/index';
+export * from './decorate-avatar/index';
