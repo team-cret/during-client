@@ -34,6 +34,6 @@ function preloadGLTFObjects() {
   });
 }
 
-preloadGLTFObjects();
+// preloadGLTFObjects();
 
 export { AvatarObject, RoomObject, preloadGLTFObjects };

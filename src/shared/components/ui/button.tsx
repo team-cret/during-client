@@ -140,10 +140,12 @@ function BarButtonGreen({
   onPress,
   text,
   ifDisabled = false,
+  bottom,
 }: {
   onPress: () => void;
   text: string;
   ifDisabled?: boolean;
+  bottom?: number | undefined;
 }) {
   return (
     <Pressable
@@ -154,6 +156,9 @@ function BarButtonGreen({
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
+
+        position: bottom === undefined ? 'relative' : 'absolute',
+        bottom: bottom === undefined ? 0 : bottom,
 
         backgroundColor: ifDisabled ? COLOR_BASE_3 : COLOR_PRIMARY_GREEN,
       }}
