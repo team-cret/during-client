@@ -1,13 +1,21 @@
 import { COLOR_BASE_1, convertHeight, convertWidth } from '@/src/shared';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-function MenuItem({ Icon, title }: { Icon: React.JSX.Element; title: string }) {
+function MenuItem({
+  Icon,
+  title,
+  onPress,
+}: {
+  Icon: React.JSX.Element;
+  title: string;
+  onPress: () => void;
+}) {
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPress}>
       <View style={styles.iconContainer}>{Icon}</View>
       <Text style={styles.itemText}>{title}</Text>
-    </View>
+    </Pressable>
   );
 }
 

@@ -4,6 +4,7 @@ import {
   convertHeight,
   convertWidth,
   HorizontalDivider,
+  NavProp,
 } from '@/src/shared';
 import { TitleCloseAppbar } from '@/src/widgets';
 import { StyleSheet, View } from 'react-native';
@@ -12,8 +13,14 @@ import { MenuItem } from './components/menu-item';
 import RoomIconLight from '@/src/shared/assets/icons/menu/room-light.svg';
 import AvatarIconLight from '@/src/shared/assets/icons/menu/avatar-light.svg';
 import SettingIconLight from '@/src/shared/assets/icons/menu/setting-light.svg';
+import { useDecorateRoomStore, useRoomStore } from '@/src/features';
+import { useNavigation } from 'expo-router';
 
 function MenuPage() {
+  const { background, objects } = useRoomStore();
+  const { init } = useDecorateRoomStore();
+  const navigation = useNavigation<NavProp<'menu/index'>>();
+
   return (
     <View style={styles.container}>
       <TitleCloseAppbar title="메뉴" />
@@ -28,10 +35,15 @@ function MenuPage() {
       <MenuItem
         Icon={<RoomIconLight width={convertWidth(22)} height={convertHeight(25)} />}
         title="방 편집"
+        onPress={() => {
+          init({ background, objects });
+          navigation.navigate('decorate-room/index');
+        }}
       />
       <MenuItem
         Icon={<AvatarIconLight width={convertWidth(25)} height={convertHeight(25)} />}
         title="아바타 편집"
+        onPress={() => {}}
       />
       <HorizontalDivider
         width={convertWidth(331)}
@@ -44,6 +56,7 @@ function MenuPage() {
       <MenuItem
         Icon={<SettingIconLight width={convertWidth(23)} height={convertHeight(24)} />}
         title="설정"
+        onPress={() => {}}
       />
     </View>
   );
