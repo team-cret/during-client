@@ -3,6 +3,7 @@ import { TitleCloseAppbar } from '@/src/widgets';
 import { StyleSheet, View } from 'react-native';
 import { UpperButtons } from './components/upper-buttons';
 import { BottomSection } from './components/bottom-section';
+import { PurchaseBottomSheet } from './components/purchase-bottom-sheet';
 
 function DecorateAvatarPage() {
   return (
@@ -10,6 +11,7 @@ function DecorateAvatarPage() {
       <TitleCloseAppbar title="아바타 꾸미기" />
       <UpperButtons />
       <BottomSection />
+      <PurchaseBottomSheet />
     </View>
   );
 }

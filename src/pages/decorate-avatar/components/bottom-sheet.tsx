@@ -1,10 +1,13 @@
 import { COLOR_BASE_1, COLOR_WHITE, convertHeight, convertWidth, SpaceFlexBox } from '@/src/shared';
-import { StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { ModeToggle } from './bottom-sheet.mode-toggle';
 import { IndexRow } from './bottom-sheet.index-row';
 import { Divider } from './bottom-sheet.divider';
+import { useDecorateAvatarStore } from '@/src/features';
 
 function BottomSheet() {
+  const { category, mode, bagItems, shopItems, selectShopItem } = useDecorateAvatarStore();
+
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={12} />
@@ -19,24 +22,48 @@ function BottomSheet() {
       <SpaceFlexBox flex={5} />
 
       <View style={styles.itemContainer}>
-        <View style={styles.itemRow}>
-          <View style={styles.item} />
-          <View style={styles.item} />
-          <View style={styles.item} />
-          <View style={styles.item} />
-        </View>
-        <View style={styles.itemRow}>
-          <View style={styles.item} />
-          <View style={styles.item} />
-          <View style={styles.item} />
-          <View style={styles.item} />
-        </View>
-        <View style={styles.itemRow}>
-          <View style={styles.item} />
-          <View style={styles.item} />
-          <View style={styles.item} />
-          <View style={styles.item} />
-        </View>
+        {mode === 0
+          ? shopItems
+              .filter((item) => item.category == category)
+              .map((item, index) => {
+                if (index % 4 !== 0) return null;
+                return (
+                  <View key={index} style={styles.itemRow}>
+                    {shopItems
+                      .filter((item) => item.category == category)
+                      .slice(index, index + 4)
+                      .map((item, index) => {
+                        return (
+                          <Pressable onPress={() => selectShopItem(item.id)} key={item.id}>
+                            <Image source={item.image} style={styles.item} resizeMode="cover" />
+                          </Pressable>
+                        );
+                      })}
+                  </View>
+                );
+              })
+          : bagItems
+              .filter((item) => item.category == category)
+              .map((item, index) => {
+                if (index % 4 !== 0) return null;
+                return (
+                  <View key={index} style={styles.itemRow}>
+                    {bagItems
+                      .filter((item) => item.category == category)
+                      .slice(index, index + 4)
+                      .map((item, index) => {
+                        return (
+                          <Image
+                            source={item.image}
+                            key={item.id}
+                            style={styles.item}
+                            resizeMode="cover"
+                          />
+                        );
+                      })}
+                  </View>
+                );
+              })}
       </View>
     </View>
   );
@@ -70,7 +97,6 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: convertWidth(390),
     height: convertHeight(274),
-    backgroundColor: 'green',
 
     alignItems: 'center',
   },
@@ -78,7 +104,6 @@ const styles = StyleSheet.create({
   itemRow: {
     width: convertWidth(336),
     height: convertHeight(66),
-    backgroundColor: 'blue',
 
     flexDirection: 'row',
     marginTop: convertHeight(19),
@@ -88,7 +113,6 @@ const styles = StyleSheet.create({
     height: convertWidth(66),
     width: convertWidth(66),
     aspectRatio: 1,
-    backgroundColor: 'red',
     borderRadius: convertWidth(33),
 
     marginRight: convertWidth(24),

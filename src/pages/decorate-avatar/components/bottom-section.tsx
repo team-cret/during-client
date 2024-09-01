@@ -1,4 +1,9 @@
-import { convertHeight, convertWidth } from '@/src/shared';
+import {
+  convertHeight,
+  convertWidth,
+  useNavigationBarHeight,
+  useStatusbarHeight,
+} from '@/src/shared';
 import { Dimensions, Platform, StatusBar, StyleSheet } from 'react-native';
 import { FloatingButtonRow } from './floating-button-row';
 import { BottomSheet } from './bottom-sheet';
@@ -28,13 +33,8 @@ const bottomSheetConfig = {
 
 function BottomSection() {
   const screenHeight = Dimensions.get('screen').height;
-  const stautsBarHeight =
-    Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : useSafeAreaInsets().top;
-  const navBarHeight =
-    Platform.OS === 'android'
-      ? Dimensions.get('screen').height - Dimensions.get('window').height - stautsBarHeight
-      : useSafeAreaInsets().bottom;
-
+  const stautsBarHeight = useStatusbarHeight();
+  const navBarHeight = useNavigationBarHeight();
   const bottom = useSharedValue<number>(bottomSheetConfig.bottom['handle-only']);
   const bottomStartOffset = useSharedValue(0);
 
@@ -44,7 +44,6 @@ function BottomSection() {
     })
     .onEnd((event) => {
       if (bottomStartOffset.value < bottomSheetConfig.unTocuableArea) return;
-
       if (Math.abs(event.velocityY) > bottomSheetConfig.velocityBoundary) {
         if (event.velocityY > 0) {
           bottom.value = withTiming(
