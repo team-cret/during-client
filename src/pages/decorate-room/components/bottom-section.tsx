@@ -1,10 +1,16 @@
-import { convertHeight, convertWidth, DESIGN_HEIGHT } from '@/src/shared';
-import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import {
+  convertHeight,
+  convertWidth,
+  DESIGN_HEIGHT,
+  useNavigationBarHeight,
+  useStatusbarHeight,
+} from '@/src/shared';
+import { Dimensions, StyleSheet } from 'react-native';
 import { FloatingButtonRow } from './floating-button-row';
 import { BottomSheet } from './bottom-sheet';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-import Animated, { Easing, runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const bottomSheetConfig = {
@@ -29,13 +35,8 @@ const bottomSheetConfig = {
 
 function BottomSection() {
   const screenHeight = Dimensions.get('screen').height;
-  const stautsBarHeight =
-    Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : useSafeAreaInsets().top;
-  const navBarHeight =
-    Platform.OS === 'android'
-      ? Dimensions.get('screen').height - Dimensions.get('window').height - stautsBarHeight
-      : useSafeAreaInsets().bottom;
-
+  const stautsBarHeight = useStatusbarHeight();
+  const navBarHeight = useNavigationBarHeight();
   const bottom = useSharedValue<number>(bottomSheetConfig.bottom['handle-only']);
   const bottomStartOffset = useSharedValue(0);
 
