@@ -9,6 +9,7 @@ import { SideBar } from './components/sidebar';
 import { useChatStore, useUserStore } from '@/src/features';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { RoomCanvas } from './components/room-canvas';
 
 function MainPage() {
   const navigation = useNavigation<NavProp<'main/index'>>();
@@ -24,12 +25,7 @@ function MainPage() {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.roomContainer}>
-        <Image
-          source={require('@/src/shared/assets/temp.png')}
-          style={{ width: convertWidth(375), height: convertHeight(812) }}
-        />
-      </View> */}
+      <RoomCanvas />
       <MainAppBar />
       <ChatContainer />
       <ChatFloatingButton />
