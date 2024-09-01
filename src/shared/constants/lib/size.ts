@@ -1,0 +1,3 @@
+const MESSAGE_PAGE_SIZE = 20;
+
+export { MESSAGE_PAGE_SIZE };
