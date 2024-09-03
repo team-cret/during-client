@@ -27,7 +27,7 @@ const roomItems: RoomItem[] = [
     name: 'room1Background',
     price: 100,
     object: RoomObjects.room1Background,
-    image: require('@/src/shared/assets/images/room-items/room-1-desk.png'),
+    image: require('@/src/shared/assets/images/room-items/room-1-background.png'),
     category: '배경',
   },
   {
@@ -35,7 +35,7 @@ const roomItems: RoomItem[] = [
     name: 'room1Bed',
     price: 100,
     object: RoomObjects.room1Bed,
-    image: require('@/src/shared/assets/images/room-items/room-1-desk.png'),
+    image: require('@/src/shared/assets/images/room-items/room-1-bed.png'),
     category: '가구',
   },
   {
@@ -51,7 +51,7 @@ const roomItems: RoomItem[] = [
     name: 'room1DrawerBig',
     price: 100,
     object: RoomObjects.room1DrawerBig,
-    image: require('@/src/shared/assets/images/room-items/room-1-desk.png'),
+    image: require('@/src/shared/assets/images/room-items/room-1-drawer-big.png'),
     category: '가구',
   },
   {
@@ -59,7 +59,7 @@ const roomItems: RoomItem[] = [
     name: 'room1DrawerSmall',
     price: 100,
     object: RoomObjects.room1DrawerSmall,
-    image: require('@/src/shared/assets/images/room-items/room-1-desk.png'),
+    image: require('@/src/shared/assets/images/room-items/room-1-drawer-small.png'),
     category: '가구',
   },
   {
@@ -67,7 +67,7 @@ const roomItems: RoomItem[] = [
     name: 'room1Lamp',
     price: 100,
     object: RoomObjects.room1Lamp,
-    image: require('@/src/shared/assets/images/room-items/room-1-desk.png'),
+    image: require('@/src/shared/assets/images/room-items/room-1-lamp.png'),
     category: '가구',
   },
   {
@@ -75,7 +75,7 @@ const roomItems: RoomItem[] = [
     name: 'room1Sofa',
     price: 100,
     object: RoomObjects.room1Sofa,
-    image: require('@/src/shared/assets/images/room-items/room-1-desk.png'),
+    image: require('@/src/shared/assets/images/room-items/room-1-sofa.png'),
     category: '가구',
   },
 ];
