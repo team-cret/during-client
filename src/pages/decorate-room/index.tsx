@@ -4,10 +4,12 @@ import { StyleSheet, View } from 'react-native';
 import { UpperButtons } from './components/upper-buttons';
 import { BottomSection } from './components/bottom-section';
 import { PurchaseBottomSheet } from './components/purchase-bottom-sheet';
+import { RoomCanvas } from './components/room-canvas';
 
 function DecorateRoomPage() {
   return (
     <View style={styles.container}>
+      <RoomCanvas />
       <TitleCloseAppbar title="방 꾸미기" />
       <UpperButtons />
       <BottomSection />
