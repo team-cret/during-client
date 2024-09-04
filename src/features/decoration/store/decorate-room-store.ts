@@ -22,8 +22,11 @@ type State = {
     objects: Array<{
       item: RoomItem;
       position: THREE.Vector3;
+      rotation: number;
     }>;
     selectedObjectId: number;
+    selectedPoint: THREE.Vector3;
+    isObjectExists: Array<Array<boolean>>;
   };
 };
 
@@ -38,6 +41,8 @@ const defaultState: State = {
     background: roomItems[0],
     objects: [],
     selectedObjectId: -1,
+    selectedPoint: new THREE.Vector3(0, 0, 0),
+    isObjectExists: Array.from({ length: 12 }, () => Array.from({ length: 12 }, () => false)),
   },
 };
 
@@ -50,6 +55,7 @@ type Action = {
     objects: Array<{
       item: RoomItem;
       position: THREE.Vector3;
+      rotation: number;
     }>;
   }) => void;
   setMode: (mode: number) => void;
@@ -64,19 +70,31 @@ type Action = {
     objects: Array<{
       item: RoomItem;
       position: THREE.Vector3;
+      rotation: number;
     }>;
   };
 
-  selectObject: (id: number) => void;
+  selectObject: (id: number, point: THREE.Vector3) => void;
   deselectObject: () => void;
   moveObject: (position: THREE.Vector3) => void;
+  putItemIntoBag: () => void;
+  rotateSelectedObject: () => void;
 };
 
 const useDecorateRoomStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  init: ({ background, objects }) =>
+  init: ({ background, objects }) => {
+    const isObjectExists = Array.from({ length: 12 }, () =>
+      Array.from({ length: 12 }, () => false)
+    );
+    objects.forEach((e) => {
+      for (let i = 0; i < (e.rotation % 2 === 0 ? e.item.size.depth : e.item.size.width); i++)
+        for (let j = 0; j < (e.rotation % 2 === 1 ? e.item.size.depth : e.item.size.width); j++)
+          isObjectExists[e.position.x + i][e.position.z + j] = true;
+    });
+
     set({
       mode: defaultState.mode,
       category: defaultState.category,
@@ -84,8 +102,15 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
       purchaseItems: defaultState.purchaseItems,
       bagItems: defaultState.bagItems,
       shopItems: defaultState.shopItems,
-      room: { background, objects, selectedObjectId: defaultState.room.selectedObjectId },
-    }),
+      room: {
+        background,
+        objects,
+        selectedObjectId: defaultState.room.selectedObjectId,
+        selectedPoint: defaultState.room.selectedPoint,
+        isObjectExists,
+      },
+    });
+  },
   setMode: (mode) => set({ mode }),
   setCategory: (category) => set({ category }),
   setIsPurchaseMode: (isPurchaseMode) => set({ isPurchaseMode }),
@@ -98,6 +123,7 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
         room: {
           ...state.room,
           background: selectedItem,
+          selectedObjectId: defaultState.room.selectedObjectId,
         },
       }));
     else
@@ -110,8 +136,10 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
             {
               item: selectedItem,
               position: new THREE.Vector3(6, 0, 6),
+              rotation: 0,
             },
           ],
+          selectedObjectId: selectedItem.id,
         },
       }));
   },
@@ -125,6 +153,7 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
         room: {
           ...state.room,
           background: selectedItem,
+          selectedObjectId: defaultState.room.selectedObjectId,
         },
       }));
     else
@@ -138,8 +167,10 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
             {
               item: selectedItem,
               position: new THREE.Vector3(6, 0, 6),
+              rotation: 0,
             },
           ],
+          selectedObjectId: selectedItem.id,
         },
       }));
   },
@@ -165,12 +196,19 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
     };
   },
 
-  selectObject: (id) => {
+  selectObject: (id, point) => {
+    const selectedItem = get().room.objects.find((e) => e.item.id === id);
+    if (selectedItem === undefined) return;
     set((state) => ({
       ...state,
       room: {
         ...state.room,
         selectedObjectId: id,
+        selectedPoint: new THREE.Vector3(
+          Math.round(point.x) - selectedItem.position.x,
+          Math.round(point.y) - selectedItem.position.y,
+          Math.round(point.z) - selectedItem.position.z
+        ),
       },
     }));
   },
@@ -183,9 +221,84 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
       },
     }));
   },
-  moveObject: (position) => {
-    if (get().room.selectedObjectId === defaultState.room.selectedObjectId) return;
+  moveObject: (point) => {
+    const position = new THREE.Vector3(
+      Math.round(point.x) - get().room.selectedPoint.x,
+      0,
+      Math.round(point.z) - get().room.selectedPoint.z
+    );
+    const selectedItem = get().room.objects.find((e) => e.item.id === get().room.selectedObjectId);
+    if (selectedItem === undefined) return;
     if (position.x < 0 || position.x > 12 || position.z < 0 || position.z > 12) return;
+    if (
+      position.x +
+        (selectedItem.rotation % 2 === 0
+          ? selectedItem.item.size.depth
+          : selectedItem.item.size.width) >
+        12 ||
+      position.z +
+        (selectedItem.rotation % 2 === 1
+          ? selectedItem.item.size.depth
+          : selectedItem.item.size.width) >
+        12
+    )
+      return;
+
+    const isObjectExists = get().room.isObjectExists;
+    for (
+      let i = 0;
+      i <
+      (selectedItem.rotation % 2 === 0
+        ? selectedItem.item.size.depth
+        : selectedItem.item.size.width);
+      i++
+    )
+      for (
+        let j = 0;
+        j <
+        (selectedItem.rotation % 2 === 1
+          ? selectedItem.item.size.depth
+          : selectedItem.item.size.width);
+        j++
+      )
+        isObjectExists[selectedItem.position.x + i][selectedItem.position.z + j] = false;
+
+    for (
+      let i = 0;
+      i <
+      (selectedItem.rotation % 2 === 0
+        ? selectedItem.item.size.depth
+        : selectedItem.item.size.width);
+      i++
+    )
+      for (
+        let j = 0;
+        j <
+        (selectedItem.rotation % 2 === 1
+          ? selectedItem.item.size.depth
+          : selectedItem.item.size.width);
+        j++
+      )
+        if (isObjectExists[position.x + i][position.z + j]) return;
+
+    for (
+      let i = 0;
+      i <
+      (selectedItem.rotation % 2 === 0
+        ? selectedItem.item.size.depth
+        : selectedItem.item.size.width);
+      i++
+    )
+      for (
+        let j = 0;
+        j <
+        (selectedItem.rotation % 2 === 1
+          ? selectedItem.item.size.depth
+          : selectedItem.item.size.width);
+        j++
+      )
+        isObjectExists[position.x + i][position.z + j] = true;
+
     set((state) => ({
       ...state,
       room: {
@@ -193,8 +306,54 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
         objects: state.room.objects.map((e) =>
           e.item.id === state.room.selectedObjectId ? { ...e, position: position } : e
         ),
+        isObjectExists,
       },
     }));
+  },
+  putItemIntoBag: () => {
+    set((state) => ({
+      ...state,
+      room: {
+        ...state.room,
+        selectedObjectId: defaultState.room.selectedObjectId,
+        objects: state.room.objects.filter((e) => e.item.id !== state.room.selectedObjectId),
+      },
+    }));
+  },
+  rotateSelectedObject: () => {
+    const selectedItem = get().room.objects.find((e) => e.item.id === get().room.selectedObjectId);
+    if (selectedItem === undefined) return;
+    for (let i = 1; i <= 4; i++) {
+      if (
+        selectedItem.position.x +
+          ((selectedItem.rotation + i) % 2 === 0
+            ? selectedItem.item.size.depth
+            : selectedItem.item.size.width) >
+          12 ||
+        selectedItem.position.z +
+          ((selectedItem.rotation + i) % 2 === 1
+            ? selectedItem.item.size.depth
+            : selectedItem.item.size.width) >
+          12
+      )
+        continue;
+
+      set((state) => ({
+        ...state,
+        room: {
+          ...state.room,
+          objects: state.room.objects.map((e) => {
+            if (e.item.id === state.room.selectedObjectId)
+              return {
+                ...e,
+                rotation: (e.rotation + i) % 4,
+              };
+            else return e;
+          }),
+        },
+      }));
+      break;
+    }
   },
 }));
 
