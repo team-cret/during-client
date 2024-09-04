@@ -2,9 +2,9 @@ import { useDecorateRoomStore, useRoomStore } from '@/src/features';
 import { COLOR_BACKGROUND, convertHeight, convertWidth } from '@/src/shared';
 import { Gltf } from '@react-three/drei/native';
 import { Canvas, ThreeEvent } from '@react-three/fiber/native';
-import { Suspense, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Suspense } from 'react';
+import { StyleSheet } from 'react-native';
+import Animated, { Easing, useSharedValue } from 'react-native-reanimated';
 import THREE from 'three';
 
 const animatinonConfig = {
@@ -48,9 +48,10 @@ function Room() {
         onPointerMove={(e: ThreeEvent<PointerEvent>) => {
           if (selectedObjectId === -1) return;
           const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
-          moveObject(new THREE.Vector3(Math.round(floorPoint.x), 0, Math.round(floorPoint.z)));
+          moveObject(floorPoint);
         }}
-        onPointerUp={() => {
+        onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
+          if (e.intersections.length >= 2) return;
           deselectObject();
         }}
       />
@@ -59,11 +60,24 @@ function Room() {
           <Gltf
             key={index}
             src={object.item.object.src}
-            position={object.position}
+            position={
+              new THREE.Vector3(
+                object.position.x +
+                  (object.rotation % 2 === 0
+                    ? object.item.size.depth / 2
+                    : object.item.size.width / 2),
+                object.position.y,
+                object.position.z +
+                  (object.rotation % 2 === 1
+                    ? object.item.size.depth / 2
+                    : object.item.size.width / 2)
+              )
+            }
             onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
-              if (e.intersections.length > 2) return;
-              selectObject(object.item.id);
+              const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
+              selectObject(object.item.id, floorPoint);
             }}
+            rotation={[0, (object.rotation * Math.PI) / 2, 0]}
           />
         );
       })}

@@ -7,6 +7,7 @@ type State = {
   objects: Array<{
     item: RoomItem;
     position: THREE.Vector3;
+    rotation: number;
   }>;
 };
 
@@ -16,10 +17,12 @@ const defaultState: State = {
     {
       item: roomItems[1],
       position: new THREE.Vector3(0, 0, 0),
+      rotation: 0,
     },
     {
       item: roomItems[3],
       position: new THREE.Vector3(7, 0, 5),
+      rotation: 0,
     },
   ],
 };
@@ -33,6 +36,7 @@ type Action = {
     objects: Array<{
       item: RoomItem;
       position: THREE.Vector3;
+      rotation: number;
     }>;
   }) => void;
 };

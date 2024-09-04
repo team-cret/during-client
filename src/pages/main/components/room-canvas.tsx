@@ -1,9 +1,10 @@
 import { useRoomStore } from '@/src/features';
 import { COLOR_BACKGROUND, convertHeight, convertWidth } from '@/src/shared';
 import { Gltf } from '@react-three/drei/native';
-import { Canvas, ThreeEvent, Vector3 } from '@react-three/fiber/native';
-import { Suspense, useState } from 'react';
+import { Canvas } from '@react-three/fiber/native';
+import { Suspense } from 'react';
 import { StyleSheet, View } from 'react-native';
+import THREE from 'three';
 
 function RoomCanvas() {
   return (
@@ -31,7 +32,26 @@ function Room() {
     <Suspense>
       <Gltf src={background.object.src} />
       {objects.map((object, index) => {
-        return <Gltf key={index} src={object.item.object.src} position={object.position} />;
+        return (
+          <Gltf
+            key={index}
+            src={object.item.object.src}
+            position={
+              new THREE.Vector3(
+                object.position.x +
+                  (object.rotation % 2 === 0
+                    ? object.item.size.depth / 2
+                    : object.item.size.width / 2),
+                object.position.y,
+                object.position.z +
+                  (object.rotation % 2 === 1
+                    ? object.item.size.depth / 2
+                    : object.item.size.width / 2)
+              )
+            }
+            rotation={[0, (object.rotation * Math.PI) / 2, 0]}
+          />
+        );
       })}
     </Suspense>
   );
