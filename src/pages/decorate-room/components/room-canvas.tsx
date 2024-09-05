@@ -35,7 +35,7 @@ function RoomCanvas() {
 
 function Room() {
   const {
-    room: { background, objects, selectedObjectId },
+    roomInfo: { background, objects, selectedObjectId },
     selectObject,
     deselectObject,
     moveObject,
