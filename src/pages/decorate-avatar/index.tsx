@@ -4,10 +4,12 @@ import { StyleSheet, View } from 'react-native';
 import { UpperButtons } from './components/upper-buttons';
 import { BottomSection } from './components/bottom-section';
 import { PurchaseBottomSheet } from './components/purchase-bottom-sheet';
+import { AvatarCanvas } from './components/avatar-canvas';
 
 function DecorateAvatarPage() {
   return (
     <View style={styles.container}>
+      <AvatarCanvas />
       <TitleCloseAppbar title="아바타 꾸미기" />
       <UpperButtons />
       <BottomSection />

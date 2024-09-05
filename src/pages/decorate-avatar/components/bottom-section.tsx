@@ -9,8 +9,9 @@ import { FloatingButtonRow } from './floating-button-row';
 import { BottomSheet } from './bottom-sheet';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDecorateAvatarStore } from '@/src/features';
 
 const bottomSheetConfig = {
   animatinonConfig: {
@@ -37,6 +38,7 @@ function BottomSection() {
   const navBarHeight = useNavigationBarHeight();
   const bottom = useSharedValue<number>(bottomSheetConfig.bottom['handle-only']);
   const bottomStartOffset = useSharedValue(0);
+  const { setBottomSheetMode } = useDecorateAvatarStore();
 
   const gesturePan = Gesture.Pan()
     .onBegin((event) => {
@@ -50,28 +52,34 @@ function BottomSection() {
             bottomSheetConfig.bottom['handle-only'],
             bottomSheetConfig.animatinonConfig
           );
+          runOnJS(setBottomSheetMode)('handle-only');
         } else {
           bottom.value = withTiming(
             bottomSheetConfig.bottom['three-rows'],
             bottomSheetConfig.animatinonConfig
           );
+          runOnJS(setBottomSheetMode)('three-rows');
         }
       } else {
-        if (event.absoluteY - stautsBarHeight < bottomSheetConfig.yBoundary['three-rows'])
+        if (event.absoluteY - stautsBarHeight < bottomSheetConfig.yBoundary['three-rows']) {
           bottom.value = withTiming(
             bottomSheetConfig.bottom['three-rows'],
             bottomSheetConfig.animatinonConfig
           );
-        else if (event.absoluteY - stautsBarHeight < bottomSheetConfig.yBoundary['one-row'])
+          runOnJS(setBottomSheetMode)('three-rows');
+        } else if (event.absoluteY - stautsBarHeight < bottomSheetConfig.yBoundary['one-row']) {
           bottom.value = withTiming(
             bottomSheetConfig.bottom['one-row'],
             bottomSheetConfig.animatinonConfig
           );
-        else
+          runOnJS(setBottomSheetMode)('one-row');
+        } else {
           bottom.value = withTiming(
             bottomSheetConfig.bottom['handle-only'],
             bottomSheetConfig.animatinonConfig
           );
+          runOnJS(setBottomSheetMode)('handle-only');
+        }
       }
     })
     .onChange((event) => {
