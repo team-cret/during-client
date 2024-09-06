@@ -58,6 +58,8 @@ function Avatar() {
   const animations = useAnimations(model.animations, model.scene);
   useFocusEffect(
     useCallback(() => {
+      model.scene.position.set(0, 0, 0);
+      model.scene.rotation.set(0, 0, 0);
       animations.actions['Idle']?.play();
     }, [])
   );
