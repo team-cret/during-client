@@ -17,7 +17,7 @@ type State = {
   bottomSheetMode: 'three-rows' | 'one-row' | 'handle-only';
   bagItems: Array<AvatarItem>;
   shopItems: Array<AvatarItem>;
-  avatarInfo: {
+  avatarStyle: {
     [key in avatarDecorationCategoriesType]: AvatarItem | null;
   };
 };
@@ -30,7 +30,7 @@ const defaultState: State = {
   bottomSheetMode: 'handle-only',
   bagItems: [],
   shopItems: Array.from({ length: 41 }, (_, i) => avatarItems[i]),
-  avatarInfo: {
+  avatarStyle: {
     헤어: null,
     상의: null,
     하의: null,
@@ -63,18 +63,18 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
     if (!selectedItem) return;
 
     if (
-      get().avatarInfo[selectedItem.category] &&
-      get().avatarInfo[selectedItem.category]?.id === id
+      get().avatarStyle[selectedItem.category] &&
+      get().avatarStyle[selectedItem.category]?.id === id
     ) {
       set((state) => ({
         ...state,
-        avatarInfo: { ...state.avatarInfo, [selectedItem.category]: null },
+        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: null },
       }));
       return;
     } else {
       set((state) => ({
         ...state,
-        avatarInfo: { ...state.avatarInfo, [selectedItem.category]: selectedItem },
+        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: selectedItem },
       }));
       return;
     }
@@ -83,18 +83,18 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
     const selectedItem = avatarItems.find((item) => item.id === id);
     if (!selectedItem) return;
     if (
-      get().avatarInfo[selectedItem.category] &&
-      get().avatarInfo[selectedItem.category]?.id === id
+      get().avatarStyle[selectedItem.category] &&
+      get().avatarStyle[selectedItem.category]?.id === id
     ) {
       set((state) => ({
         ...state,
-        avatarInfo: { ...state.avatarInfo, [selectedItem.category]: null },
+        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: null },
         purchaseItems: state.purchaseItems.filter((item) => item.item.id !== id),
       }));
     } else {
       set((state) => ({
         ...state,
-        avatarInfo: { ...state.avatarInfo, [selectedItem.category]: selectedItem },
+        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: selectedItem },
         purchaseItems: [...state.purchaseItems, { item: selectedItem, isSelected: true }],
       }));
     }

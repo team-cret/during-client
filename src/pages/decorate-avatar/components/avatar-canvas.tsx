@@ -51,7 +51,7 @@ function AvatarCanvas() {
 }
 
 function Avatar() {
-  const { avatarInfo } = useDecorateAvatarStore();
+  const { avatarStyle } = useDecorateAvatarStore();
 
   const model = useGLTF(AvatarObject.avatar.src);
 
@@ -66,17 +66,17 @@ function Avatar() {
     model.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.visible = false;
-        if (avatarInfo.상의 === null && child.name === 'basic-tops') child.visible = true;
-        if (avatarInfo.하의 === null && child.name === 'basic-bottoms') child.visible = true;
+        if (avatarStyle.상의 === null && child.name === 'basic-tops') child.visible = true;
+        if (avatarStyle.하의 === null && child.name === 'basic-bottoms') child.visible = true;
         if (child.name === 'body') child.visible = true;
 
-        if (avatarInfo.상의 && child.name === avatarInfo.상의.name) child.visible = true;
-        if (avatarInfo.하의 && child.name === avatarInfo.하의.name) child.visible = true;
-        if (avatarInfo.신발 && child.name === avatarInfo.신발.name) child.visible = true;
-        if (avatarInfo.헤어 && child.name === avatarInfo.헤어.name) child.visible = true;
+        if (avatarStyle.상의 && child.name === avatarStyle.상의.name) child.visible = true;
+        if (avatarStyle.하의 && child.name === avatarStyle.하의.name) child.visible = true;
+        if (avatarStyle.신발 && child.name === avatarStyle.신발.name) child.visible = true;
+        if (avatarStyle.헤어 && child.name === avatarStyle.헤어.name) child.visible = true;
       }
     });
-  }, [avatarInfo]);
+  }, [avatarStyle]);
 
   return (
     <Suspense>
