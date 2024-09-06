@@ -18,11 +18,13 @@ function RoomCanvas() {
   return (
     <Animated.View style={[styles.container, { bottom }]}>
       <Canvas
+        orthographic
         camera={{
           fov: 75,
           near: 1,
           far: 100,
-          position: [21, 19, 21],
+          zoom: 20,
+          position: [21, 21, 21],
         }}
         style={styles.container}
       >
