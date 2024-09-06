@@ -1,4 +1,10 @@
-import { RoomItem, roomItems } from '@/src/shared';
+import {
+  avatarDecorationCategories,
+  avatarDecorationCategoriesType,
+  AvatarItem,
+  RoomItem,
+  roomItems,
+} from '@/src/shared';
 import THREE from 'three';
 import { create } from 'zustand';
 
@@ -9,6 +15,23 @@ type State = {
     position: THREE.Vector3;
     rotation: number;
   }>;
+
+  myAvatar: {
+    style: {
+      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+    };
+    position: THREE.Vector3;
+    rotation: number;
+    animation: number;
+  };
+  otherAvatar: {
+    style: {
+      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+    };
+    position: THREE.Vector3;
+    rotation: number;
+    animation: number;
+  };
 };
 
 const defaultState: State = {
@@ -25,9 +48,38 @@ const defaultState: State = {
       rotation: 0,
     },
   ],
+  myAvatar: {
+    style: {
+      헤어: null,
+      상의: null,
+      하의: null,
+      신발: null,
+    },
+    position: new THREE.Vector3(8, 0, 7),
+    rotation: 0.5,
+    animation: 0,
+  },
+  otherAvatar: {
+    style: {
+      헤어: null,
+      상의: null,
+      하의: null,
+      신발: null,
+    },
+    position: new THREE.Vector3(8, 0, 7),
+    rotation: 0,
+    animation: 0,
+  },
 };
 
 type Action = {
+  updateMyAvatarStyle: ({
+    style,
+  }: {
+    style: {
+      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+    };
+  }) => void;
   updateRoom: ({
     background,
     objects,
@@ -45,6 +97,15 @@ const useRoomStore = create<State & Action>((set) => ({
   ...defaultState,
 
   //actions
+  updateMyAvatarStyle: ({ style }) => {
+    set((state) => ({
+      ...state,
+      myAvatar: {
+        ...state.myAvatar,
+        style,
+      },
+    }));
+  },
   updateRoom: ({ background, objects }) => {
     set((state) => ({
       ...state,

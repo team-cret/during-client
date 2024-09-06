@@ -13,12 +13,17 @@ import { MenuItem } from './components/menu-item';
 import RoomIconLight from '@/src/shared/assets/icons/menu/room-light.svg';
 import AvatarIconLight from '@/src/shared/assets/icons/menu/avatar-light.svg';
 import SettingIconLight from '@/src/shared/assets/icons/menu/setting-light.svg';
-import { useDecorateRoomStore, useRoomStore } from '@/src/features';
+import { useDecorateAvatarStore, useDecorateRoomStore, useRoomStore } from '@/src/features';
 import { useNavigation } from 'expo-router';
 
 function MenuPage() {
-  const { background, objects } = useRoomStore();
-  const { init } = useDecorateRoomStore();
+  const {
+    background,
+    objects,
+    myAvatar: { style: avatarStyle },
+  } = useRoomStore();
+  const { init: decorateRoomInit } = useDecorateRoomStore();
+  const { init: decorateAvatarInit } = useDecorateAvatarStore();
   const navigation = useNavigation<NavProp<'menu/index'>>();
 
   return (
@@ -36,14 +41,17 @@ function MenuPage() {
         Icon={<RoomIconLight width={convertWidth(22)} height={convertHeight(25)} />}
         title="방 편집"
         onPress={() => {
-          init({ background, objects });
+          decorateRoomInit({ background, objects });
           navigation.navigate('decorate-room/index');
         }}
       />
       <MenuItem
         Icon={<AvatarIconLight width={convertWidth(25)} height={convertHeight(25)} />}
         title="아바타 편집"
-        onPress={() => {}}
+        onPress={() => {
+          decorateAvatarInit({ avatarStyle });
+          navigation.navigate('decorate-avatar/index');
+        }}
       />
       <HorizontalDivider
         width={convertWidth(331)}

@@ -39,6 +39,7 @@ const defaultState: State = {
 };
 
 type Action = {
+  init: ({ avatarStyle }: { avatarStyle: State['avatarStyle'] }) => void;
   setMode: (mode: number) => void;
   setCategory: (category: avatarDecorationCategoriesType) => void;
   setIsPurchaseMode: (isPurchaseMode: boolean) => void;
@@ -48,12 +49,26 @@ type Action = {
   selectBagItem: (id: number) => void;
   selectShopItem: (id: number) => void;
   togglePurchaseItem: (id: number) => void;
+  confirmPurchase: () => {
+    style: State['avatarStyle'];
+  };
 };
 
 const useDecorateAvatarStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
+  init: ({ avatarStyle }) =>
+    set({
+      mode: defaultState.mode,
+      category: defaultState.category,
+      isPurchaseMode: defaultState.isPurchaseMode,
+      purchaseItems: defaultState.purchaseItems,
+      bottomSheetMode: defaultState.bottomSheetMode,
+      bagItems: defaultState.bagItems,
+      shopItems: defaultState.shopItems,
+      avatarStyle,
+    }),
   setMode: (mode) => set({ mode }),
   setCategory: (category) => set({ category }),
   setIsPurchaseMode: (isPurchaseMode) => set({ isPurchaseMode }),
@@ -106,6 +121,15 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
         item.item.id === id ? { ...item, isSelected: !item.isSelected } : item
       ),
     }));
+  },
+  confirmPurchase: () => {
+    const newAvatarStyle = get().avatarStyle;
+    get().purchaseItems.forEach((item) => {
+      if (item.isSelected) {
+        newAvatarStyle[item.item.category] = item.item;
+      }
+    });
+    return { style: newAvatarStyle };
   },
 }));
 
