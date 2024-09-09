@@ -1,12 +1,13 @@
 import { COLOR_BASE_1, COLOR_WHITE, convertHeight, convertWidth, SpaceFlexBox } from '@/src/shared';
-import { Image, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { ModeToggle } from './bottom-sheet.mode-toggle';
 import { IndexRow } from './bottom-sheet.index-row';
 import { Divider } from './bottom-sheet.divider';
 import { useDecorateRoomStore } from '@/src/features';
 
 function BottomSheet() {
-  const { category, mode, bagItems, shopItems, selectShopItem } = useDecorateRoomStore();
+  const { category, mode, bagItems, shopItems, selectShopItem, selectBagItem } =
+    useDecorateRoomStore();
 
   return (
     <View style={styles.container}>
@@ -53,12 +54,9 @@ function BottomSheet() {
                       .slice(index, index + 4)
                       .map((item, index) => {
                         return (
-                          <Image
-                            source={item.image}
-                            key={item.id}
-                            style={styles.item}
-                            resizeMode="cover"
-                          />
+                          <Pressable onPress={() => selectBagItem(item.id)} key={item.id}>
+                            <Image source={item.image} style={styles.item} resizeMode="cover" />
+                          </Pressable>
                         );
                       })}
                   </View>

@@ -6,17 +6,28 @@ import {
   convertHeight,
   convertWidth,
   HorizontalSizedBox,
+  NavProp,
 } from '@/src/shared';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CreditIcon from '@/src/shared/assets/icons/decoration/credit.svg';
-import { useDecorateAvatarStore } from '@/src/features';
+import { useDecorateAvatarStore, useRoomStore } from '@/src/features';
+import { useNavigation } from 'expo-router';
 
 function UpperButtons() {
-  const { isPurchaseMode, setIsPurchaseMode } = useDecorateAvatarStore();
+  const navigation = useNavigation<NavProp<'decorate-avatar/index'>>();
+  const { isPurchaseMode, setIsPurchaseMode, purchaseItems, confirmPurchase } =
+    useDecorateAvatarStore();
+  const { updateMyAvatarStyle } = useRoomStore();
 
   function onConfirm() {
-    setIsPurchaseMode(true);
+    if (purchaseItems.length === 0) {
+      const newAvatarStyle = confirmPurchase();
+      updateMyAvatarStyle(newAvatarStyle);
+      navigation.navigate('main/index');
+    } else {
+      setIsPurchaseMode(true);
+    }
   }
 
   return (

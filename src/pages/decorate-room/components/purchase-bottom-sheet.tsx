@@ -4,13 +4,15 @@ import {
   COLOR_WHITE,
   convertHeight,
   convertWidth,
+  NavProp,
   useNavigationBarHeight,
 } from '@/src/shared';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Item } from './purchase-bottom-sheet.item';
-import { useDecorateRoomStore } from '@/src/features';
+import { useDecorateRoomStore, useRoomStore } from '@/src/features';
 import { useEffect } from 'react';
+import { useNavigation } from 'expo-router';
 
 const animatinonConfig = {
   duration: 300,
@@ -18,12 +20,15 @@ const animatinonConfig = {
 };
 
 function PurchaseBottomSheet() {
+  const navigation = useNavigation<NavProp<'decorate-room/index'>>();
   const navigationBarSize = useNavigationBarHeight();
 
   const height = convertHeight(634) - navigationBarSize;
   const bottom = useSharedValue<number>(-height);
 
-  const { isPurchaseMode, setIsPurchaseMode, purchaseItems } = useDecorateRoomStore();
+  const { isPurchaseMode, setIsPurchaseMode, purchaseItems, confirmPurchase } =
+    useDecorateRoomStore();
+  const { updateRoom } = useRoomStore();
   useEffect(() => {
     bottom.value = withTiming(isPurchaseMode ? 0 : -height, animatinonConfig);
   }, [isPurchaseMode]);
@@ -42,7 +47,15 @@ function PurchaseBottomSheet() {
       {purchaseItems.map((item, index) => {
         return <Item key={index} purchaseItem={item} />;
       })}
-      <BarButtonGreen text="구매" onPress={() => {}} bottom={convertHeight(23)} />
+      <BarButtonGreen
+        text="구매"
+        onPress={() => {
+          const newRoom = confirmPurchase();
+          updateRoom(newRoom);
+          navigation.navigate('main/index');
+        }}
+        bottom={convertHeight(23)}
+      />
     </Animated.View>
   );
 }

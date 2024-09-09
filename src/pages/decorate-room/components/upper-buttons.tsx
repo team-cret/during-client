@@ -6,17 +6,28 @@ import {
   convertHeight,
   convertWidth,
   HorizontalSizedBox,
+  NavProp,
 } from '@/src/shared';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CreditIcon from '@/src/shared/assets/icons/decoration/credit.svg';
-import { useDecorateRoomStore } from '@/src/features';
+import { useDecorateRoomStore, useRoomStore } from '@/src/features';
+import { useNavigation } from 'expo-router';
 
 function UpperButtons() {
-  const { isPurchaseMode, setIsPurchaseMode } = useDecorateRoomStore();
+  const { isPurchaseMode, setIsPurchaseMode, purchaseItems, confirmPurchase } =
+    useDecorateRoomStore();
+  const { updateRoom } = useRoomStore();
+  const navigation = useNavigation<NavProp<'decorate-room/index'>>();
 
   function onConfirm() {
-    setIsPurchaseMode(true);
+    if (purchaseItems.length === 0) {
+      const newRoom = confirmPurchase();
+      updateRoom(newRoom);
+      navigation.navigate('main/index');
+    } else {
+      setIsPurchaseMode(true);
+    }
   }
 
   return (

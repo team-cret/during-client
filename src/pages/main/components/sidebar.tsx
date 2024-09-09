@@ -5,6 +5,7 @@ import {
   convertHeight,
   convertWidth,
   HorizontalDivider,
+  NavProp,
   SpaceFlexBox,
 } from '@/src/shared';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -13,17 +14,17 @@ import CloseIcon from '@/src/shared/assets/icons/menu/close.svg';
 import RoomIcon from '@/src/shared/assets/icons/menu/room.svg';
 import AvatarIcon from '@/src/shared/assets/icons/menu/avatar.svg';
 import SettingIcon from '@/src/shared/assets/icons/menu/setting.svg';
-import { useSideBarStore } from '@/src/features';
-import Animated, {
-  Easing,
-  runOnJS,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import {
+  useDecorateAvatarStore,
+  useDecorateRoomStore,
+  useRoomStore,
+  useSideBarStore,
+} from '@/src/features';
+import Animated, { Easing, runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useEffect } from 'react';
 import { MenuPage } from '../../menu';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useNavigation } from 'expo-router';
 
 const sideBarConfig = {
   animatinonConfig: {
@@ -43,6 +44,15 @@ function SideBar() {
   const { closeSideBar, ifSideBarOpen } = useSideBarStore();
   const left = useSharedValue(sideBarConfig.sideBarLeft.close);
   const leftStartOffset = useSharedValue(0);
+
+  const {
+    background,
+    objects,
+    myAvatar: { style: avatarStyle },
+  } = useRoomStore();
+  const { init: decorateRoomInit } = useDecorateRoomStore();
+  const { init: decorateAvatarInit } = useDecorateAvatarStore();
+  const navigation = useNavigation<NavProp<'main/index'>>();
 
   useEffect(() => {
     if (ifSideBarOpen) {
@@ -93,13 +103,25 @@ function SideBar() {
             lowerFlex={16}
             color={COLOR_BASE_2_30}
           />
-          <View style={styles.iconContainer}>
+          <Pressable
+            style={styles.iconContainer}
+            onPress={() => {
+              decorateRoomInit({ background, objects });
+              navigation.navigate('decorate-room/index');
+            }}
+          >
             <RoomIcon width={convertWidth(22)} height={convertHeight(25)} />
-          </View>
+          </Pressable>
           <SpaceFlexBox flex={10} />
-          <View style={styles.iconContainer}>
+          <Pressable
+            style={styles.iconContainer}
+            onPress={() => {
+              decorateAvatarInit({ avatarStyle });
+              navigation.navigate('decorate-avatar/index');
+            }}
+          >
             <AvatarIcon width={convertWidth(25)} height={convertHeight(25)} />
-          </View>
+          </Pressable>
           <HorizontalDivider
             width={convertWidth(46)}
             height={convertHeight(51)}

@@ -50,6 +50,7 @@
     "react-native-svg-transformer": "^1.5.0",
     "react-native-web": "~0.19.10",
     "react-native-webview": "13.8.6",
+    "three": "^0.168.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

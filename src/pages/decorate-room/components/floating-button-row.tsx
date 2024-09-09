@@ -1,18 +1,21 @@
 import { COLOR_BACKGROUND, COLOR_BASE_2_30, convertHeight, convertWidth } from '@/src/shared';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import BagIcon from '@/src/shared/assets/icons/decoration/bag.svg';
 import ResetIcon from '@/src/shared/assets/icons/decoration/reset.svg';
+import { useDecorateRoomStore } from '@/src/features';
 
 function FloatingButtonRow() {
+  const { putItemIntoBag, rotateSelectedObject } = useDecorateRoomStore();
+
   return (
     <View style={styles.container}>
-      <View style={styles.button}>
+      <Pressable style={styles.button} onPress={putItemIntoBag}>
         <BagIcon width={convertWidth(22)} />
-      </View>
-      <View style={styles.button}>
+      </Pressable>
+      <Pressable style={styles.button} onPress={rotateSelectedObject}>
         <ResetIcon width={convertWidth(26)} />
-      </View>
+      </Pressable>
     </View>
   );
 }
