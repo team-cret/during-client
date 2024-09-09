@@ -90,9 +90,9 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
       Array.from({ length: 12 }, () => false)
     );
     objects.forEach((e) => {
-      for (let i = 0; i < (e.rotation % 2 === 0 ? e.item.size.depth : e.item.size.width); i++)
-        for (let j = 0; j < (e.rotation % 2 === 1 ? e.item.size.depth : e.item.size.width); j++)
-          isObjectExists[e.position.x + i][e.position.z + j] = true;
+      for (let i = 0; i < (e.rotation % 2 === 0 ? e.item.size.width : e.item.size.depth); i++)
+        for (let j = 0; j < (e.rotation % 2 === 1 ? e.item.size.width : e.item.size.depth); j++)
+          isObjectExists[e.position.z + i][e.position.x + j] = true;
     });
 
     set({
@@ -233,15 +233,15 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
     if (selectedItem === undefined) return;
     if (position.x < 0 || position.x > 12 || position.z < 0 || position.z > 12) return;
     if (
-      position.x +
-        (selectedItem.rotation % 2 === 0
-          ? selectedItem.item.size.depth
-          : selectedItem.item.size.width) >
-        12 ||
       position.z +
+        (selectedItem.rotation % 2 === 0
+          ? selectedItem.item.size.width
+          : selectedItem.item.size.depth) >
+        12 ||
+      position.x +
         (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.depth
-          : selectedItem.item.size.width) >
+          ? selectedItem.item.size.width
+          : selectedItem.item.size.depth) >
         12
     )
       return;
@@ -251,55 +251,55 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
       let i = 0;
       i <
       (selectedItem.rotation % 2 === 0
-        ? selectedItem.item.size.depth
-        : selectedItem.item.size.width);
+        ? selectedItem.item.size.width
+        : selectedItem.item.size.depth);
       i++
     )
       for (
         let j = 0;
         j <
         (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.depth
-          : selectedItem.item.size.width);
+          ? selectedItem.item.size.width
+          : selectedItem.item.size.depth);
         j++
       )
-        isObjectExists[selectedItem.position.x + i][selectedItem.position.z + j] = false;
+        isObjectExists[selectedItem.position.z + i][selectedItem.position.x + j] = false;
 
     for (
       let i = 0;
       i <
       (selectedItem.rotation % 2 === 0
-        ? selectedItem.item.size.depth
-        : selectedItem.item.size.width);
+        ? selectedItem.item.size.width
+        : selectedItem.item.size.depth);
       i++
     )
       for (
         let j = 0;
         j <
         (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.depth
-          : selectedItem.item.size.width);
+          ? selectedItem.item.size.width
+          : selectedItem.item.size.depth);
         j++
       )
-        if (isObjectExists[position.x + i][position.z + j]) return;
+        if (isObjectExists[position.z + i][position.x + j]) return;
 
     for (
       let i = 0;
       i <
       (selectedItem.rotation % 2 === 0
-        ? selectedItem.item.size.depth
-        : selectedItem.item.size.width);
+        ? selectedItem.item.size.width
+        : selectedItem.item.size.depth);
       i++
     )
       for (
         let j = 0;
         j <
         (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.depth
-          : selectedItem.item.size.width);
+          ? selectedItem.item.size.width
+          : selectedItem.item.size.depth);
         j++
       )
-        isObjectExists[position.x + i][position.z + j] = true;
+        isObjectExists[position.z + i][position.x + j] = true;
 
     set((state) => ({
       ...state,
@@ -331,15 +331,15 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
     if (selectedItem === undefined) return;
     for (let i = 1; i <= 4; i++) {
       if (
-        selectedItem.position.x +
-          ((selectedItem.rotation + i) % 2 === 0
-            ? selectedItem.item.size.depth
-            : selectedItem.item.size.width) >
-          12 ||
         selectedItem.position.z +
+          ((selectedItem.rotation + i) % 2 === 0
+            ? selectedItem.item.size.width
+            : selectedItem.item.size.depth) >
+          12 ||
+        selectedItem.position.x +
           ((selectedItem.rotation + i) % 2 === 1
-            ? selectedItem.item.size.depth
-            : selectedItem.item.size.width) >
+            ? selectedItem.item.size.width
+            : selectedItem.item.size.depth) >
           12
       )
         continue;
