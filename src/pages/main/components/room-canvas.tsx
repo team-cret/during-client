@@ -7,14 +7,23 @@ import {
   convertHeight,
   convertWidth,
 } from '@/src/shared';
-import { Gltf, useGLTF } from '@react-three/drei/native';
-import { Canvas } from '@react-three/fiber/native';
-import { Suspense, useEffect } from 'react';
+import { findRoute } from '@/src/shared/func/lib/room';
+import { Gltf, useAnimations, useGLTF } from '@react-three/drei/native';
+import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber/native';
+import { useFocusEffect } from 'expo-router';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import THREE from 'three';
+import THREE, { Euler } from 'three';
 
 function RoomCanvas() {
-  const { myAvatar } = useRoomStore();
+  const { myAvatar, isObjectExists, initRoom } = useRoomStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      initRoom();
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
       <Canvas
@@ -30,7 +39,7 @@ function RoomCanvas() {
       >
         <color attach="background" args={[COLOR_BACKGROUND]} />
         <Room />
-        <Avatar avatarInfo={myAvatar} />
+        <Avatar avatarInfo={myAvatar} isObjectExists={isObjectExists} />
       </Canvas>
     </View>
   );
@@ -45,11 +54,17 @@ const styles = StyleSheet.create({
 });
 
 function Room() {
-  const { background, objects } = useRoomStore();
+  const { background, objects, updateMyAvatarPosition } = useRoomStore();
 
   return (
     <Suspense>
-      <Gltf src={background.object.src} />
+      <Gltf
+        src={background.object.src}
+        onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
+          const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
+          updateMyAvatarPosition(floorPoint);
+        }}
+      />
       {objects.map((object, index) => {
         return (
           <Gltf
@@ -78,25 +93,37 @@ function Room() {
 
 function Avatar({
   avatarInfo,
+  isObjectExists,
 }: {
   avatarInfo: {
     style: {
       [key in avatarDecorationCategoriesType]: AvatarItem | null;
     };
-    position: THREE.Vector3 | null;
+    position: THREE.Vector3;
     rotation: number;
     animation: number;
   };
+  isObjectExists: Array<Array<boolean>>;
 }) {
   const model = useGLTF(AvatarObject.avatar.src);
+  const modelRef = useRef<THREE.Group>(null);
 
-  // const animations = useAnimations(model.animations, model.scene);
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     animations.actions['Idle']?.play();
-  //   }, [])
-  // );
+  // 애니메이션 처리
+  const animations = useAnimations(model.animations, model.scene);
+  useFocusEffect(
+    useCallback(() => {
+      if (!modelRef.current) return;
+      modelRef.current.position.set(
+        avatarInfo.position.x,
+        avatarInfo.position.y,
+        avatarInfo.position.z
+      );
+      modelRef.current.rotation.set(0, (avatarInfo.rotation * Math.PI) / 2, 0);
+      // animations.actions['Idle']?.play();
+    }, [])
+  );
 
+  // 아바타 스타일 처리
   useEffect(() => {
     model.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -117,24 +144,75 @@ function Avatar({
     });
   }, [avatarInfo.style]);
 
+  // 아바타 이동 처리
+  const [route, setRoute] = useState<Array<THREE.Vector3>>([avatarInfo.position]);
+  const [routeIdx, setRouteIdx] = useState(0);
+
   useEffect(() => {
-    if (avatarInfo.position) {
-      model.scene.position.set(
-        1 + avatarInfo.position.x,
-        avatarInfo.position.y,
-        1 + avatarInfo.position.z
-      );
-    }
+    if (avatarInfo.position === null) return;
+
+    const lastPosition = routeIdx == route.length - 1 ? route[routeIdx] : route[routeIdx + 1];
+    const newRoute = findRoute(lastPosition, avatarInfo.position, isObjectExists);
+    if (newRoute.length === 0) return;
+
+    setRoute(newRoute);
+    setRouteIdx(0);
   }, [avatarInfo.position]);
 
   useEffect(() => {
-    model.scene.rotation.y = (avatarInfo.rotation * Math.PI) / 2;
-  }, [avatarInfo.rotation]);
+    if (routeIdx == route.length - 1) {
+      animations.actions['walk']?.stop();
+      animations.actions['Idle']?.play();
+    } else {
+      animations.actions['Idle']?.stop();
+      animations.actions['walk']?.play();
+    }
+  }, [route, routeIdx]);
+
+  // 프레임마다 호출되는 useFrame으로 이동 처리
+  // lerp 마지막 인자로 속도 조절
+  useFrame(() => {
+    if (!modelRef.current) return;
+
+    // 루트의 끝에 도달
+    if (routeIdx == route.length - 1) return;
+
+    modelRef.current.position.lerp(route[routeIdx + 1], 0.08);
+
+    // 다음 루트로 이동
+    if (modelRef.current.position.distanceTo(route[routeIdx + 1]) < 0.01) setRouteIdx(routeIdx + 1);
+
+    // 방향 바꾸기
+    if (
+      modelRef.current.position.distanceTo(route[routeIdx]) < 0.1 &&
+      routeIdx < route.length - 1
+    ) {
+      const curDir = [
+        route[routeIdx + 1].z - route[routeIdx].z,
+        route[routeIdx + 1].x - route[routeIdx].x,
+      ];
+      if (curDir[0] === 0) {
+        if (curDir[1] === 1) {
+          modelRef.current.rotation.set(0, Math.PI / 2, 0);
+        } else {
+          modelRef.current.rotation.set(0, (3 * Math.PI) / 2, 0);
+        }
+      } else {
+        if (curDir[0] === 1) {
+          modelRef.current.rotation.set(0, 0, 0);
+        } else {
+          modelRef.current.rotation.set(0, Math.PI, 0);
+        }
+      }
+    }
+  });
 
   return (
-    <Suspense>
-      <primitive object={model.scene} />
-    </Suspense>
+    <group position={new THREE.Vector3(1, 0, 1)}>
+      <group ref={modelRef}>
+        <primitive object={model.scene} />
+      </group>
+    </group>
   );
 }
 
