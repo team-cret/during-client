@@ -97,7 +97,7 @@ function Avatar({
 }: {
   avatarInfo: {
     style: {
-      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+      [key in avatarDecorationCategoriesType]: string | null;
     };
     position: THREE.Vector3;
     rotation: number;
@@ -132,14 +132,10 @@ function Avatar({
         if (avatarInfo.style.하의 === null && child.name === 'basic-bottoms') child.visible = true;
         if (child.name === 'body') child.visible = true;
 
-        if (avatarInfo.style.상의 && child.name === avatarInfo.style.상의.name)
-          child.visible = true;
-        if (avatarInfo.style.하의 && child.name === avatarInfo.style.하의.name)
-          child.visible = true;
-        if (avatarInfo.style.신발 && child.name === avatarInfo.style.신발.name)
-          child.visible = true;
-        if (avatarInfo.style.헤어 && child.name === avatarInfo.style.헤어.name)
-          child.visible = true;
+        if (avatarInfo.style.상의 && child.name === avatarInfo.style.상의) child.visible = true;
+        if (avatarInfo.style.하의 && child.name === avatarInfo.style.하의) child.visible = true;
+        if (avatarInfo.style.신발 && child.name === avatarInfo.style.신발) child.visible = true;
+        if (avatarInfo.style.헤어 && child.name === avatarInfo.style.헤어) child.visible = true;
       }
     });
   }, [avatarInfo.style]);

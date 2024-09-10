@@ -11,14 +11,14 @@ type State = {
   category: avatarDecorationCategoriesType;
   isPurchaseMode: boolean;
   purchaseItems: Array<{
-    item: AvatarItem;
+    id: string;
     isSelected: boolean;
   }>;
   bottomSheetMode: 'three-rows' | 'one-row' | 'handle-only';
-  bagItems: Array<AvatarItem>;
-  shopItems: Array<AvatarItem>;
+  bagItems: Array<string>;
+  shopItems: Array<string>;
   avatarStyle: {
-    [key in avatarDecorationCategoriesType]: AvatarItem | null;
+    [key in avatarDecorationCategoriesType]: string | null;
   };
 };
 
@@ -46,9 +46,9 @@ type Action = {
 
   setBottomSheetMode: (mode: 'three-rows' | 'one-row' | 'handle-only') => void;
 
-  selectBagItem: (id: number) => void;
-  selectShopItem: (id: number) => void;
-  togglePurchaseItem: (id: number) => void;
+  selectBagItem: (id: string) => void;
+  selectShopItem: (id: string) => void;
+  togglePurchaseItem: (id: string) => void;
   confirmPurchase: () => {
     style: State['avatarStyle'];
   };
@@ -95,22 +95,18 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
     }
   },
   selectShopItem: (id) => {
-    const selectedItem = avatarItems.find((item) => item.id === id);
-    if (!selectedItem) return;
-    if (
-      get().avatarStyle[selectedItem.category] &&
-      get().avatarStyle[selectedItem.category]?.id === id
-    ) {
+    const selectedItemCategory = avatarItems[id].category;
+    if (get().avatarStyle[selectedItemCategory] === id) {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: null },
-        purchaseItems: state.purchaseItems.filter((item) => item.item.id !== id),
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: null },
+        purchaseItems: state.purchaseItems.filter((item) => item.id !== id),
       }));
     } else {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: selectedItem },
-        purchaseItems: [...state.purchaseItems, { item: selectedItem, isSelected: true }],
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: id },
+        purchaseItems: [...state.purchaseItems, { id, isSelected: true }],
       }));
     }
   },
@@ -118,16 +114,15 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
     set((state) => ({
       ...state,
       purchaseItems: state.purchaseItems.map((item) =>
-        item.item.id === id ? { ...item, isSelected: !item.isSelected } : item
+        item.id === id ? { ...item, isSelected: !item.isSelected } : item
       ),
     }));
   },
   confirmPurchase: () => {
     const newAvatarStyle = get().avatarStyle;
     get().purchaseItems.forEach((item) => {
-      if (item.isSelected) {
-        newAvatarStyle[item.item.category] = item.item;
-      }
+      if (item.isSelected) return;
+      newAvatarStyle[avatarItems[item.id].category] = null;
     });
     return { style: newAvatarStyle };
   },

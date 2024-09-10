@@ -1,5 +1,6 @@
 import {
   AvatarItem,
+  avatarItems,
   COLOR_BASE_1,
   COLOR_BASE_2,
   COLOR_BASE_4,
@@ -13,28 +14,32 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import CheckIcon from '@/src/shared/assets/icons/decoration/check.svg';
 import CheckDisabledIcon from '@/src/shared/assets/icons/decoration/check-disabled.svg';
 import CreditIcon from '@/src/shared/assets/icons/decoration/credit.svg';
-import { useDecorateRoomStore } from '@/src/features';
+import { useDecorateAvatarStore } from '@/src/features';
 
-function Item({ purchaseItem }: { purchaseItem: { item: AvatarItem; isSelected: boolean } }) {
-  const { togglePurchaseItem } = useDecorateRoomStore();
+function Item({ purchaseItem }: { purchaseItem: { id: string; isSelected: boolean } }) {
+  const { togglePurchaseItem } = useDecorateAvatarStore();
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={26} />
       <View style={styles.itemRow}>
-        <Pressable onPress={() => togglePurchaseItem(purchaseItem.item.id)}>
+        <Pressable onPress={() => togglePurchaseItem(purchaseItem.id)}>
           {purchaseItem.isSelected ? (
             <CheckIcon width={convertWidth(20)} height={convertHeight(20)} />
           ) : (
             <CheckDisabledIcon width={convertWidth(20)} height={convertHeight(20)} />
           )}
         </Pressable>
-        <Image source={purchaseItem.item.image} style={styles.image} resizeMode="cover" />
+        <Image
+          source={avatarItems[purchaseItem.id].image}
+          style={styles.image}
+          resizeMode="cover"
+        />
         <View style={styles.infoContainer}>
-          <Text style={styles.nameText}>{purchaseItem.item.name}</Text>
+          <Text style={styles.nameText}>{avatarItems[purchaseItem.id].name}</Text>
 
           <View style={styles.priceContainer}>
             <CreditIcon width={convertWidth(14)} height={convertHeight(14)} />
-            <Text style={styles.priceText}>{purchaseItem.item.price}</Text>
+            <Text style={styles.priceText}>{avatarItems[purchaseItem.id].price}</Text>
           </View>
         </View>
       </View>

@@ -44,8 +44,8 @@ function PurchaseBottomSheet() {
           <Text style={styles.cancleText}>취소</Text>
         </Pressable>
       </View>
-      {purchaseItems.map((item, index) => {
-        return <Item key={index} purchaseItem={item} />;
+      {purchaseItems.map((id, index) => {
+        return <Item key={index} purchaseItem={id} />;
       })}
       <BarButtonGreen
         text="구매"

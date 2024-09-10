@@ -19,7 +19,7 @@ type State = {
 
   myAvatar: {
     style: {
-      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+      [key in avatarDecorationCategoriesType]: string | null;
     };
     position: THREE.Vector3;
     rotation: number;
@@ -27,7 +27,7 @@ type State = {
   };
   otherAvatar: {
     style: {
-      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+      [key in avatarDecorationCategoriesType]: string | null;
     };
     position: THREE.Vector3;
     rotation: number;
@@ -69,7 +69,7 @@ type Action = {
     style,
   }: {
     style: {
-      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+      [key in avatarDecorationCategoriesType]: string | null;
     };
   }) => void;
   updateRoom: ({
@@ -82,7 +82,7 @@ type Action = {
       position: THREE.Vector3;
       rotation: number;
     }>;
-  }) => void;
+  }) => Promise<boolean>;
   updateMyAvatarPosition: (position: THREE.Vector3) => void;
 };
 
@@ -142,7 +142,7 @@ const useRoomStore = create<State & Action>((set, get) => ({
       },
     }));
   },
-  updateRoom: ({ background, objects }) => {
+  updateRoom: async ({ background, objects }) => {
     const newIsObjectExists = Array.from({ length: 12 }, () =>
       Array.from({ length: 12 }, () => false)
     );
@@ -176,6 +176,8 @@ const useRoomStore = create<State & Action>((set, get) => ({
         route: [],
       },
     }));
+
+    return true;
   },
   updateMyAvatarPosition: (position) => {
     position = new THREE.Vector3(

@@ -46,300 +46,260 @@ const avatarItemList = [
 ] as const;
 
 type AvatarItem = {
-  id: number;
   name: (typeof avatarItemList)[number];
   price: number;
   image: ImageSourcePropType;
   category: (typeof avatarDecorationCategories)[number];
 };
 
-const avatarItems: AvatarItem[] = [
-  {
-    id: 1,
+const avatarItems: {
+  [key: string]: AvatarItem;
+} = {
+  '1': {
     name: 'avatar1-hair-black-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-black-female.png'),
     category: '헤어',
   },
-  {
-    id: 2,
+  '2': {
     name: 'avatar1-hair-brown-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-brown-female.png'),
     category: '헤어',
   },
-  {
-    id: 3,
+  '3': {
     name: 'avatar1-hair-green-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-green-female.png'),
     category: '헤어',
   },
-  {
-    id: 4,
+  '4': {
     name: 'avatar1-hair-pink-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-pink-female.png'),
     category: '헤어',
   },
-  {
-    id: 5,
+  '5': {
     name: 'avatar1-hair-black-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-black-male.png'),
     category: '헤어',
   },
-  {
-    id: 6,
+  '6': {
     name: 'avatar1-hair-brown-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-brown-male.png'),
     category: '헤어',
   },
-  {
-    id: 7,
+  '7': {
     name: 'avatar1-hair-green-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-green-male.png'),
     category: '헤어',
   },
-  {
-    id: 8,
+  '8': {
     name: 'avatar1-hair-pink-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-pink-male.png'),
     category: '헤어',
   },
-  {
-    id: 9,
+  '9': {
     name: 'avatar1-tops',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-tops.png'),
     category: '상의',
   },
-  {
-    id: 10,
+  '10': {
     name: 'avatar1-bottoms-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-bottoms-female.png'),
     category: '하의',
   },
-  {
-    id: 11,
+  '11': {
     name: 'avatar1-bottoms-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-bottoms-male.png'),
     category: '하의',
   },
-  {
-    id: 12,
+  '12': {
     name: 'avatar1-shoes-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-shoes-female.png'),
     category: '신발',
   },
-  {
-    id: 13,
+  '13': {
     name: 'avatar1-shoes-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar1-shoes-male.png'),
     category: '신발',
   },
-  {
-    id: 14,
+  '14': {
     name: 'avatar2-hair-black-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-black-female.png'),
     category: '헤어',
   },
-  {
-    id: 15,
+  '15': {
     name: 'avatar2-hair-brown-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-brown-female.png'),
     category: '헤어',
   },
-  {
-    id: 16,
+  '16': {
     name: 'avatar2-hair-green-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-green-female.png'),
     category: '헤어',
   },
-  {
-    id: 17,
+  '17': {
     name: 'avatar2-hair-pink-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-pink-female.png'),
     category: '헤어',
   },
-  {
-    id: 18,
+  '18': {
     name: 'avatar2-hair-black-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-black-male.png'),
     category: '헤어',
   },
-  {
-    id: 19,
+  '19': {
     name: 'avatar2-hair-brown-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-brown-male.png'),
     category: '헤어',
   },
-  {
-    id: 20,
+  '20': {
     name: 'avatar2-hair-green-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-green-male.png'),
     category: '헤어',
   },
-  {
-    id: 21,
+  '21': {
     name: 'avatar2-hair-pink-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-pink-male.png'),
     category: '헤어',
   },
-  {
-    id: 22,
+  '22': {
     name: 'avatar2-tops-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-tops-female.png'),
     category: '상의',
   },
-  {
-    id: 23,
+  '23': {
     name: 'avatar2-tops-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-tops-male.png'),
     category: '상의',
   },
-  {
-    id: 24,
+  '24': {
     name: 'avatar2-bottoms-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-bottoms-female.png'),
     category: '하의',
   },
-  {
-    id: 25,
+  '25': {
     name: 'avatar2-bottoms-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-bottoms-male.png'),
     category: '하의',
   },
-  {
-    id: 26,
+  '26': {
     name: 'avatar2-shoes-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-shoes-female.png'),
     category: '신발',
   },
-  {
-    id: 27,
+  '27': {
     name: 'avatar2-shoes-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar2-shoes-male.png'),
     category: '신발',
   },
-  {
-    id: 28,
+  '28': {
     name: 'avatar3-hair-black-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-black-female.png'),
     category: '헤어',
   },
-  {
-    id: 29,
+  '29': {
     name: 'avatar3-hair-brown-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-brown-female.png'),
     category: '헤어',
   },
-  {
-    id: 30,
+  '30': {
     name: 'avatar3-hair-green-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-green-female.png'),
     category: '헤어',
   },
-  {
-    id: 31,
+  '31': {
     name: 'avatar3-hair-pink-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-pink-female.png'),
     category: '헤어',
   },
-  {
-    id: 32,
+  '32': {
     name: 'avatar3-hair-black-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-black-male.png'),
     category: '헤어',
   },
-  {
-    id: 33,
+  '33': {
     name: 'avatar3-hair-brown-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-brown-male.png'),
     category: '헤어',
   },
-  {
-    id: 34,
+  '34': {
     name: 'avatar3-hair-green-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-green-male.png'),
     category: '헤어',
   },
-  {
-    id: 35,
+  '35': {
     name: 'avatar3-hair-pink-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-pink-male.png'),
     category: '헤어',
   },
-  {
-    id: 36,
+  '36': {
     name: 'avatar3-tops-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-tops-female.png'),
     category: '상의',
   },
-  {
-    id: 37,
+  '37': {
     name: 'avatar3-tops-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-tops-male.png'),
     category: '상의',
   },
-  {
-    id: 38,
+  '38': {
     name: 'avatar3-bottoms-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-bottoms-female.png'),
     category: '하의',
   },
-  {
-    id: 39,
+  '39': {
     name: 'avatar3-bottoms-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-bottoms-male.png'),
     category: '하의',
   },
-  {
-    id: 40,
+  '40': {
     name: 'avatar3-shoes-female',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-shoes-female.png'),
     category: '신발',
   },
-  {
-    id: 41,
+  '41': {
     name: 'avatar3-shoes-male',
     price: 0,
     image: require('@/src/shared/assets/images/avatar-items/avatar3-shoes-male.png'),
     category: '신발',
   },
-];
-export { avatarItems, AvatarItem, avatarItemList };
+};
+export { avatarItems, AvatarItem };
