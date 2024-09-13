@@ -1,11 +1,13 @@
+import { useUserStore } from '@/src/features';
 import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth } from '@/src/shared';
 import { StyleSheet, Text, View } from 'react-native';
 
 function InfoPanel() {
+  const { name } = useUserStore();
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer} />
-      <Text style={styles.nameText}>수빈콩</Text>
+      <Text style={styles.nameText}>{name ?? ''}</Text>
     </View>
   );
 }

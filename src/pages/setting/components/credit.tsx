@@ -2,15 +2,17 @@ import { COLOR_BASE_1, convertHeight, convertWidth } from '@/src/shared';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CreditIcon from '@/src/shared/assets/icons/setting/credit.svg';
-import ArrorIcon from '@/src/shared/assets/icons/setting/right-arrow.svg';
+import ArrorwIcon from '@/src/shared/assets/icons/setting/right-arrow.svg';
+import { useCoupleStore } from '@/src/features';
 
 function Credit() {
+  const { cashPoint } = useCoupleStore();
   return (
     <View style={styles.container}>
       <CreditIcon width={convertWidth(14)} height={convertHeight(14)} />
-      <Text style={styles.text}>5,403,000</Text>
+      <Text style={styles.text}>{cashPoint}</Text>
       <Pressable style={styles.navigateContainer}>
-        <ArrorIcon width={convertWidth(6)} height={convertHeight(9)} />
+        <ArrorwIcon width={convertWidth(6)} height={convertHeight(9)} />
       </Pressable>
     </View>
   );
