@@ -1,15 +1,18 @@
 import { useNotificationStore } from '@/src/features';
 import { convertHeight, convertWidth } from '@/src/shared';
-import { useEffect } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 function NotificationPage() {
   const { notificationList, getNotificationList, deleteNotification, acceptCoupleConnection } =
     useNotificationStore();
-  useEffect(() => {
-    getNotificationList();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getNotificationList();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
