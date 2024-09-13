@@ -13,7 +13,12 @@ import { MenuItem } from './components/menu-item';
 import RoomIconLight from '@/src/shared/assets/icons/menu/room-light.svg';
 import AvatarIconLight from '@/src/shared/assets/icons/menu/avatar-light.svg';
 import SettingIconLight from '@/src/shared/assets/icons/menu/setting-light.svg';
-import { useDecorateAvatarStore, useDecorateRoomStore, useRoomStore } from '@/src/features';
+import {
+  useDecorateAvatarStore,
+  useDecorateRoomStore,
+  useRoomStore,
+  useSideBarStore,
+} from '@/src/features';
 import { useNavigation } from 'expo-router';
 
 function MenuPage() {
@@ -25,6 +30,7 @@ function MenuPage() {
   const { init: decorateRoomInit } = useDecorateRoomStore();
   const { init: decorateAvatarInit } = useDecorateAvatarStore();
   const navigation = useNavigation<NavProp<'menu/index'>>();
+  const { closeSideBar } = useSideBarStore();
 
   return (
     <View style={styles.container}>
@@ -43,6 +49,7 @@ function MenuPage() {
         onPress={() => {
           decorateRoomInit({ background, objects });
           navigation.navigate('decorate-room/index');
+          closeSideBar();
         }}
       />
       <MenuItem
@@ -51,6 +58,7 @@ function MenuPage() {
         onPress={() => {
           decorateAvatarInit({ avatarStyle });
           navigation.navigate('decorate-avatar/index');
+          closeSideBar();
         }}
       />
       <HorizontalDivider
@@ -64,7 +72,10 @@ function MenuPage() {
       <MenuItem
         Icon={<SettingIconLight width={convertWidth(23)} height={convertHeight(24)} />}
         title="설정"
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('setting/index');
+          closeSideBar();
+        }}
       />
     </View>
   );
