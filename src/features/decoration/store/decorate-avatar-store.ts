@@ -1,3 +1,4 @@
+import { getAvatarBagAPI, getAvatarShopAPI, purchaseAvatarObjectAPI } from '@/src/entities';
 import {
   avatarDecorationCategories,
   avatarDecorationCategoriesType,
@@ -29,7 +30,7 @@ const defaultState: State = {
   purchaseItems: [],
   bottomSheetMode: 'handle-only',
   bagItems: [],
-  shopItems: Array.from({ length: 41 }, (_, i) => avatarItems[i]),
+  shopItems: [],
   avatarStyle: {
     헤어: null,
     상의: null,
@@ -39,7 +40,7 @@ const defaultState: State = {
 };
 
 type Action = {
-  init: ({ avatarStyle }: { avatarStyle: State['avatarStyle'] }) => void;
+  init: ({ avatarStyle }: { avatarStyle: State['avatarStyle'] }) => Promise<boolean>;
   setMode: (mode: number) => void;
   setCategory: (category: avatarDecorationCategoriesType) => void;
   setIsPurchaseMode: (isPurchaseMode: boolean) => void;
@@ -49,53 +50,58 @@ type Action = {
   selectBagItem: (id: string) => void;
   selectShopItem: (id: string) => void;
   togglePurchaseItem: (id: string) => void;
-  confirmPurchase: () => {
+
+  ////구매하기
+  //수정된 스타일 오브젝트는 수정된 값으로, 수정되지 않은 스타일 오브젝트는 null 반환
+  confirmPurchase: () => Promise<{
     style: State['avatarStyle'];
-  };
+  }>;
 };
 
 const useDecorateAvatarStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  init: ({ avatarStyle }) =>
+  init: async ({ avatarStyle }) => {
+    const bagItems = await getAvatarBagAPI();
+    const shopItems = await getAvatarShopAPI();
+
     set({
       mode: defaultState.mode,
       category: defaultState.category,
       isPurchaseMode: defaultState.isPurchaseMode,
       purchaseItems: defaultState.purchaseItems,
       bottomSheetMode: defaultState.bottomSheetMode,
-      bagItems: defaultState.bagItems,
-      shopItems: defaultState.shopItems,
+      bagItems,
+      shopItems,
       avatarStyle,
-    }),
+    });
+    return true;
+  },
   setMode: (mode) => set({ mode }),
   setCategory: (category) => set({ category }),
   setIsPurchaseMode: (isPurchaseMode) => set({ isPurchaseMode }),
   setBottomSheetMode: (bottomSheetMode) => set({ bottomSheetMode }),
   selectBagItem: (id) => {
-    const selectedItem = avatarItems.find((item) => item.id === id);
-    if (!selectedItem) return;
+    const selectedItemCategory = avatarItems[id].category;
+    if (!selectedItemCategory) return;
 
-    if (
-      get().avatarStyle[selectedItem.category] &&
-      get().avatarStyle[selectedItem.category]?.id === id
-    ) {
+    if (get().avatarStyle[selectedItemCategory] === id) {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: null },
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: null },
+        purchaseItems: state.purchaseItems.filter((item) => item.id !== id),
       }));
-      return;
     } else {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: selectedItem },
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: id },
       }));
-      return;
     }
   },
   selectShopItem: (id) => {
     const selectedItemCategory = avatarItems[id].category;
+    if (!selectedItemCategory) return;
     if (get().avatarStyle[selectedItemCategory] === id) {
       set((state) => ({
         ...state,
@@ -118,12 +124,21 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
       ),
     }));
   },
-  confirmPurchase: () => {
+  confirmPurchase: async () => {
+    const purchaseResult = await purchaseAvatarObjectAPI(
+      get().purchaseItems.filter((item) => item.isSelected)
+    );
+    if (!purchaseResult)
+      return {
+        style: defaultState.avatarStyle,
+      };
+
     const newAvatarStyle = get().avatarStyle;
     get().purchaseItems.forEach((item) => {
       if (item.isSelected) return;
       newAvatarStyle[avatarItems[item.id].category] = null;
     });
+
     return { style: newAvatarStyle };
   },
 }));

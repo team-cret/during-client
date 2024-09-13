@@ -1,17 +1,28 @@
 import {
+  getAvatarStyleAPI,
+  getRoomInfoAPI,
+  updateAvatarStyleAPI,
+  updateRoomInfoAPI,
+} from '@/src/entities';
+import {
   avatarDecorationCategories,
   avatarDecorationCategoriesType,
-  AvatarItem,
-  RoomItem,
   roomItems,
 } from '@/src/shared';
 import THREE from 'three';
 import { create } from 'zustand';
 
 type State = {
-  background: RoomItem;
+  id: number;
+  name: string;
+  thumbnailImageUrl: string;
+  background: {
+    id: number | null;
+    itemId: string;
+  };
   objects: Array<{
-    item: RoomItem;
+    id: number;
+    itemId: string;
     position: THREE.Vector3;
     rotation: number;
   }>;
@@ -36,7 +47,13 @@ type State = {
 };
 
 const defaultState: State = {
-  background: roomItems[0],
+  id: 0,
+  name: '',
+  thumbnailImageUrl: '',
+  background: {
+    id: null,
+    itemId: '1',
+  },
   objects: [],
   isObjectExists: Array.from({ length: 12 }, () => Array.from({ length: 12 }, () => false)),
   myAvatar: {
@@ -46,7 +63,7 @@ const defaultState: State = {
       하의: null,
       신발: null,
     },
-    position: new THREE.Vector3(-1, -1, -1),
+    position: new THREE.Vector3(-2, -2, -2),
     rotation: 0,
     animation: 0,
   },
@@ -57,14 +74,14 @@ const defaultState: State = {
       하의: null,
       신발: null,
     },
-    position: new THREE.Vector3(-1, -1, -1),
+    position: new THREE.Vector3(-2, -2, -2),
     rotation: 0,
     animation: 0,
   },
 };
 
 type Action = {
-  initRoom: () => void;
+  initRoom: () => Promise<void>;
   updateMyAvatarStyle: ({
     style,
   }: {
@@ -76,13 +93,17 @@ type Action = {
     background,
     objects,
   }: {
-    background: RoomItem | null;
+    background: {
+      id: number | null;
+      itemId: string;
+    } | null;
     objects: Array<{
-      item: RoomItem;
+      id: number | null;
+      itemId: string;
       position: THREE.Vector3;
       rotation: number;
-    }>;
-  }) => Promise<boolean>;
+    }> | null;
+  }) => void;
   updateMyAvatarPosition: (position: THREE.Vector3) => void;
 };
 
@@ -90,31 +111,27 @@ const useRoomStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  initRoom: () => {
-    const objects = [
-      {
-        item: roomItems[1],
-        position: new THREE.Vector3(0, 0, 0),
-        rotation: 0,
-      },
-      {
-        item: roomItems[3],
-        position: new THREE.Vector3(7, 0, 5),
-        rotation: 0,
-      },
-    ];
+  initRoom: async () => {
+    const { id, name, thumbnailImageUrl, background, objects } = await getRoomInfoAPI();
+
     const isObjectExists = Array.from({ length: 12 }, () =>
       Array.from({ length: 12 }, () => false)
     );
     for (const object of objects) {
       for (
         let i = 0;
-        i < (object.rotation % 2 === 0 ? object.item.size.width : object.item.size.depth);
+        i <
+        (object.rotation % 2 === 0
+          ? roomItems[object.id].size.width
+          : roomItems[object.id].size.depth);
         i++
       ) {
         for (
           let j = 0;
-          j < (object.rotation % 2 === 1 ? object.item.size.width : object.item.size.depth);
+          j <
+          (object.rotation % 2 === 1
+            ? roomItems[object.id].size.width
+            : roomItems[object.id].size.depth);
           j++
         ) {
           isObjectExists[object.position.z + i][object.position.x + j] = true;
@@ -122,62 +139,118 @@ const useRoomStore = create<State & Action>((set, get) => ({
       }
     }
 
+    const { myAvatarStyle, otherAvatarStyle } = await getAvatarStyleAPI();
+
     set({
       ...defaultState,
+      id,
+      name,
+      thumbnailImageUrl,
+      background: background ?? defaultState.background,
       objects,
       isObjectExists,
       myAvatar: {
         ...defaultState.myAvatar,
-        position: new THREE.Vector3(8, 0, 8),
-        rotation: 0,
+        style: myAvatarStyle
+          ? {
+              상의: myAvatarStyle.style['상의'] !== '' ? myAvatarStyle.style['상의'] : null,
+              하의: myAvatarStyle.style['하의'] !== '' ? myAvatarStyle.style['하의'] : null,
+              신발: myAvatarStyle.style['신발'] !== '' ? myAvatarStyle.style['신발'] : null,
+              헤어: myAvatarStyle.style['헤어'] !== '' ? myAvatarStyle.style['헤어'] : null,
+            }
+          : defaultState.myAvatar.style,
+        position: (myAvatarStyle ?? defaultState.myAvatar).position,
+      },
+      otherAvatar: {
+        ...defaultState.otherAvatar,
+        style: otherAvatarStyle
+          ? {
+              상의: otherAvatarStyle.style['상의'] !== '' ? otherAvatarStyle.style['상의'] : null,
+              하의: otherAvatarStyle.style['하의'] !== '' ? otherAvatarStyle.style['하의'] : null,
+              신발: otherAvatarStyle.style['신발'] !== '' ? otherAvatarStyle.style['신발'] : null,
+              헤어: otherAvatarStyle.style['헤어'] !== '' ? otherAvatarStyle.style['헤어'] : null,
+            }
+          : defaultState.otherAvatar.style,
+        position: (otherAvatarStyle ?? defaultState.otherAvatar).position,
       },
     });
   },
   updateMyAvatarStyle: ({ style }) => {
-    set((state) => ({
-      ...state,
-      myAvatar: {
-        ...state.myAvatar,
-        style,
-      },
-    }));
-  },
-  updateRoom: async ({ background, objects }) => {
-    const newIsObjectExists = Array.from({ length: 12 }, () =>
-      Array.from({ length: 12 }, () => false)
+    const addedProducts = [];
+    const removedProduct = [];
+
+    for (const category of avatarDecorationCategories) {
+      if (style[category] !== null && get().myAvatar.style[category] !== style[category])
+        addedProducts.push({ id: style[category]! });
+      else if (
+        get().myAvatar.style[category] !== null &&
+        get().myAvatar.style[category] !== style[category]
+      )
+        removedProduct.push({ id: get().myAvatar.style[category]! });
+    }
+    updateAvatarStyleAPI({ addProducts: addedProducts, removeProducts: removedProduct }).then(
+      () => {
+        get().initRoom();
+      }
     );
-    for (const object of objects) {
-      for (
-        let i = 0;
-        i < (object.rotation % 2 === 0 ? object.item.size.width : object.item.size.depth);
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < (object.rotation % 2 === 1 ? object.item.size.width : object.item.size.depth);
-          j++
-        ) {
-          newIsObjectExists[object.position.z + i][object.position.x + j] = true;
-        }
+  },
+  updateRoom: ({ background, objects }) => {
+    const addedObjects: Array<{
+      itemId: string;
+      position: THREE.Vector3;
+      rotation: number;
+    }> = [];
+    const updatedObjects: Array<{
+      id: number;
+      position: THREE.Vector3;
+      rotation: number;
+    }> = [];
+    const removedObjects: Array<{
+      id: number;
+      itemId: string;
+    }> = [];
+
+    if (background !== null && background.id === null) {
+      addedObjects.push({
+        itemId: background.itemId,
+        position: new THREE.Vector3(0, 0, 0),
+        rotation: 0,
+      });
+      if (get().background.id)
+        removedObjects.push({ id: get().background.id!, itemId: get().background.itemId });
+    }
+
+    if (objects !== null) {
+      for (const object of objects) {
+        if (object.id === null)
+          addedObjects.push({
+            itemId: object.itemId,
+            position: object.position,
+            rotation: object.rotation,
+          });
+        else
+          updatedObjects.push({
+            id: object.id,
+            position: object.position,
+            rotation: object.rotation,
+          });
+      }
+      for (const object of get().objects) {
+        if (!objects.find((o) => o.id === object.id))
+          removedObjects.push({ id: object.id, itemId: object.itemId });
       }
     }
 
-    set((state) => ({
-      ...state,
-      background: background !== null ? background : state.background,
-      isObjectExists: newIsObjectExists,
-      objects,
-      myAvatar: {
-        ...state.myAvatar,
-        route: [],
-      },
-      otherAvatar: {
-        ...state.otherAvatar,
-        route: [],
-      },
-    }));
-
-    return true;
+    updateRoomInfoAPI({
+      roomId: get().id,
+      name: get().name,
+      thumbnailImageUrl: get().thumbnailImageUrl,
+      addedObjects,
+      updatedObjects,
+      removedObjects,
+    }).then(() => {
+      get().initRoom();
+    });
   },
   updateMyAvatarPosition: (position) => {
     position = new THREE.Vector3(
