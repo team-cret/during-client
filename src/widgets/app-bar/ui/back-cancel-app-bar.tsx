@@ -3,12 +3,14 @@ import { View } from 'react-native';
 import { BackIconTextButton, CloseButton, convertHeight, SpaceFlexBox } from '@/src/shared';
 
 function BackCancelAppBar({
-  backDisabled = true,
-  cancelDisabled = true,
+  backDisabled = false,
+  cancelDisabled = false,
+  onBackPressed = () => {},
   onCancelPressed = () => {},
 }: {
   backDisabled?: boolean;
   cancelDisabled?: boolean;
+  onBackPressed?: () => void;
   onCancelPressed?: () => void;
 }) {
   return (
@@ -23,15 +25,15 @@ function BackCancelAppBar({
       }}
     >
       <SpaceFlexBox flex={24} />
-      <View style={{ display: backDisabled ? 'flex' : 'none' }}>
+      <View style={{ display: backDisabled ? 'none' : 'flex' }}>
         <BackIconTextButton
           onPress={() => {
-            //enable 안됐을 때 처리하기
+            onBackPressed();
           }}
         />
       </View>
       <SpaceFlexBox flex={245} />
-      <View style={{ display: cancelDisabled ? 'flex' : 'none' }}>
+      <View style={{ display: cancelDisabled ? 'none' : 'flex' }}>
         <CloseButton
           onPress={() => {
             onCancelPressed();

@@ -13,7 +13,12 @@ import { SettingItem } from './components/setting-item';
 function SettingPage() {
   return (
     <View style={styles.container}>
-      <TitleCloseAppbar title="설정" />
+      <TitleCloseAppbar
+        title="설정"
+        onPress={() => {
+          navigation.pop();
+        }}
+      />
       <InfoPanel />
       <HorizontalDivider
         width={convertWidth(331)}

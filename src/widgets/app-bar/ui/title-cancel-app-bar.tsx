@@ -3,11 +3,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CloseIcon from '@/src/shared/assets/icons/menu/close.svg';
 
-function TitleCloseAppbar({ title }: { title: string }) {
+function TitleCloseAppbar({ title, onPress }: { title: string; onPress?: () => void }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <Pressable style={styles.closeButton}>
+      <Pressable style={styles.closeButton} onPress={onPress}>
         <CloseIcon width={convertWidth(20)} height={convertHeight(20)} />
       </Pressable>
     </View>
