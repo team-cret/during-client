@@ -11,20 +11,22 @@ import {
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CreditIcon from '@/src/shared/assets/icons/decoration/credit.svg';
-import { useDecorateAvatarStore, useRoomStore } from '@/src/features';
+import { useCoupleStore, useDecorateAvatarStore, useRoomStore } from '@/src/features';
 import { useNavigation } from 'expo-router';
 
 function UpperButtons() {
   const navigation = useNavigation<NavProp<'decorate-avatar/index'>>();
+  const { cashPoint } = useCoupleStore();
   const { isPurchaseMode, setIsPurchaseMode, purchaseItems, confirmPurchase } =
     useDecorateAvatarStore();
   const { updateMyAvatarStyle } = useRoomStore();
 
   function onConfirm() {
     if (purchaseItems.length === 0) {
-      const newAvatarStyle = confirmPurchase();
-      updateMyAvatarStyle(newAvatarStyle);
-      navigation.navigate('main/index');
+      confirmPurchase().then((newAvatarStyle) => {
+        updateMyAvatarStyle(newAvatarStyle);
+        navigation.navigate('main/index');
+      });
     } else {
       setIsPurchaseMode(true);
     }
@@ -38,7 +40,7 @@ function UpperButtons() {
       <View style={styles.creditButton}>
         <CreditIcon width={convertWidth(14)} />
         <HorizontalSizedBox width={convertWidth(13)} />
-        <Text style={styles.creditButtonText}>5403000</Text>
+        <Text style={styles.creditButtonText}>{cashPoint}</Text>
       </View>
       <Pressable
         style={[styles.blackButton, { opacity: isPurchaseMode ? 0 : 1 }]}

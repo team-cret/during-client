@@ -22,9 +22,10 @@ function UpperButtons() {
 
   function onConfirm() {
     if (purchaseItems.length === 0) {
-      const newRoom = confirmPurchase();
-      updateRoom(newRoom);
-      navigation.navigate('main/index');
+      confirmPurchase().then((newRoom) => {
+        updateRoom(newRoom);
+        navigation.navigate('main/index');
+      });
     } else {
       setIsPurchaseMode(true);
     }

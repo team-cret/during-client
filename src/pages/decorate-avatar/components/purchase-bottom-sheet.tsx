@@ -50,9 +50,10 @@ function PurchaseBottomSheet() {
       <BarButtonGreen
         text="구매"
         onPress={() => {
-          const newMyAvatarStyle = confirmPurchase();
-          updateMyAvatarStyle(newMyAvatarStyle);
-          navigation.navigate('main/index');
+          confirmPurchase().then((newAvatarStyle) => {
+            updateMyAvatarStyle(newAvatarStyle);
+            navigation.navigate('main/index');
+          });
         }}
         bottom={convertHeight(23)}
       />

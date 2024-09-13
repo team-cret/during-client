@@ -5,6 +5,7 @@ import {
   convertHeight,
   convertWidth,
   RoomItem,
+  roomItems,
   SpaceFlexBox,
 } from '@/src/shared';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -12,28 +13,24 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import CheckIcon from '@/src/shared/assets/icons/decoration/check.svg';
 import CheckDisabledIcon from '@/src/shared/assets/icons/decoration/check-disabled.svg';
 import CreditIcon from '@/src/shared/assets/icons/decoration/credit.svg';
-import { useDecorateRoomStore } from '@/src/features';
 
-function Item({ purchaseItem }: { purchaseItem: { item: RoomItem; isSelected: boolean } }) {
-  const { togglePurchaseItem } = useDecorateRoomStore();
+function Item({ purchaseItem }: { purchaseItem: { itemId: string } }) {
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={26} />
       <View style={styles.itemRow}>
-        <Pressable onPress={() => togglePurchaseItem(purchaseItem.item.id)}>
-          {purchaseItem.isSelected ? (
-            <CheckIcon width={convertWidth(20)} height={convertHeight(20)} />
-          ) : (
-            <CheckDisabledIcon width={convertWidth(20)} height={convertHeight(20)} />
-          )}
-        </Pressable>
-        <Image source={purchaseItem.item.image} style={styles.image} resizeMode="cover" />
+        <CheckIcon width={convertWidth(20)} height={convertHeight(20)} />
+        <Image
+          source={roomItems[purchaseItem.itemId].image}
+          style={styles.image}
+          resizeMode="cover"
+        />
         <View style={styles.infoContainer}>
-          <Text style={styles.nameText}>{purchaseItem.item.name}</Text>
+          <Text style={styles.nameText}>{roomItems[purchaseItem.itemId].name}</Text>
 
           <View style={styles.priceContainer}>
             <CreditIcon width={convertWidth(14)} height={convertHeight(14)} />
-            <Text style={styles.priceText}>{purchaseItem.item.price}</Text>
+            <Text style={styles.priceText}>{roomItems[purchaseItem.itemId].price}</Text>
           </View>
         </View>
       </View>

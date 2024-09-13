@@ -107,6 +107,7 @@ function SideBar() {
             style={styles.iconContainer}
             onPress={() => {
               decorateRoomInit({ background, objects });
+              closeSideBar();
               navigation.navigate('decorate-room/index');
             }}
           >
@@ -117,6 +118,7 @@ function SideBar() {
             style={styles.iconContainer}
             onPress={() => {
               decorateAvatarInit({ avatarStyle });
+              closeSideBar();
               navigation.navigate('decorate-avatar/index');
             }}
           >
@@ -130,9 +132,15 @@ function SideBar() {
             lowerFlex={25}
             color={COLOR_BASE_2_30}
           />
-          <View style={styles.iconContainer}>
+          <Pressable
+            style={styles.iconContainer}
+            onPress={() => {
+              closeSideBar();
+              navigation.navigate('setting/index');
+            }}
+          >
             <SettingIcon width={convertWidth(23)} height={convertHeight(24)} />
-          </View>
+          </Pressable>
           <SpaceFlexBox flex={20} />
         </View>
         <MenuPage />

@@ -50,9 +50,10 @@ function PurchaseBottomSheet() {
       <BarButtonGreen
         text="구매"
         onPress={() => {
-          const newRoom = confirmPurchase();
-          updateRoom(newRoom);
-          navigation.navigate('main/index');
+          confirmPurchase().then((newRoom) => {
+            updateRoom(newRoom);
+            navigation.navigate('main/index');
+          });
         }}
         bottom={convertHeight(23)}
       />

@@ -25,7 +25,7 @@ function MainPage() {
 
   return (
     <View style={styles.container}>
-      <RoomCanvas />
+      {/* <RoomCanvas /> */}
       <MainAppBar />
       <ChatContainer />
       <ChatFloatingButton />
