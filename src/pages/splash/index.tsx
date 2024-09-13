@@ -12,7 +12,7 @@ function SplashPage() {
   useFocusEffect(
     useCallback(() => {
       getUserInfo().then((res) => {
-        if (!res) navigation.navigate('auth/index', { platform: null, accessToken: null });
+        if (!res) navigation.navigate('auth/index');
       });
     }, [])
   );
@@ -23,7 +23,7 @@ function SplashPage() {
       else if (birth === null || name === null) navigation.navigate('info-setup/index');
       else if (role === 'ROLE_COUPLE') {
         getCoupleInfo().then((res) => {
-          if (!res) navigation.navigate('auth/index', { platform: null, accessToken: null });
+          if (!res) navigation.navigate('auth/index');
           else navigation.navigate('main/index');
         });
       } else navigation.navigate('main/index');
