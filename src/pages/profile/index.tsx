@@ -37,8 +37,23 @@ function ProfilePage() {
       />
       <Text style={styles.groupTitleText}>앱 설정</Text>
       <SpaceFlexBox flex={17} />
-      <ProfileItemText title="로그아웃" text="" />
-      <ProfileItemText title="탈퇴하기" text="" />
+      <ProfileItemText
+        title="로그아웃"
+        text=""
+        onPress={() => {
+          logOut();
+          navigation.navigate('splash/index');
+        }}
+      />
+      <ProfileItemText
+        title="탈퇴하기"
+        text=""
+        onPress={() => {
+          deleteAccount().then((res) => {
+            if (res) navigation.navigate('splash/index');
+          });
+        }}
+      />
     </View>
   );
 }
