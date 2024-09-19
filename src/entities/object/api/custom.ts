@@ -53,13 +53,14 @@ async function getRoomInfoAPI(): Promise<{
         position: new THREE.Vector3(object.x, object.y, object.z),
         rotation: object.rotate,
       }));
-      const background = objects.find((object) => roomItems[object.id].category === '배경') ?? null;
+      const background =
+        objects.find((object) => roomItems[object.itemId].category === '배경') ?? null;
       return {
         id: res.roomInfo.id,
         name: res.roomInfo.name,
         thumbnailImageUrl: res.roomInfo.thumbnailImageUrl,
         background: background,
-        objects: objects.filter((object) => roomItems[object.id].category !== '배경'),
+        objects: objects.filter((object) => roomItems[object.itemId].category !== '배경'),
       };
     }
   );
