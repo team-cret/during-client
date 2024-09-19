@@ -8,7 +8,7 @@ import {
   defaultDate,
   HorizontalDivider,
   NavProp,
-  SpaceFlexBox,
+  VerticalSizedBox,
 } from '@/src/shared';
 import { TitleCloseAppbar } from '@/src/widgets';
 import { StyleSheet, Text, View } from 'react-native';
@@ -26,13 +26,12 @@ function ProfilePage() {
     <View style={styles.container}>
       <TitleCloseAppbar title="개인프로필" />
       <InfoPanel />
-      <SpaceFlexBox flex={30} />
+      <VerticalSizedBox height={30} />
       <Text style={styles.groupTitleText}>내 정보</Text>
-      <SpaceFlexBox flex={17} />
+      <VerticalSizedBox height={17} />
       <ProfileItemText title="이름" text={name ?? ''} />
       <ProfileItemText title="생일" text={convertDateToHumanFormat(birth ?? defaultDate)} />
       <ProfileItemInvitationCode />
-      <ProfileItemText title="이메일" text="zx12cv741@naver.com" />
       <HorizontalDivider
         width={convertWidth(331)}
         height={convertHeight(59)}
@@ -41,8 +40,8 @@ function ProfilePage() {
         lowerFlex={43}
         color={COLOR_BASE_3}
       />
-      <Text style={styles.groupTitleText}>앱 설정</Text>
-      <SpaceFlexBox flex={17} />
+      <Text style={styles.groupTitleText}>연결</Text>
+      <VerticalSizedBox height={17} />
       <ProfileItemText
         title="로그아웃"
         text=""
