@@ -15,12 +15,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { InfoPanel } from './components/info-panel';
 import { ProfileItemText } from './components/profile-item.text';
 import { ProfileItemInvitationCode } from './components/profile-item.invitation-code';
-import { useUserStore } from '@/src/features';
+import { useCoupleStore, useUserStore } from '@/src/features';
 import { useNavigation } from 'expo-router';
 
 function ProfilePage() {
   const navigation = useNavigation<NavProp<'profile/index'>>();
   const { name, birth, logOut, deleteAccount } = useUserStore();
+  const { disconnectCouple } = useCoupleStore();
   return (
     <View style={styles.container}>
       <TitleCloseAppbar title="개인프로필" />
@@ -55,6 +56,15 @@ function ProfilePage() {
         text=""
         onPress={() => {
           deleteAccount().then((res) => {
+            if (res) navigation.navigate('splash/index');
+          });
+        }}
+      />
+      <ProfileItemText
+        title="연인 연결 끊기"
+        text=""
+        onPress={() => {
+          disconnectCouple().then((res) => {
             if (res) navigation.navigate('splash/index');
           });
         }}

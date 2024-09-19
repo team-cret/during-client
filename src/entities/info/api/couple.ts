@@ -10,4 +10,13 @@ async function getCoupleProfileInfoAPI() {
   });
 }
 
-export { getCoupleProfileInfoAPI };
+async function disconnectCoupleAPI(): Promise<boolean> {
+  return fetchAPI({
+    method: 'DELETE',
+    path: 'api/v0/info/couple',
+  }).then((res) => {
+    return res ?? false;
+  });
+}
+
+export { getCoupleProfileInfoAPI, disconnectCoupleAPI };
