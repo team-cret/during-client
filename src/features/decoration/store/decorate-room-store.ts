@@ -1,3 +1,4 @@
+import { getRoomItemBagAPI, getRoomItemShopAPI, purchaseRoomItemAPI } from '@/src/entities';
 import {
   roomDecorationCategories,
   roomDecorationCategoriesType,
@@ -12,19 +13,23 @@ type State = {
   category: roomDecorationCategoriesType;
   isPurchaseMode: boolean;
   purchaseItems: Array<{
-    item: RoomItem;
-    isSelected: boolean;
+    itemId: string;
+    // isSelected: boolean;
   }>;
-  bagItems: Array<RoomItem>;
-  shopItems: Array<RoomItem>;
+  bagItems: Array<string>;
+  shopItems: Array<string>;
   roomInfo: {
-    background: RoomItem;
+    background: {
+      id: number | null;
+      itemId: string;
+    };
     objects: Array<{
-      item: RoomItem;
+      id: number | null;
+      itemId: string;
       position: THREE.Vector3;
       rotation: number;
     }>;
-    selectedObjectId: number;
+    selectedObjectIdx: number | null;
     selectedPoint: THREE.Vector3;
     isObjectExists: Array<Array<boolean>>;
   };
@@ -35,12 +40,15 @@ const defaultState: State = {
   category: roomDecorationCategories[0],
   isPurchaseMode: false,
   purchaseItems: [],
-  bagItems: [roomItems[0], roomItems[2], roomItems[4], roomItems[6]],
-  shopItems: [roomItems[1], roomItems[3], roomItems[5]],
+  bagItems: [],
+  shopItems: [],
   roomInfo: {
-    background: roomItems[0],
+    background: {
+      id: null,
+      itemId: '1',
+    },
     objects: [],
-    selectedObjectId: -1,
+    selectedObjectIdx: null,
     selectedPoint: new THREE.Vector3(0, 0, 0),
     isObjectExists: Array.from({ length: 12 }, () => Array.from({ length: 12 }, () => false)),
   },
@@ -51,30 +59,37 @@ type Action = {
     background,
     objects,
   }: {
-    background: RoomItem;
+    background: {
+      id: number | null;
+      itemId: string;
+    };
     objects: Array<{
-      item: RoomItem;
+      id: number;
+      itemId: string;
       position: THREE.Vector3;
       rotation: number;
     }>;
-  }) => void;
+  }) => Promise<boolean>;
   setMode: (mode: number) => void;
   setCategory: (category: roomDecorationCategoriesType) => void;
   setIsPurchaseMode: (isPurchaseMode: boolean) => void;
 
-  selectBagItem: (id: number) => void;
-  selectShopItem: (id: number) => void;
-  togglePurchaseItem: (id: number) => void;
-  confirmPurchase: () => {
-    background: RoomItem | null;
+  selectBagItem: (itemId: string) => void;
+  selectShopItem: (itemId: string) => void;
+  confirmPurchase: () => Promise<{
+    background: {
+      id: number | null;
+      itemId: string;
+    } | null;
     objects: Array<{
-      item: RoomItem;
+      id: number | null;
+      itemId: string;
       position: THREE.Vector3;
       rotation: number;
-    }>;
-  };
+    }> | null;
+  }>;
 
-  selectObject: (id: number, point: THREE.Vector3) => void;
+  selectObject: (idx: number, point: THREE.Vector3) => void;
   deselectObject: () => void;
   moveObject: (position: THREE.Vector3) => void;
   putItemIntoBag: () => void;
@@ -85,46 +100,68 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  init: ({ background, objects }) => {
+  init: async ({ background, objects }) => {
     const isObjectExists = Array.from({ length: 12 }, () =>
       Array.from({ length: 12 }, () => false)
     );
-    objects.forEach((e) => {
-      for (let i = 0; i < (e.rotation % 2 === 0 ? e.item.size.width : e.item.size.depth); i++)
-        for (let j = 0; j < (e.rotation % 2 === 1 ? e.item.size.width : e.item.size.depth); j++)
-          isObjectExists[e.position.z + i][e.position.x + j] = true;
+    objects.forEach((object) => {
+      for (
+        let i = 0;
+        i <
+        (object.rotation % 2 === 0
+          ? roomItems[object.itemId].size.width
+          : roomItems[object.itemId].size.depth);
+        i++
+      )
+        for (
+          let j = 0;
+          j <
+          (object.rotation % 2 === 1
+            ? roomItems[object.itemId].size.width
+            : roomItems[object.itemId].size.depth);
+          j++
+        )
+          isObjectExists[object.position.z + i][object.position.x + j] = true;
     });
+
+    const bagItems = await getRoomItemBagAPI();
+    const shopItems = await getRoomItemShopAPI();
 
     set({
       mode: defaultState.mode,
       category: defaultState.category,
       isPurchaseMode: defaultState.isPurchaseMode,
       purchaseItems: defaultState.purchaseItems,
-      bagItems: defaultState.bagItems,
-      shopItems: defaultState.shopItems,
+      bagItems: bagItems,
+      shopItems: shopItems,
       roomInfo: {
         background,
         objects,
-        selectedObjectId: defaultState.roomInfo.selectedObjectId,
+        selectedObjectIdx: defaultState.roomInfo.selectedObjectIdx,
         selectedPoint: defaultState.roomInfo.selectedPoint,
         isObjectExists,
       },
     });
+    return true;
   },
   setMode: (mode) => set({ mode }),
   setCategory: (category) => set({ category }),
   setIsPurchaseMode: (isPurchaseMode) => set({ isPurchaseMode }),
-  selectBagItem: (id) => {
-    const selectedItem = get().bagItems.find((item) => item.id === id);
-    if (!selectedItem) return;
-    if (selectedItem.category === '배경')
+  selectBagItem: (itemId) => {
+    if (roomItems[itemId].category === '배경')
       set((state) => ({
         ...state,
         roomInfo: {
           ...state.roomInfo,
-          background: selectedItem,
-          selectedObjectId: defaultState.roomInfo.selectedObjectId,
+          background: {
+            id: null,
+            itemId: itemId,
+          },
+          selectedObjectIdx: defaultState.roomInfo.selectedObjectIdx,
         },
+        purchaseItems: state.purchaseItems.filter(
+          (item) => item.itemId !== state.roomInfo.background.itemId
+        ),
       }));
     else
       set((state) => ({
@@ -134,76 +171,74 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
           objects: [
             ...state.roomInfo.objects,
             {
-              item: selectedItem,
+              id: null,
+              itemId,
               position: new THREE.Vector3(6, 0, 6),
               rotation: 0,
             },
           ],
-          selectedObjectId: selectedItem.id,
+          selectedObjectIdx: get().roomInfo.objects.length,
         },
       }));
   },
-  selectShopItem: (id) => {
-    const selectedItem = get().shopItems.find((item) => item.id === id);
-    if (!selectedItem) return;
-    if (selectedItem.category === '배경')
+  selectShopItem: (itemId) => {
+    if (roomItems[itemId].category === '배경')
       set((state) => ({
         ...state,
-        purchaseItems: [...state.purchaseItems, { item: selectedItem, isSelected: true }],
         roomInfo: {
           ...state.roomInfo,
-          background: selectedItem,
-          selectedObjectId: defaultState.roomInfo.selectedObjectId,
+          background: {
+            id: null,
+            itemId,
+          },
+          selectedObjectIdx: defaultState.roomInfo.selectedObjectIdx,
         },
+        purchaseItems: [
+          ...state.purchaseItems.filter((item) => item.itemId !== state.roomInfo.background.itemId),
+          { itemId },
+        ],
       }));
     else
       set((state) => ({
         ...state,
-        purchaseItems: [...state.purchaseItems, { item: selectedItem, isSelected: true }],
         roomInfo: {
           ...state.roomInfo,
           objects: [
             ...state.roomInfo.objects,
             {
-              item: selectedItem,
+              id: null,
+              itemId,
               position: new THREE.Vector3(6, 0, 6),
               rotation: 0,
             },
           ],
-          selectedObjectId: selectedItem.id,
+          selectedObjectIdx: get().roomInfo.objects.length,
         },
+        purchaseItems: [...state.purchaseItems, { itemId }],
       }));
   },
-  togglePurchaseItem: (id) => {
-    set((state) => ({
-      ...state,
-      purchaseItems: state.purchaseItems.map((item) =>
-        item.item.id === id ? { ...item, isSelected: !item.isSelected } : item
-      ),
-    }));
-  },
-  confirmPurchase: () => {
-    const backgroundItem = get().purchaseItems.find(
-      (item) => item.item.id === get().roomInfo.background.id
-    );
+  confirmPurchase: async () => {
+    const purchaseResult = await purchaseRoomItemAPI(get().purchaseItems);
+    if (!purchaseResult)
+      return {
+        background: null,
+        objects: null,
+      };
 
     return {
-      background: !backgroundItem || backgroundItem.isSelected ? get().roomInfo.background : null,
-      objects: get().roomInfo.objects.filter((e) => {
-        const item = get().purchaseItems.find((p) => p.item.id === e.item.id);
-        if (!item || item.isSelected) return e;
-      }),
+      background: get().roomInfo.background,
+      objects: get().roomInfo.objects,
     };
   },
 
-  selectObject: (id, point) => {
-    const selectedItem = get().roomInfo.objects.find((e) => e.item.id === id);
+  selectObject: (idx, point) => {
+    const selectedItem = get().roomInfo.objects[idx];
     if (selectedItem === undefined) return;
     set((state) => ({
       ...state,
       roomInfo: {
         ...state.roomInfo,
-        selectedObjectId: id,
+        selectedObjectIdx: idx,
         selectedPoint: new THREE.Vector3(
           Math.round(point.x) - selectedItem.position.x,
           Math.round(point.y) - selectedItem.position.y,
@@ -217,7 +252,7 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
       ...state,
       roomInfo: {
         ...state.roomInfo,
-        selectedObjectId: defaultState.roomInfo.selectedObjectId,
+        selectedObjectIdx: defaultState.roomInfo.selectedObjectIdx,
       },
     }));
   },
@@ -227,21 +262,16 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
       0,
       Math.round(point.z) - get().roomInfo.selectedPoint.z
     );
-    const selectedItem = get().roomInfo.objects.find(
-      (e) => e.item.id === get().roomInfo.selectedObjectId
-    );
-    if (selectedItem === undefined) return;
     if (position.x < 0 || position.x > 12 || position.z < 0 || position.z > 12) return;
+    const selectedObject = get().roomInfo.objects[get().roomInfo.selectedObjectIdx!];
+    if (!selectedObject) return;
+    const selectedItem = roomItems[selectedObject.itemId];
     if (
       position.z +
-        (selectedItem.rotation % 2 === 0
-          ? selectedItem.item.size.width
-          : selectedItem.item.size.depth) >
+        (selectedObject.rotation % 2 === 0 ? selectedItem.size.width : selectedItem.size.depth) >
         12 ||
       position.x +
-        (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.width
-          : selectedItem.item.size.depth) >
+        (selectedObject.rotation % 2 === 1 ? selectedItem.size.width : selectedItem.size.depth) >
         12
     )
       return;
@@ -249,97 +279,96 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
     const isObjectExists = get().roomInfo.isObjectExists;
     for (
       let i = 0;
-      i <
-      (selectedItem.rotation % 2 === 0
-        ? selectedItem.item.size.width
-        : selectedItem.item.size.depth);
+      i < (selectedObject.rotation % 2 === 0 ? selectedItem.size.width : selectedItem.size.depth);
       i++
-    )
+    ) {
       for (
         let j = 0;
-        j <
-        (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.width
-          : selectedItem.item.size.depth);
+        j < (selectedObject.rotation % 2 === 1 ? selectedItem.size.width : selectedItem.size.depth);
         j++
-      )
-        isObjectExists[selectedItem.position.z + i][selectedItem.position.x + j] = false;
+      ) {
+        isObjectExists[selectedObject.position.z + i][selectedObject.position.x + j] = false;
+      }
+    }
 
     for (
       let i = 0;
-      i <
-      (selectedItem.rotation % 2 === 0
-        ? selectedItem.item.size.width
-        : selectedItem.item.size.depth);
+      i < (selectedObject.rotation % 2 === 0 ? selectedItem.size.width : selectedItem.size.depth);
       i++
-    )
+    ) {
       for (
         let j = 0;
-        j <
-        (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.width
-          : selectedItem.item.size.depth);
+        j < (selectedObject.rotation % 2 === 1 ? selectedItem.size.width : selectedItem.size.depth);
         j++
-      )
+      ) {
         if (isObjectExists[position.z + i][position.x + j]) return;
+      }
+    }
 
     for (
       let i = 0;
-      i <
-      (selectedItem.rotation % 2 === 0
-        ? selectedItem.item.size.width
-        : selectedItem.item.size.depth);
+      i < (selectedObject.rotation % 2 === 0 ? selectedItem.size.width : selectedItem.size.depth);
       i++
-    )
+    ) {
       for (
         let j = 0;
-        j <
-        (selectedItem.rotation % 2 === 1
-          ? selectedItem.item.size.width
-          : selectedItem.item.size.depth);
+        j < (selectedObject.rotation % 2 === 1 ? selectedItem.size.width : selectedItem.size.depth);
         j++
-      )
+      ) {
         isObjectExists[position.z + i][position.x + j] = true;
+      }
+    }
 
     set((state) => ({
       ...state,
       roomInfo: {
         ...state.roomInfo,
-        objects: state.roomInfo.objects.map((e) =>
-          e.item.id === state.roomInfo.selectedObjectId ? { ...e, position: position } : e
+        objects: state.roomInfo.objects.map((object, idx) =>
+          idx === state.roomInfo.selectedObjectIdx ? { ...object, position: position } : object
         ),
         isObjectExists,
       },
     }));
   },
   putItemIntoBag: () => {
+    if (get().roomInfo.selectedObjectIdx === null) return;
+
+    const selectedItemId = get().roomInfo.objects[get().roomInfo.selectedObjectIdx!].itemId;
+    const selectedPurchaseItemIdx = get().purchaseItems.findIndex(
+      (item) => item.itemId === selectedItemId
+    );
+    const newPurchaseItems =
+      selectedPurchaseItemIdx === -1
+        ? get().purchaseItems
+        : get().purchaseItems.filter((item, idx) => idx !== selectedPurchaseItemIdx);
+
     set((state) => ({
       ...state,
       roomInfo: {
         ...state.roomInfo,
-        selectedObjectId: defaultState.roomInfo.selectedObjectId,
+        selectedObjectIdx: defaultState.roomInfo.selectedObjectIdx,
         objects: state.roomInfo.objects.filter(
-          (e) => e.item.id !== state.roomInfo.selectedObjectId
+          (object, idx) => idx !== state.roomInfo.selectedObjectIdx
         ),
       },
+      purchaseItems: newPurchaseItems,
     }));
   },
   rotateSelectedObject: () => {
-    const selectedItem = get().roomInfo.objects.find(
-      (e) => e.item.id === get().roomInfo.selectedObjectId
-    );
-    if (selectedItem === undefined) return;
+    const selectedObject = get().roomInfo.objects[get().roomInfo.selectedObjectIdx!];
+    if (!selectedObject) return;
+
     for (let i = 1; i <= 4; i++) {
       if (
-        selectedItem.position.z +
-          ((selectedItem.rotation + i) % 2 === 0
-            ? selectedItem.item.size.width
-            : selectedItem.item.size.depth) >
+        selectedObject.position.z +
+          ((selectedObject.rotation + i) % 2 === 0
+            ? roomItems[selectedObject.itemId].size.width
+            : roomItems[selectedObject.itemId].size.depth) >
           12 ||
-        selectedItem.position.x +
-          ((selectedItem.rotation + i) % 2 === 1
-            ? selectedItem.item.size.width
-            : selectedItem.item.size.depth) >
+        selectedObject.position.x +
+          ((selectedObject.rotation + i) % 2 === 1
+            ? roomItems[selectedObject.itemId].size.width
+            : roomItems[selectedObject.itemId].size.depth) >
           12
       )
         continue;
@@ -348,13 +377,13 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
         ...state,
         roomInfo: {
           ...state.roomInfo,
-          objects: state.roomInfo.objects.map((e) => {
-            if (e.item.id === state.roomInfo.selectedObjectId)
+          objects: state.roomInfo.objects.map((object) => {
+            if (object.itemId === selectedObject.itemId)
               return {
-                ...e,
-                rotation: (e.rotation + i) % 4,
+                ...object,
+                rotation: (object.rotation + i) % 4,
               };
-            else return e;
+            else return object;
           }),
         },
       }));

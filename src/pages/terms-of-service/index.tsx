@@ -6,8 +6,6 @@ import {
   HeadLineText,
   NavProp,
   SpaceFlexBox,
-  termsOptional,
-  termsRequired,
 } from '@/src/shared';
 import { BackCancelAppBar } from '@/src/widgets';
 import { TermsOfService } from './components/terms-of-service';
@@ -22,8 +20,11 @@ function TermsOfServicePage() {
   return (
     <View style={styles.container}>
       <BackCancelAppBar
+        onBackPressed={() => {
+          navigation.replace('auth/index');
+        }}
         onCancelPressed={() => {
-          navigation.navigate('auth/index', { platform: null, accessToken: null });
+          navigation.replace('auth/index');
         }}
       />
       <SpaceFlexBox flex={34} />

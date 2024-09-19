@@ -6,6 +6,7 @@ import {
   COLOR_BACKGROUND,
   convertHeight,
   convertWidth,
+  roomItems,
 } from '@/src/shared';
 import { findRoute } from '@/src/shared/func/lib/room';
 import { Gltf, useAnimations, useGLTF } from '@react-three/drei/native';
@@ -59,7 +60,7 @@ function Room() {
   return (
     <Suspense>
       <Gltf
-        src={background.object.src}
+        src={roomItems[background.itemId].object.src}
         onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
           const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
           updateMyAvatarPosition(floorPoint);
@@ -69,18 +70,18 @@ function Room() {
         return (
           <Gltf
             key={index}
-            src={object.item.object.src}
+            src={roomItems[object.itemId].object.src}
             position={
               new THREE.Vector3(
                 object.position.x +
                   (object.rotation % 2 === 0
-                    ? object.item.size.depth / 2
-                    : object.item.size.width / 2),
+                    ? roomItems[object.itemId].size.depth / 2
+                    : roomItems[object.itemId].size.width / 2),
                 object.position.y,
                 object.position.z +
                   (object.rotation % 2 === 1
-                    ? object.item.size.depth / 2
-                    : object.item.size.width / 2)
+                    ? roomItems[object.itemId].size.depth / 2
+                    : roomItems[object.itemId].size.width / 2)
               )
             }
             rotation={[0, (object.rotation * Math.PI) / 2, 0]}
@@ -97,7 +98,7 @@ function Avatar({
 }: {
   avatarInfo: {
     style: {
-      [key in avatarDecorationCategoriesType]: AvatarItem | null;
+      [key in avatarDecorationCategoriesType]: string | null;
     };
     position: THREE.Vector3;
     rotation: number;
@@ -132,14 +133,10 @@ function Avatar({
         if (avatarInfo.style.하의 === null && child.name === 'basic-bottoms') child.visible = true;
         if (child.name === 'body') child.visible = true;
 
-        if (avatarInfo.style.상의 && child.name === avatarInfo.style.상의.name)
-          child.visible = true;
-        if (avatarInfo.style.하의 && child.name === avatarInfo.style.하의.name)
-          child.visible = true;
-        if (avatarInfo.style.신발 && child.name === avatarInfo.style.신발.name)
-          child.visible = true;
-        if (avatarInfo.style.헤어 && child.name === avatarInfo.style.헤어.name)
-          child.visible = true;
+        if (avatarInfo.style.상의 && child.name === avatarInfo.style.상의) child.visible = true;
+        if (avatarInfo.style.하의 && child.name === avatarInfo.style.하의) child.visible = true;
+        if (avatarInfo.style.신발 && child.name === avatarInfo.style.신발) child.visible = true;
+        if (avatarInfo.style.헤어 && child.name === avatarInfo.style.헤어) child.visible = true;
       }
     });
   }, [avatarInfo.style]);

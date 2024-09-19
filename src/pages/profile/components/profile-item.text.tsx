@@ -1,9 +1,21 @@
-import { COLOR_BASE_1, convertHeight, convertWidth } from '@/src/shared';
-import { StyleSheet, Text, View } from 'react-native';
+import { COLOR_BASE_1 } from '@/src/shared';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import { ProfileItem } from './profile-item';
 
-function ProfileItemText({ title, text }: { title: string; text: string }) {
-  return <ProfileItem title={title} Content={<Text style={styles.text}>{text}</Text>} />;
+function ProfileItemText({
+  title,
+  text,
+  onPress,
+}: {
+  title: string;
+  text: string;
+  onPress?: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress}>
+      <ProfileItem title={title} Content={<Text style={styles.text}>{text}</Text>} />
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({

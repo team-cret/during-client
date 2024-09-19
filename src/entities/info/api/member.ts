@@ -63,6 +63,16 @@ async function updateMemberProfileInfoAPI({
   });
 }
 
+async function deleteMemberAPI() {
+  return fetchAPI({
+    method: 'DELETE',
+    path: 'api/v0/info/member',
+  }).then((res) => {
+    if (res === null) return false;
+    return true;
+  });
+}
+
 async function requestCoupleConnectionAPI({ invitationCode }: { invitationCode: string }) {
   return fetchAPI({
     path: 'api/v0/info/member/couple-request',
@@ -122,6 +132,7 @@ async function deleteMemberNotificationAPI({ noticeId }: { noticeId: number }) {
 export {
   getMemberProfileInfoAPI,
   updateMemberProfileInfoAPI,
+  deleteMemberAPI,
   requestCoupleConnectionAPI,
   acceptCoupleConnectionAPI,
   getNotificationListAPI,

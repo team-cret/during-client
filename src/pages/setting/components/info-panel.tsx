@@ -2,14 +2,16 @@ import { COLOR_BASE_1, convertHeight, convertWidth, SpaceFlexBox } from '@/src/s
 import { StyleSheet, Text, View } from 'react-native';
 import { CoupleImage } from './info-panel.couple-image';
 import { DDay } from './d-day';
-import { Credit } from './credeit';
+import { Credit } from './credit';
+import { useUserStore } from '@/src/features';
 
 function InfoPanel() {
+  const { invitationCode } = useUserStore();
   return (
     <View style={styles.container}>
       <CoupleImage />
       <SpaceFlexBox flex={16} />
-      <Text style={styles.coupleCode}>DL3UBODAAD</Text>
+      <Text style={styles.coupleCode}>{invitationCode}</Text>
       <SpaceFlexBox flex={9} />
       <DDay />
       <SpaceFlexBox flex={4} />

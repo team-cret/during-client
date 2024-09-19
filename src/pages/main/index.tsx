@@ -10,6 +10,7 @@ import { useChatStore, useUserStore } from '@/src/features';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RoomCanvas } from './components/room-canvas';
+import { TempNotificationToast } from './components/temp-notification-toast';
 
 function MainPage() {
   const navigation = useNavigation<NavProp<'main/index'>>();
@@ -32,6 +33,7 @@ function MainPage() {
       <ChatInputBar />
       <DownFloatingButton />
       <SideBar />
+      <TempNotificationToast />
     </View>
   );
 }

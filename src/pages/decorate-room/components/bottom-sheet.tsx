@@ -1,9 +1,17 @@
-import { COLOR_BASE_1, COLOR_WHITE, convertHeight, convertWidth, SpaceFlexBox } from '@/src/shared';
+import {
+  COLOR_BASE_1,
+  COLOR_WHITE,
+  convertHeight,
+  convertWidth,
+  roomItems,
+  SpaceFlexBox,
+} from '@/src/shared';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { ModeToggle } from './bottom-sheet.mode-toggle';
 import { IndexRow } from './bottom-sheet.index-row';
 import { Divider } from './bottom-sheet.divider';
 import { useDecorateRoomStore } from '@/src/features';
+import { ScrollView } from 'react-native-gesture-handler';
 
 function BottomSheet() {
   const { category, mode, bagItems, shopItems, selectShopItem, selectBagItem } =
@@ -23,45 +31,55 @@ function BottomSheet() {
       <SpaceFlexBox flex={5} />
 
       <View style={styles.itemContainer}>
-        {mode === 0
-          ? shopItems
-              .filter((item) => item.category == category)
-              .map((item, index) => {
-                if (index % 4 !== 0) return null;
-                return (
-                  <View key={index} style={styles.itemRow}>
-                    {shopItems
-                      .filter((item) => item.category == category)
-                      .slice(index, index + 4)
-                      .map((item, index) => {
-                        return (
-                          <Pressable onPress={() => selectShopItem(item.id)} key={item.id}>
-                            <Image source={item.image} style={styles.item} resizeMode="cover" />
-                          </Pressable>
-                        );
-                      })}
-                  </View>
-                );
-              })
-          : bagItems
-              .filter((item) => item.category == category)
-              .map((item, index) => {
-                if (index % 4 !== 0) return null;
-                return (
-                  <View key={index} style={styles.itemRow}>
-                    {bagItems
-                      .filter((item) => item.category == category)
-                      .slice(index, index + 4)
-                      .map((item, index) => {
-                        return (
-                          <Pressable onPress={() => selectBagItem(item.id)} key={item.id}>
-                            <Image source={item.image} style={styles.item} resizeMode="cover" />
-                          </Pressable>
-                        );
-                      })}
-                  </View>
-                );
-              })}
+        <ScrollView>
+          {mode === 0
+            ? shopItems
+                .filter((itemId) => roomItems[itemId].category == category)
+                .map((itemId, index) => {
+                  if (index % 4 !== 0) return null;
+                  return (
+                    <View key={index} style={styles.itemRow}>
+                      {shopItems
+                        .filter((itemId) => roomItems[itemId].category == category)
+                        .slice(index, index + 4)
+                        .map((itemId) => {
+                          return (
+                            <Pressable onPress={() => selectShopItem(itemId)} key={itemId}>
+                              <Image
+                                source={roomItems[itemId].image}
+                                style={styles.item}
+                                resizeMode="cover"
+                              />
+                            </Pressable>
+                          );
+                        })}
+                    </View>
+                  );
+                })
+            : bagItems
+                .filter((itemId) => roomItems[itemId].category == category)
+                .map((itemId, index) => {
+                  if (index % 4 !== 0) return null;
+                  return (
+                    <View key={index} style={styles.itemRow}>
+                      {bagItems
+                        .filter((itemId) => roomItems[itemId].category == category)
+                        .slice(index, index + 4)
+                        .map((itemId, index) => {
+                          return (
+                            <Pressable onPress={() => selectBagItem(itemId)} key={itemId}>
+                              <Image
+                                source={roomItems[itemId].image}
+                                style={styles.item}
+                                resizeMode="cover"
+                              />
+                            </Pressable>
+                          );
+                        })}
+                    </View>
+                  );
+                })}
+        </ScrollView>
       </View>
     </View>
   );

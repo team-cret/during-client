@@ -6,8 +6,8 @@ async function setUserToken({
   accessToken,
   refreshToken,
 }: {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: string | null;
+  refreshToken: string | null;
 }) {
   AsyncStorage.setItem('auth/token', JSON.stringify({ accessToken, refreshToken }));
   // await EncryptedStorage.setItem(

@@ -1,15 +1,19 @@
 import { useNotificationStore } from '@/src/features';
-import { convertHeight, convertWidth } from '@/src/shared';
-import { useEffect } from 'react';
+import { convertHeight, convertWidth, NavProp } from '@/src/shared';
+import { useFocusEffect, useNavigation } from 'expo-router';
+import { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 function NotificationPage() {
+  const navigation = useNavigation<NavProp<'notification/index'>>();
   const { notificationList, getNotificationList, deleteNotification, acceptCoupleConnection } =
     useNotificationStore();
-  useEffect(() => {
-    getNotificationList();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getNotificationList();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -26,7 +30,13 @@ function NotificationPage() {
             </Pressable>
             <Pressable
               onPress={() => {
-                acceptCoupleConnection(notification.id);
+                acceptCoupleConnection(notification.id).then((res) => {
+                  if (!res) return;
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'splash/index' }],
+                  });
+                });
               }}
             >
               <Text>수락</Text>

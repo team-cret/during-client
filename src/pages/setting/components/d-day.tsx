@@ -1,14 +1,16 @@
-import { COLOR_BASE_1, convertHeight, convertWidth } from '@/src/shared';
+import { calcDDay, COLOR_BASE_1, convertHeight, convertWidth } from '@/src/shared';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import DDayIcon from '@/src/shared/assets/icons/setting/d-day.svg';
 import ArrorIcon from '@/src/shared/assets/icons/setting/right-arrow.svg';
+import { useCoupleStore } from '@/src/features';
 
 function DDay() {
+  const { startDate } = useCoupleStore();
   return (
     <View style={styles.container}>
       <DDayIcon width={convertWidth(13)} height={convertHeight(16)} />
-      <Text style={styles.text}>D+ 105</Text>
+      <Text style={styles.text}>D+ {calcDDay(startDate)}</Text>
       <Pressable style={styles.navigateContainer}>
         <ArrorIcon width={convertWidth(6)} height={convertHeight(9)} />
       </Pressable>

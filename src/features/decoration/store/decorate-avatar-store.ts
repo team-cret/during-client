@@ -1,3 +1,4 @@
+import { getAvatarBagAPI, getAvatarShopAPI, purchaseAvatarObjectAPI } from '@/src/entities';
 import {
   avatarDecorationCategories,
   avatarDecorationCategoriesType,
@@ -11,14 +12,14 @@ type State = {
   category: avatarDecorationCategoriesType;
   isPurchaseMode: boolean;
   purchaseItems: Array<{
-    item: AvatarItem;
+    id: string;
     isSelected: boolean;
   }>;
   bottomSheetMode: 'three-rows' | 'one-row' | 'handle-only';
-  bagItems: Array<AvatarItem>;
-  shopItems: Array<AvatarItem>;
+  bagItems: Array<string>;
+  shopItems: Array<string>;
   avatarStyle: {
-    [key in avatarDecorationCategoriesType]: AvatarItem | null;
+    [key in avatarDecorationCategoriesType]: string | null;
   };
 };
 
@@ -29,7 +30,7 @@ const defaultState: State = {
   purchaseItems: [],
   bottomSheetMode: 'handle-only',
   bagItems: [],
-  shopItems: Array.from({ length: 41 }, (_, i) => avatarItems[i]),
+  shopItems: [],
   avatarStyle: {
     헤어: null,
     상의: null,
@@ -39,78 +40,79 @@ const defaultState: State = {
 };
 
 type Action = {
-  init: ({ avatarStyle }: { avatarStyle: State['avatarStyle'] }) => void;
+  init: ({ avatarStyle }: { avatarStyle: State['avatarStyle'] }) => Promise<boolean>;
   setMode: (mode: number) => void;
   setCategory: (category: avatarDecorationCategoriesType) => void;
   setIsPurchaseMode: (isPurchaseMode: boolean) => void;
 
   setBottomSheetMode: (mode: 'three-rows' | 'one-row' | 'handle-only') => void;
 
-  selectBagItem: (id: number) => void;
-  selectShopItem: (id: number) => void;
-  togglePurchaseItem: (id: number) => void;
-  confirmPurchase: () => {
+  selectBagItem: (id: string) => void;
+  selectShopItem: (id: string) => void;
+  togglePurchaseItem: (id: string) => void;
+
+  ////구매하기
+  //수정된 스타일 오브젝트는 수정된 값으로, 수정되지 않은 스타일 오브젝트는 null 반환
+  confirmPurchase: () => Promise<{
     style: State['avatarStyle'];
-  };
+  }>;
 };
 
 const useDecorateAvatarStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  init: ({ avatarStyle }) =>
+  init: async ({ avatarStyle }) => {
+    const bagItems = await getAvatarBagAPI();
+    const shopItems = await getAvatarShopAPI();
+
     set({
       mode: defaultState.mode,
       category: defaultState.category,
       isPurchaseMode: defaultState.isPurchaseMode,
       purchaseItems: defaultState.purchaseItems,
       bottomSheetMode: defaultState.bottomSheetMode,
-      bagItems: defaultState.bagItems,
-      shopItems: defaultState.shopItems,
+      bagItems,
+      shopItems,
       avatarStyle,
-    }),
+    });
+    return true;
+  },
   setMode: (mode) => set({ mode }),
   setCategory: (category) => set({ category }),
   setIsPurchaseMode: (isPurchaseMode) => set({ isPurchaseMode }),
   setBottomSheetMode: (bottomSheetMode) => set({ bottomSheetMode }),
   selectBagItem: (id) => {
-    const selectedItem = avatarItems.find((item) => item.id === id);
-    if (!selectedItem) return;
+    const selectedItemCategory = avatarItems[id].category;
+    if (!selectedItemCategory) return;
 
-    if (
-      get().avatarStyle[selectedItem.category] &&
-      get().avatarStyle[selectedItem.category]?.id === id
-    ) {
+    if (get().avatarStyle[selectedItemCategory] === id) {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: null },
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: null },
+        purchaseItems: state.purchaseItems.filter((item) => item.id !== id),
       }));
-      return;
     } else {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: selectedItem },
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: id },
       }));
-      return;
     }
   },
   selectShopItem: (id) => {
-    const selectedItem = avatarItems.find((item) => item.id === id);
-    if (!selectedItem) return;
-    if (
-      get().avatarStyle[selectedItem.category] &&
-      get().avatarStyle[selectedItem.category]?.id === id
-    ) {
+    const selectedItemCategory = avatarItems[id].category;
+    if (!selectedItemCategory) return;
+    if (get().avatarStyle[selectedItemCategory] === id) {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: null },
-        purchaseItems: state.purchaseItems.filter((item) => item.item.id !== id),
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: null },
+        purchaseItems: state.purchaseItems.filter((item) => item.id !== id),
       }));
     } else {
       set((state) => ({
         ...state,
-        avatarStyle: { ...state.avatarStyle, [selectedItem.category]: selectedItem },
-        purchaseItems: [...state.purchaseItems, { item: selectedItem, isSelected: true }],
+        avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: id },
+        purchaseItems: [...state.purchaseItems, { id, isSelected: true }],
       }));
     }
   },
@@ -118,17 +120,25 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
     set((state) => ({
       ...state,
       purchaseItems: state.purchaseItems.map((item) =>
-        item.item.id === id ? { ...item, isSelected: !item.isSelected } : item
+        item.id === id ? { ...item, isSelected: !item.isSelected } : item
       ),
     }));
   },
-  confirmPurchase: () => {
+  confirmPurchase: async () => {
+    const purchaseResult = await purchaseAvatarObjectAPI(
+      get().purchaseItems.filter((item) => item.isSelected)
+    );
+    if (!purchaseResult)
+      return {
+        style: defaultState.avatarStyle,
+      };
+
     const newAvatarStyle = get().avatarStyle;
     get().purchaseItems.forEach((item) => {
-      if (item.isSelected) {
-        newAvatarStyle[item.item.category] = item.item;
-      }
+      if (item.isSelected) return;
+      newAvatarStyle[avatarItems[item.id].category] = null;
     });
+
     return { style: newAvatarStyle };
   },
 }));

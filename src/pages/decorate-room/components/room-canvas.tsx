@@ -1,5 +1,5 @@
-import { useDecorateRoomStore, useRoomStore } from '@/src/features';
-import { COLOR_BACKGROUND, convertHeight, convertWidth } from '@/src/shared';
+import { useDecorateRoomStore } from '@/src/features';
+import { COLOR_BACKGROUND, convertHeight, convertWidth, roomItems } from '@/src/shared';
 import { Gltf } from '@react-three/drei/native';
 import { Canvas, ThreeEvent } from '@react-three/fiber/native';
 import { Suspense } from 'react';
@@ -37,7 +37,7 @@ function RoomCanvas() {
 
 function Room() {
   const {
-    roomInfo: { background, objects, selectedObjectId },
+    roomInfo: { background, objects, selectedObjectIdx },
     selectObject,
     deselectObject,
     moveObject,
@@ -46,9 +46,9 @@ function Room() {
   return (
     <Suspense>
       <Gltf
-        src={background.object.src}
+        src={roomItems[background.itemId].object.src}
         onPointerMove={(e: ThreeEvent<PointerEvent>) => {
-          if (selectedObjectId === -1) return;
+          if (selectedObjectIdx === null) return;
           const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
           moveObject(floorPoint);
         }}
@@ -61,23 +61,23 @@ function Room() {
         return (
           <Gltf
             key={index}
-            src={object.item.object.src}
+            src={roomItems[object.itemId].object.src}
             position={
               new THREE.Vector3(
                 object.position.x +
                   (object.rotation % 2 === 0
-                    ? object.item.size.depth / 2
-                    : object.item.size.width / 2),
+                    ? roomItems[object.itemId].size.depth / 2
+                    : roomItems[object.itemId].size.width / 2),
                 object.position.y,
                 object.position.z +
                   (object.rotation % 2 === 1
-                    ? object.item.size.depth / 2
-                    : object.item.size.width / 2)
+                    ? roomItems[object.itemId].size.depth / 2
+                    : roomItems[object.itemId].size.width / 2)
               )
             }
             onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
               const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
-              selectObject(object.item.id, floorPoint);
+              selectObject(index, floorPoint);
             }}
             rotation={[0, (object.rotation * Math.PI) / 2, 0]}
           />

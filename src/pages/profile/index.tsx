@@ -1,32 +1,37 @@
 import {
   COLOR_BACKGROUND,
-  COLOR_BASE_2,
   COLOR_BASE_2_30,
   COLOR_BASE_3,
-  colorWithOpacity,
+  convertDateToHumanFormat,
   convertHeight,
   convertWidth,
+  defaultDate,
   HorizontalDivider,
-  SpaceFlexBox,
+  NavProp,
+  VerticalSizedBox,
 } from '@/src/shared';
 import { TitleCloseAppbar } from '@/src/widgets';
 import { StyleSheet, Text, View } from 'react-native';
 import { InfoPanel } from './components/info-panel';
 import { ProfileItemText } from './components/profile-item.text';
 import { ProfileItemInvitationCode } from './components/profile-item.invitation-code';
+import { useCoupleStore, useUserStore } from '@/src/features';
+import { useNavigation } from 'expo-router';
 
 function ProfilePage() {
+  const navigation = useNavigation<NavProp<'profile/index'>>();
+  const { name, birth, logOut, deleteAccount } = useUserStore();
+  const { disconnectCouple } = useCoupleStore();
   return (
     <View style={styles.container}>
       <TitleCloseAppbar title="개인프로필" />
       <InfoPanel />
-      <SpaceFlexBox flex={30} />
+      <VerticalSizedBox height={30} />
       <Text style={styles.groupTitleText}>내 정보</Text>
-      <SpaceFlexBox flex={17} />
-      <ProfileItemText title="이름" text="허연주" />
-      <ProfileItemText title="생일" text="2000년 2월 24일" />
+      <VerticalSizedBox height={17} />
+      <ProfileItemText title="이름" text={name ?? ''} />
+      <ProfileItemText title="생일" text={convertDateToHumanFormat(birth ?? defaultDate)} />
       <ProfileItemInvitationCode />
-      <ProfileItemText title="이메일" text="zx12cv741@naver.com" />
       <HorizontalDivider
         width={convertWidth(331)}
         height={convertHeight(59)}
@@ -35,10 +40,34 @@ function ProfilePage() {
         lowerFlex={43}
         color={COLOR_BASE_3}
       />
-      <Text style={styles.groupTitleText}>앱 설정</Text>
-      <SpaceFlexBox flex={17} />
-      <ProfileItemText title="로그아웃" text="" />
-      <ProfileItemText title="탈퇴하기" text="" />
+      <Text style={styles.groupTitleText}>연결</Text>
+      <VerticalSizedBox height={17} />
+      <ProfileItemText
+        title="로그아웃"
+        text=""
+        onPress={() => {
+          logOut();
+          navigation.navigate('splash/index');
+        }}
+      />
+      <ProfileItemText
+        title="탈퇴하기"
+        text=""
+        onPress={() => {
+          deleteAccount().then((res) => {
+            if (res) navigation.navigate('splash/index');
+          });
+        }}
+      />
+      <ProfileItemText
+        title="연인 연결 끊기"
+        text=""
+        onPress={() => {
+          disconnectCouple().then((res) => {
+            if (res) navigation.navigate('splash/index');
+          });
+        }}
+      />
     </View>
   );
 }

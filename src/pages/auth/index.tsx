@@ -12,11 +12,10 @@ import {
 import { trySignInUpAPI } from '@/src/entities';
 import { useNavigation } from 'expo-router';
 import { useAuthStore } from '@/src/features';
-import { useFocusEffect } from '@react-navigation/native';
 
 function AuthPage() {
   const navigation = useNavigation<NavProp<'auth/index'>>();
-  const { platform, accessToken, setAuth } = useAuthStore();
+  const { platform, accessToken, setAuth, init: initAuthStore } = useAuthStore();
 
   useEffect(() => {
     if (platform === null || accessToken === null) return;
@@ -25,7 +24,8 @@ function AuthPage() {
       platform,
     }).then((res) => {
       if (!res) return;
-      navigation.navigate('splash/index');
+      initAuthStore();
+      navigation.replace('splash/index');
     });
   }, [platform, accessToken]);
 

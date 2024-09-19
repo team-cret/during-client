@@ -19,18 +19,18 @@ function AIToggle() {
   const { isAIOn, setIsAIOn } = useChatAIStore();
 
   //animation Values
-  const handleMarginLeft = useSharedValue<number>(2);
-  const backgroundColor = useSharedValue<string>(COLOR_PRIMARY_GREEN);
+  const handleMarginLeft = useSharedValue<number>(isAIOn ? 2 : 17);
+  const backgroundColor = useSharedValue<string>(isAIOn ? COLOR_PRIMARY_GREEN : COLOR_BASE_4);
 
   function toggleAI() {
     if (isAIOn) {
       setIsAIOn(false);
-      handleMarginLeft.value = withTiming(convertWidth(2), animatinonConfig);
-      backgroundColor.value = withTiming(COLOR_PRIMARY_GREEN, animatinonConfig);
-    } else {
-      setIsAIOn(true);
       handleMarginLeft.value = withTiming(convertWidth(17), animatinonConfig);
       backgroundColor.value = withTiming(COLOR_BASE_4, animatinonConfig);
+    } else {
+      setIsAIOn(true);
+      handleMarginLeft.value = withTiming(convertWidth(2), animatinonConfig);
+      backgroundColor.value = withTiming(COLOR_PRIMARY_GREEN, animatinonConfig);
     }
   }
 

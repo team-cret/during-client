@@ -1,7 +1,7 @@
 import { useCoupleStore, useUserStore } from '@/src/features';
 import { NavProp } from '@/src/shared';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { Text, View } from 'react-native';
 
 function SplashPage() {
@@ -12,21 +12,21 @@ function SplashPage() {
   useFocusEffect(
     useCallback(() => {
       getUserInfo().then((res) => {
-        if (!res) navigation.navigate('auth/index', { platform: null, accessToken: null });
+        if (!res) navigation.replace('auth/index');
       });
     }, [])
   );
 
   useFocusEffect(
     useCallback(() => {
-      if (!requiredTermsAgreed) navigation.navigate('terms-of-service/index');
-      else if (birth === null || name === null) navigation.navigate('info-setup/index');
+      if (!requiredTermsAgreed) navigation.replace('terms-of-service/index');
+      else if (birth === null || name === null) navigation.replace('info-setup/index');
       else if (role === 'ROLE_COUPLE') {
         getCoupleInfo().then((res) => {
-          if (!res) navigation.navigate('auth/index', { platform: null, accessToken: null });
-          else navigation.navigate('main/index');
+          if (!res) navigation.replace('auth/index');
+          else navigation.replace('main/index');
         });
-      } else navigation.navigate('main/index');
+      } else navigation.replace('main/index');
     }, [id])
   );
 

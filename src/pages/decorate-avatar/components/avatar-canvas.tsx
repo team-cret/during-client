@@ -1,4 +1,4 @@
-import { useDecorateAvatarStore, useDecorateRoomStore, useRoomStore } from '@/src/features';
+import { useDecorateAvatarStore } from '@/src/features';
 import { AvatarObject, COLOR_BACKGROUND, convertHeight, convertWidth } from '@/src/shared';
 import { Gltf, useAnimations, useGLTF } from '@react-three/drei/native';
 import { Canvas, ThreeEvent } from '@react-three/fiber/native';
@@ -68,14 +68,14 @@ function Avatar() {
     model.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.visible = false;
+        if (child.name === 'body') child.visible = true;
         if (avatarStyle.상의 === null && child.name === 'basic-tops') child.visible = true;
         if (avatarStyle.하의 === null && child.name === 'basic-bottoms') child.visible = true;
-        if (child.name === 'body') child.visible = true;
 
-        if (avatarStyle.상의 && child.name === avatarStyle.상의.name) child.visible = true;
-        if (avatarStyle.하의 && child.name === avatarStyle.하의.name) child.visible = true;
-        if (avatarStyle.신발 && child.name === avatarStyle.신발.name) child.visible = true;
-        if (avatarStyle.헤어 && child.name === avatarStyle.헤어.name) child.visible = true;
+        if (avatarStyle.상의 && child.name === avatarStyle.상의) child.visible = true;
+        if (avatarStyle.하의 && child.name === avatarStyle.하의) child.visible = true;
+        if (avatarStyle.신발 && child.name === avatarStyle.신발) child.visible = true;
+        if (avatarStyle.헤어 && child.name === avatarStyle.헤어) child.visible = true;
       }
     });
   }, [avatarStyle]);

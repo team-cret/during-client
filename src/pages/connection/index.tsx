@@ -1,7 +1,7 @@
 import {
   COLOR_BACKGROUND,
-  convertHeight,
   HeadLineText,
+  NavProp,
   SpaceFlexBox,
   TextButton,
   textStyles,
@@ -10,11 +10,20 @@ import { BackCancelAppBar } from '@/src/widgets';
 import { StyleSheet, Text, View } from 'react-native';
 import { MyInvitationCode } from './components/my-code';
 import { InvitationCodeInput } from './components/code-input';
+import { useNavigation } from 'expo-router';
 
 function ConnectionPage() {
+  const navigation = useNavigation<NavProp<'connection/index'>>();
   return (
     <View style={styles.container}>
-      <BackCancelAppBar backDisabled />
+      <BackCancelAppBar
+        onBackPressed={() => {
+          navigation.pop();
+        }}
+        onCancelPressed={() => {
+          navigation.pop();
+        }}
+      />
       <SpaceFlexBox flex={34} />
       <HeadLineText
         title={`듀링에 연인을 초대하고\n행복한 대화를 나눠요.`}

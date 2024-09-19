@@ -1,5 +1,9 @@
-import { getMemberProfileInfoAPI, updateMemberProfileInfoAPI } from '@/src/entities';
-import { termsOptional, termsRequired } from '@/src/shared';
+import {
+  deleteMemberAPI,
+  getMemberProfileInfoAPI,
+  updateMemberProfileInfoAPI,
+} from '@/src/entities';
+import { setUserToken, termsOptional, termsRequired } from '@/src/shared';
 import { create } from 'zustand';
 
 type State = {
@@ -39,6 +43,8 @@ type Action = {
     ifRequiredAgreed: boolean[];
     ifOptionalAgreed: boolean[];
   }) => Promise<boolean>;
+  logOut: () => void;
+  deleteAccount: () => Promise<boolean>;
 };
 
 const useUserStore = create<State & Action>((set, get) => ({
@@ -105,6 +111,12 @@ const useUserStore = create<State & Action>((set, get) => ({
         ifRequiredAgreed !== null && ifOptionalAgreed !== null ? true : state.requiredTermsAgreed,
     }));
     return true;
+  },
+  logOut: () => {
+    setUserToken({ accessToken: null, refreshToken: null });
+  },
+  deleteAccount: async () => {
+    return deleteMemberAPI();
   },
 }));
 

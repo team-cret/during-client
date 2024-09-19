@@ -1,4 +1,11 @@
-import { COLOR_BASE_1, COLOR_WHITE, convertHeight, convertWidth, SpaceFlexBox } from '@/src/shared';
+import {
+  avatarItems,
+  COLOR_BASE_1,
+  COLOR_WHITE,
+  convertHeight,
+  convertWidth,
+  SpaceFlexBox,
+} from '@/src/shared';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { ModeToggle } from './bottom-sheet.mode-toggle';
 import { IndexRow } from './bottom-sheet.index-row';
@@ -27,18 +34,22 @@ function BottomSheet() {
         <ScrollView>
           {mode === 0
             ? shopItems
-                .filter((item) => item.category == category)
-                .map((item, index) => {
+                .filter((id) => avatarItems[id].category == category)
+                .map((id, index) => {
                   if (index % 4 !== 0) return null;
                   return (
                     <View key={index} style={styles.itemRow}>
                       {shopItems
-                        .filter((item) => item.category == category)
+                        .filter((id) => avatarItems[id].category == category)
                         .slice(index, index + 4)
-                        .map((item, index) => {
+                        .map((id, index) => {
                           return (
-                            <Pressable onPress={() => selectShopItem(item.id)} key={item.id}>
-                              <Image source={item.image} style={styles.item} resizeMode="cover" />
+                            <Pressable onPress={() => selectShopItem(id)} key={id}>
+                              <Image
+                                source={avatarItems[id].image}
+                                style={styles.item}
+                                resizeMode="cover"
+                              />
                             </Pressable>
                           );
                         })}
@@ -46,20 +57,20 @@ function BottomSheet() {
                   );
                 })
             : bagItems
-                .filter((item) => item.category == category)
-                .map((item, index) => {
+                .filter((id) => avatarItems[id].category == category)
+                .map((id, index) => {
                   if (index % 4 !== 0) return null;
                   return (
                     <View key={index} style={styles.itemRow}>
                       {bagItems
-                        .filter((item) => item.category == category)
+                        .filter((id) => avatarItems[id].category == category)
                         .slice(index, index + 4)
-                        .map((item, index) => {
+                        .map((id) => {
                           return (
-                            <Pressable onPress={() => selectBagItem(item.id)} key={item.id}>
+                            <Pressable onPress={() => selectBagItem(id)} key={id}>
                               <Image
-                                source={item.image}
-                                key={item.id}
+                                source={avatarItems[id].image}
+                                key={id}
                                 style={styles.item}
                                 resizeMode="cover"
                               />

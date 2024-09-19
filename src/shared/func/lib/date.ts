@@ -1,3 +1,5 @@
+const defaultDate = new Date('1970-01-01T00:00:00');
+
 /**
  *
  * @param date
@@ -29,6 +31,19 @@ function convertDateToStringFullDate(date: Date): string {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
+/**
+ *
+ * @param date
+ * @returns "YYYY년 MM월 DD일" format string
+ */
+function convertDateToHumanFormat(date: Date): string {
+  const year = String(date.getFullYear()).padStart(4, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}년 ${month}월 ${day}일`;
+}
+
 function calcDDay(startDate: Date): number {
   const now = new Date();
 
@@ -38,4 +53,10 @@ function calcDDay(startDate: Date): number {
   return diffDays;
 }
 
-export { convertDateToStringHSS, convertDateToStringFullDate, calcDDay };
+export {
+  defaultDate,
+  convertDateToStringHSS,
+  convertDateToStringFullDate,
+  convertDateToHumanFormat,
+  calcDDay,
+};
