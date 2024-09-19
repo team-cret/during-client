@@ -21,10 +21,10 @@ function TermsOfServicePage() {
     <View style={styles.container}>
       <BackCancelAppBar
         onBackPressed={() => {
-          navigation.pop();
+          navigation.replace('auth/index');
         }}
         onCancelPressed={() => {
-          navigation.navigate('auth/index');
+          navigation.replace('auth/index');
         }}
       />
       <SpaceFlexBox flex={34} />
