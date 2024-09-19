@@ -11,6 +11,7 @@ const defaultState: State = {
 };
 
 type Action = {
+  init: () => void;
   setAuth: ({
     platform,
     accessToken,
@@ -24,6 +25,9 @@ const useAuthStore = create<State & Action>((set) => ({
   ...defaultState,
 
   //actions
+  init: () => {
+    set(defaultState);
+  },
   setAuth: ({ platform, accessToken }) => {
     set((state) => ({
       platform: platform ?? state.platform,
