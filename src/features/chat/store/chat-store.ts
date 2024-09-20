@@ -2,6 +2,7 @@ import {
   chatWebSocketOpen,
   deleteCoupleChatAPI,
   getCoupleChatAPI,
+  readChatAPI,
   sendCoupleChatAPI,
 } from '@/src/entities';
 import { MESSAGE_PAGE_SIZE } from '@/src/shared';
@@ -47,6 +48,20 @@ const useChatStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
+  startChat: ({ lastChatId }: { lastChatId: number }) => {
+    getCoupleChatAPI({ chatId: lastChatId, scrollType: 'INIT' }).then((res) => {
+      if (res === null) return;
+      chatWebSocketOpen({ appendMessage: get().appendMessage, readMessage: get().readMessage });
+      if (res.length == 0) return;
+
+      readChatAPI({ chatId: res[res.length - 1].id });
+      set((state) => ({
+        ...state,
+        chatList: res,
+      }));
+    });
+  },
+
   setInputMessage: ({ message }) => {
     set((state) => ({
       ...state,
@@ -176,15 +191,8 @@ const useChatStore = create<State & Action>((set, get) => ({
       if (res.length == 0) return;
       set((state) => ({
         ...state,
-        chatCollection: [
-          {
-            topId: res[0].id,
-            bottomId: res[res.length - 1].id,
-            chatList: res,
-          },
-        ],
+      chatList: newChatList,
       }));
-    });
   },
 }));
 

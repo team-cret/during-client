@@ -72,7 +72,13 @@ async function deleteCoupleChatAPI({ deleteId }: { deleteId: number }) {
   });
 }
 
-async function chatWebSocketOpen({ appendMessage }: { appendMessage: (chat: Chat) => void }) {
+async function chatWebSocketOpen({
+  appendMessage,
+  readMessage,
+}: {
+  appendMessage: (chat: Chat) => void;
+  readMessage: ({ startChatId, endChatId }: { startChatId: number; endChatId: number }) => void;
+}) {
   const token = await getUserToken();
   if (token === null) {
     logError('token is null');
@@ -95,7 +101,20 @@ async function chatWebSocketOpen({ appendMessage }: { appendMessage: (chat: Chat
     const message = JSON.parse(e.data);
     switch (message.actionType) {
       case 'MESSAGE_SEND':
-        appendMessage(message.messageInfo);
+        appendMessage({
+          ...message.messageInfo,
+          date: convertDateToStringHSS(new Date(message.messageInfo.date)),
+        });
+        readChatAPI({ chatId: message.messageInfo.id });
+        break;
+      case 'MESSAGE_ACCEPT':
+        readMessage({
+          startChatId: message.startChatId,
+          endChatId: message.endChatId,
+        });
+        break;
+      default:
+        console.log(message);
         break;
     }
   };
