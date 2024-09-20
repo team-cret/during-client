@@ -1,11 +1,13 @@
 import {
   convertDateToStringFullDate,
+  convertDateToStringHSS,
   getUserToken,
   logError,
   logInfo,
   MESSAGE_PAGE_SIZE,
 } from '@/src/shared';
 import { fetchAPI } from '../../auth/api/middleware';
+import { readChatAPI } from '../../info';
 
 async function getCoupleChatAPI({
   chatId,
@@ -14,7 +16,7 @@ async function getCoupleChatAPI({
 }: {
   chatId: number;
   size?: number;
-  scrollType: 'BEFORE' | 'AFTER' | 'BOTH';
+  scrollType: 'BEFORE' | 'AFTER' | 'BOTH' | 'INIT';
 }): Promise<Array<Chat> | null> {
   return fetchAPI({
     path: `api/v0/service/couple-chat`,
@@ -31,7 +33,14 @@ async function getCoupleChatAPI({
       } | null
     ) => {
       if (res === null) return null;
-      return Array<Chat>().concat(res.chatInfo ? res.chatInfo : []);
+      return res.chatInfo
+        ? res.chatInfo.map((chat) => {
+            return {
+              ...chat,
+              date: convertDateToStringHSS(new Date(chat.date)),
+            };
+          })
+        : [];
     }
   );
 }

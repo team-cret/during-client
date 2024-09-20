@@ -10,47 +10,62 @@ function ChatContainer() {
   const { chatCollection } = useChatStore();
 
   return (
-    <ScrollView contentContainerStyle={styles.container} scrollEnabled>
-      {chatCollection.map((collection) =>
-        collection.chatList.map((chat) => {
-          if (chat.sendMemberInfo.id === userId) {
-            switch (chat.messageType) {
+    <Animated.FlatList
+      ref={flatListRef}
+      style={[styles.container, { height }]}
+      contentContainerStyle={{ alignItems: 'center' }}
+      scrollEnabled
+      data={chatList}
+      onScroll={onScroll}
+      onContentSizeChange={onContentSizeChange}
+      onStartReached={onStartReached}
+      renderItem={({ item, index }) => {
+        if (item.sendMemberInfo.id === userId) {
+          switch (item.messageType) {
               case 'TEXT':
                 return (
                   <MyTextChat
-                    key={chat.id}
-                    text={chat.content}
-                    ifRead={chat.readCount === 0}
-                    time={convertDateToStringHSS(new Date(chat.date))}
+                  key={item.id}
+                  text={item.content}
+                  ifRead={item.readCount >= 2}
+                  time={item.date}
+                  infoVisible={
+                    index === chatList.length - 1 ||
+                    chatList[index + 1].sendMemberInfo.id !== item.sendMemberInfo.id ||
+                    chatList[index + 1].date !== item.date
+                  }
                   />
                 );
             }
           } else {
-            switch (chat.messageType) {
+          switch (item.messageType) {
               case 'TEXT':
                 return (
                   <OtherTextChat
-                    key={chat.id}
-                    text={chat.content}
-                    ifRead={chat.readCount === 0}
-                    time={convertDateToStringHSS(new Date(chat.date))}
+                  key={item.id}
+                  text={item.content}
+                  ifRead={item.readCount >= 2}
+                  time={item.date}
+                  infoVisible={
+                    index === chatList.length - 1 ||
+                    chatList[index + 1].sendMemberInfo.id !== item.sendMemberInfo.id ||
+                    chatList[index + 1].date !== item.date
+                  }
                   />
                 );
             }
           }
-        })
-      )}
-    </ScrollView>
+        return null;
+      }}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 0,
     width: convertWidth(375),
-    // height: convertHeight(5000),
-    alignItems: 'center',
-    overflow: 'scroll',
-
+    height: convertHeight(600),
     // backgroundColor: colorWithOpacity('#00ffff', 0.5),
   },
 });
