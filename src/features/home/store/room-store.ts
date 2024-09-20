@@ -117,21 +117,22 @@ const useRoomStore = create<State & Action>((set, get) => ({
     const isObjectExists = Array.from({ length: 12 }, () =>
       Array.from({ length: 12 }, () => false)
     );
+
     for (const object of objects) {
       for (
         let i = 0;
         i <
         (object.rotation % 2 === 0
-          ? roomItems[object.id].size.width
-          : roomItems[object.id].size.depth);
+          ? roomItems[object.itemId].size.width
+          : roomItems[object.itemId].size.depth);
         i++
       ) {
         for (
           let j = 0;
           j <
           (object.rotation % 2 === 1
-            ? roomItems[object.id].size.width
-            : roomItems[object.id].size.depth);
+            ? roomItems[object.itemId].size.width
+            : roomItems[object.itemId].size.depth);
           j++
         ) {
           isObjectExists[object.position.z + i][object.position.x + j] = true;
