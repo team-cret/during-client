@@ -2,10 +2,18 @@ import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth } from '@/src/s
 import { Pressable, StyleSheet } from 'react-native';
 
 import DownIcon from '@/src/shared/assets/icons/chat/arrow-down.svg';
+import { useChatStore } from '@/src/features';
 
 function DownFloatingButton() {
+  const { isScrollBottom, setIsScrollBottom } = useChatStore();
+
   return (
-    <Pressable style={styles.container}>
+    <Pressable
+      style={[styles.container, { display: isScrollBottom ? 'none' : 'flex' }]}
+      onPress={() => {
+        setIsScrollBottom(true);
+      }}
+    >
       <DownIcon width={convertWidth(14)} height={convertHeight(8)} />
     </Pressable>
   );
