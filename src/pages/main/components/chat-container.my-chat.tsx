@@ -11,14 +11,24 @@ import { StyleSheet, Text, View } from 'react-native';
 import ReadIcon from '@/src/shared/assets/icons/chat/read.svg';
 import UnReadIcon from '@/src/shared/assets/icons/chat/unread.svg';
 
-function MyTextChat({ text, ifRead, time }: { text: string; ifRead: boolean; time: string }) {
+function MyTextChat({
+  text,
+  ifRead,
+  time,
+  infoVisible,
+}: {
+  text: string;
+  ifRead: boolean;
+  time: string;
+  infoVisible: boolean;
+}) {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.chatContainer}>
           <Text style={styles.chatText}>{text}</Text>
         </View>
-        <View style={styles.readContainer}>
+        <View style={[styles.infoContainer, { display: infoVisible ? 'flex' : 'none' }]}>
           {ifRead ? (
             <ReadIcon width={convertWidth(9)} height={convertHeight(7)} />
           ) : (
@@ -34,7 +44,7 @@ function MyTextChat({ text, ifRead, time }: { text: string; ifRead: boolean; tim
 const styles = StyleSheet.create({
   container: {
     width: convertWidth(331),
-    marginTop: convertHeight(19),
+    marginTop: convertHeight(3),
 
     flexDirection: 'row',
 
@@ -68,11 +78,12 @@ const styles = StyleSheet.create({
     color: COLOR_BASE_1,
   },
 
-  readContainer: {
+  infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
 
     marginTop: convertHeight(8),
+    marginBottom: convertHeight(12),
   },
 
   timeText: {

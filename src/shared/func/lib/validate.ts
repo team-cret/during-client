@@ -30,4 +30,8 @@ function isValidInvitationCode(code: string): boolean {
   return code.length === 10;
 }
 
-export { isValidDate, isValidNickName, isValidInvitationCode };
+function isValidChatMessage(message: string): boolean {
+  return message.length > 0;
+}
+
+export { isValidDate, isValidNickName, isValidInvitationCode, isValidChatMessage };

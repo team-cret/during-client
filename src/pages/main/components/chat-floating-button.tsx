@@ -3,14 +3,16 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import ChatIcon from '@/src/shared/assets/icons/chat/chat.svg';
 import { useNavigation } from '@react-navigation/native';
+import { useChatStore } from '@/src/features';
 
 function ChatFloatingButton() {
   const navigation = useNavigation<NavProp<'main/index'>>();
+  const { isChatMode, setIsChatMode } = useChatStore();
   return (
     <Pressable
       style={styles.container}
       onPress={() => {
-        navigation.navigate('notification/index');
+        setIsChatMode(!isChatMode);
       }}
     >
       <ChatIcon width={convertWidth(convertWidth(16))} height={convertHeight(16)} />

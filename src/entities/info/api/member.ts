@@ -129,6 +129,18 @@ async function deleteMemberNotificationAPI({ noticeId }: { noticeId: number }) {
   });
 }
 
+async function readChatAPI({ chatId }: { chatId: number }): Promise<boolean> {
+  return fetchAPI({
+    path: 'api/v0/info/member/chat-accept',
+    method: 'PUT',
+    params: {
+      lastReadChatId: chatId,
+    },
+  }).then((res) => {
+    return res ?? false;
+  });
+}
+
 export {
   getMemberProfileInfoAPI,
   updateMemberProfileInfoAPI,
@@ -137,4 +149,5 @@ export {
   acceptCoupleConnectionAPI,
   getNotificationListAPI,
   deleteMemberNotificationAPI,
+  readChatAPI,
 };

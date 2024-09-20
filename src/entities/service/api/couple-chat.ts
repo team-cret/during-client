@@ -1,11 +1,13 @@
 import {
   convertDateToStringFullDate,
+  convertDateToStringHSS,
   getUserToken,
   logError,
   logInfo,
   MESSAGE_PAGE_SIZE,
 } from '@/src/shared';
 import { fetchAPI } from '../../auth/api/middleware';
+import { readChatAPI } from '../../info';
 
 async function getCoupleChatAPI({
   chatId,
@@ -14,7 +16,7 @@ async function getCoupleChatAPI({
 }: {
   chatId: number;
   size?: number;
-  scrollType: 'BEFORE' | 'AFTER' | 'BOTH';
+  scrollType: 'BEFORE' | 'AFTER' | 'BOTH' | 'INIT';
 }): Promise<Array<Chat> | null> {
   return fetchAPI({
     path: `api/v0/service/couple-chat`,
@@ -31,7 +33,14 @@ async function getCoupleChatAPI({
       } | null
     ) => {
       if (res === null) return null;
-      return Array<Chat>().concat(res.chatInfo ? res.chatInfo : []);
+      return res.chatInfo
+        ? res.chatInfo.map((chat) => {
+            return {
+              ...chat,
+              date: convertDateToStringHSS(new Date(chat.date)),
+            };
+          })
+        : [];
     }
   );
 }
@@ -72,7 +81,13 @@ async function deleteCoupleChatAPI({ deleteId }: { deleteId: number }) {
   });
 }
 
-async function chatWebSocketOpen({ appendMessage }: { appendMessage: (chat: Chat) => void }) {
+async function chatWebSocketOpen({
+  appendMessage,
+  readMessage,
+}: {
+  appendMessage: (chat: Chat) => void;
+  readMessage: ({ startChatId, endChatId }: { startChatId: number; endChatId: number }) => void;
+}) {
   const token = await getUserToken();
   if (token === null) {
     logError('token is null');
@@ -95,7 +110,20 @@ async function chatWebSocketOpen({ appendMessage }: { appendMessage: (chat: Chat
     const message = JSON.parse(e.data);
     switch (message.actionType) {
       case 'MESSAGE_SEND':
-        appendMessage(message.messageInfo);
+        appendMessage({
+          ...message.messageInfo,
+          date: convertDateToStringHSS(new Date(message.messageInfo.date)),
+        });
+        readChatAPI({ chatId: message.messageInfo.id });
+        break;
+      case 'MESSAGE_ACCEPT':
+        readMessage({
+          startChatId: message.startChatId,
+          endChatId: message.endChatId,
+        });
+        break;
+      default:
+        console.log(message);
         break;
     }
   };
