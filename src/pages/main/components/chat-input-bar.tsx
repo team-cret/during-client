@@ -5,12 +5,14 @@ import {
   convertWidth,
   SpaceFlexBox,
 } from '@/src/shared';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import PlusIcon from '@/src/shared/assets/icons/chat/plus.svg';
 import SmileIcon from '@/src/shared/assets/icons/chat/smile.svg';
 import SendIcon from '@/src/shared/assets/icons/chat/send.svg';
 import { useChatAIStore, useChatStore } from '@/src/features';
+import { useCallback, useRef } from 'react';
+import { useFocusEffect } from 'expo-router';
 
 function ChatInputBar() {
   const {
@@ -19,6 +21,15 @@ function ChatInputBar() {
     sendMessage,
   } = useChatStore();
   const { isAIOn } = useChatAIStore();
+  const textInputRef = useRef<TextInput>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      Keyboard.addListener('keyboardDidHide', () => {
+        textInputRef.current?.blur();
+      });
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -28,12 +39,18 @@ function ChatInputBar() {
       </Pressable>
       <SpaceFlexBox flex={8} />
       <TextInput
+        ref={textInputRef}
         style={styles.chatInput}
         cursorColor={COLOR_BASE_1}
         value={message}
         onChange={(e) => {
           setInputMessage({ message: e.nativeEvent.text });
         }}
+        onSubmitEditing={() => {
+          sendMessage({ ifAi: isAIOn });
+          setInputMessage({ message: '' });
+        }}
+        blurOnSubmit={false}
       />
       <SpaceFlexBox flex={8} />
       <Pressable style={styles.ImoticonContainer}>
@@ -68,14 +85,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
 
-    elevation: 3,
-    shadowColor: COLOR_BASE_1,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
+    // elevation: 3,
+    // shadowColor: COLOR_BASE_1,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 3,
+    // },
+    // shadowOpacity: 0.08,
+    // shadowRadius: 4,
   },
 
   plusContainer: {
