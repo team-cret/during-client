@@ -15,13 +15,14 @@ import { TempNotificationToast } from './components/temp-notification-toast';
 function MainPage() {
   const navigation = useNavigation<NavProp<'main/index'>>();
   const { role, lastReadChatId } = useUserStore();
+  const { setMotion } = useRoomStore();
 
   const { startChat } = useChatStore();
   useEffect(() => {
     if (role === 'ROLE_SINGLE') {
       navigation.navigate('connection/index');
     }
-    startChat({ lastChatId: lastReadChatId });
+    startChat({ lastChatId: lastReadChatId, setMotion });
   }, []);
 
   return (

@@ -84,9 +84,11 @@ async function deleteCoupleChatAPI({ deleteId }: { deleteId: number }) {
 async function chatWebSocketOpen({
   appendMessage,
   readMessage,
+  setMotion,
 }: {
   appendMessage: (chat: Chat) => void;
   readMessage: ({ startChatId, endChatId }: { startChatId: number; endChatId: number }) => void;
+  setMotion: (isMyInfo: boolean, motionId: string) => void;
 }) {
   const token = await getUserToken();
   if (token === null) {
@@ -121,6 +123,9 @@ async function chatWebSocketOpen({
           startChatId: message.startChatId,
           endChatId: message.endChatId,
         });
+        break;
+      case 'MOTION_UPDATE':
+        setMotion(message.isMyInfo, message.result['motion_id']);
         break;
       default:
         console.log(message);

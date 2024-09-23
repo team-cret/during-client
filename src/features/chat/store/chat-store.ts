@@ -29,7 +29,13 @@ const defaultState: State = {
 };
 
 type Action = {
-  startChat: ({ lastChatId }: { lastChatId: number }) => void;
+  startChat: ({
+    lastChatId,
+    setMotion,
+  }: {
+    lastChatId: number;
+    setMotion: (isMyInfo: boolean, motionId: string) => void;
+  }) => void;
   setInputMessage: ({ message }: { message: string }) => void;
   setIsScrollBottom: (isScrollBottom: boolean) => void;
   setIsChatMode: (isChatMode: boolean) => void;
@@ -54,10 +60,20 @@ const useChatStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  startChat: ({ lastChatId }: { lastChatId: number }) => {
+  startChat: ({
+    lastChatId,
+    setMotion,
+  }: {
+    lastChatId: number;
+    setMotion: (isMyInfo: boolean, motionId: string) => void;
+  }) => {
     getCoupleChatAPI({ chatId: lastChatId, scrollType: 'INIT' }).then((res) => {
       if (res === null) return;
-      chatWebSocketOpen({ appendMessage: get().appendMessage, readMessage: get().readMessage });
+      chatWebSocketOpen({
+        appendMessage: get().appendMessage,
+        readMessage: get().readMessage,
+        setMotion,
+      });
       if (res.length == 0) return;
 
       readChatAPI({ chatId: res[res.length - 1].id });

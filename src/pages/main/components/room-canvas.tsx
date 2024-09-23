@@ -8,6 +8,7 @@ import {
   convertWidth,
   roomItems,
 } from '@/src/shared';
+import { avatarMotions } from '@/src/shared/constants/lib/avatar-motions';
 import { findRoute } from '@/src/shared/func/lib/room';
 import { Gltf, useAnimations, useGLTF } from '@react-three/drei/native';
 import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber/native';
@@ -102,7 +103,7 @@ function Avatar({
     };
     position: THREE.Vector3;
     rotation: number;
-    animation: number;
+    animation: string | null;
   };
   isObjectExists: Array<Array<boolean>>;
 }) {
@@ -110,6 +111,54 @@ function Avatar({
   const modelRef = useRef<THREE.Group>(null);
 
   // 애니메이션 처리
+  useEffect(() => {
+    if (avatarInfo.animation === null) return;
+
+    if (!avatarMotions[avatarInfo.animation]) return;
+
+    // console.log(avatarMotions[avatarInfo.animation].name);
+    // for (const key in animations.actions) {
+    //   console.log(key);
+    // }
+
+    animations.actions['walk']?.stop();
+    animations.actions['Idle']?.stop();
+    setRoute([route[routeIdx]]);
+    setRouteIdx(0);
+
+    animations.actions[avatarMotions[avatarInfo.animation].name]?.play();
+    setTimeout(() => {
+      animations.actions[avatarMotions[avatarInfo.animation!].name]?.stop();
+      animations.actions['Idle']?.play();
+    }, avatarMotions[avatarInfo.animation].playTime);
+  }, [avatarInfo.animation]);
+
+  return (
+    <group position={new THREE.Vector3(1, 0, 1)}>
+      <group ref={modelRef}>
+        <primitive object={model.scene} />
+      </group>
+    </group>
+  );
+}
+
+function AvatarOther({
+  avatarInfo,
+  isObjectExists,
+}: {
+  avatarInfo: {
+    style: {
+      [key in avatarDecorationCategoriesType]: string | null;
+    };
+    position: THREE.Vector3;
+    rotation: number;
+    animation: string | null;
+  };
+  isObjectExists: Array<Array<boolean>>;
+}) {
+  const model = useGLTF(AvatarObject.avatarOther.src);
+  const modelRef = useRef<THREE.Group>(null);
+
   const animations = useAnimations(model.animations, model.scene);
   useFocusEffect(
     useCallback(() => {

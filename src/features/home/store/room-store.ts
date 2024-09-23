@@ -34,7 +34,7 @@ type State = {
     };
     position: THREE.Vector3;
     rotation: number;
-    animation: number;
+    animation: string | null;
   };
   otherAvatar: {
     style: {
@@ -42,7 +42,7 @@ type State = {
     };
     position: THREE.Vector3;
     rotation: number;
-    animation: number;
+    animation: string | null;
   };
 };
 
@@ -65,7 +65,7 @@ const defaultState: State = {
     },
     position: new THREE.Vector3(-2, -2, -2),
     rotation: 0,
-    animation: 0,
+    animation: null,
   },
   otherAvatar: {
     style: {
@@ -76,7 +76,7 @@ const defaultState: State = {
     },
     position: new THREE.Vector3(-2, -2, -2),
     rotation: 0,
-    animation: 0,
+    animation: null,
   },
 };
 
@@ -89,6 +89,7 @@ type Action = {
       [key in avatarDecorationCategoriesType]: string | null;
     };
   }) => void;
+  setMotion: (isMyInfo: boolean, motionId: string | null) => void;
   updateRoom: ({
     background,
     objects,
@@ -194,6 +195,15 @@ const useRoomStore = create<State & Action>((set, get) => ({
         get().initRoom();
       }
     );
+  },
+  setMotion: (isMyInfo, motionId) => {
+    set((state) => ({
+      ...state,
+      [isMyInfo ? 'myAvatar' : 'otherAvatar']: {
+        ...state[isMyInfo ? 'myAvatar' : 'otherAvatar'],
+        animation: motionId,
+      },
+    }));
   },
   updateRoom: ({ background, objects }) => {
     const addedObjects: Array<{
