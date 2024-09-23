@@ -6,7 +6,7 @@ import { ChatFloatingButton } from './components/chat-floating-button';
 import { DownFloatingButton } from './components/down-floating-button';
 import { ChatContainer } from './components/chat-container';
 import { SideBar } from './components/sidebar';
-import { useChatStore, useUserStore } from '@/src/features';
+import { useChatStore, useRoomStore, useUserStore } from '@/src/features';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RoomCanvas } from './components/room-canvas';
