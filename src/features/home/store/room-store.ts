@@ -142,6 +142,35 @@ const useRoomStore = create<State & Action>((set, get) => ({
     }
 
     const { myAvatarStyle, otherAvatarStyle } = await getAvatarStyleAPI();
+    const myAvatarPosition = new THREE.Vector3(-2, 0, -2);
+
+    for (let i = 0; i < 12; i++) {
+      for (let j = 0; j < 12; j++) {
+        if (!isObjectExists[i][j]) {
+          myAvatarPosition.x = j;
+          myAvatarPosition.z = i;
+
+          isObjectExists[i][j] = true;
+          break;
+        }
+      }
+      if (myAvatarPosition.x !== -2) break;
+    }
+
+    const otherAvatarPosition = new THREE.Vector3(-2, 0, -2);
+
+    for (let i = 0; i < 12; i++) {
+      for (let j = 0; j < 12; j++) {
+        if (!isObjectExists[i][j]) {
+          otherAvatarPosition.x = j;
+          otherAvatarPosition.z = i;
+
+          isObjectExists[i][j] = true;
+          break;
+        }
+      }
+      if (otherAvatarPosition.x !== -2) break;
+    }
 
     set({
       ...defaultState,
@@ -161,7 +190,7 @@ const useRoomStore = create<State & Action>((set, get) => ({
               헤어: myAvatarStyle.style['헤어'] !== '' ? myAvatarStyle.style['헤어'] : null,
             }
           : defaultState.myAvatar.style,
-        position: (myAvatarStyle ?? defaultState.myAvatar).position,
+        position: myAvatarStyle ? myAvatarPosition : defaultState.myAvatar.position,
       },
       otherAvatar: {
         ...defaultState.otherAvatar,
@@ -173,7 +202,7 @@ const useRoomStore = create<State & Action>((set, get) => ({
               헤어: otherAvatarStyle.style['헤어'] !== '' ? otherAvatarStyle.style['헤어'] : null,
             }
           : defaultState.otherAvatar.style,
-        position: (otherAvatarStyle ?? defaultState.otherAvatar).position,
+        position: otherAvatarStyle ? otherAvatarPosition : defaultState.otherAvatar.position,
       },
     });
   },
