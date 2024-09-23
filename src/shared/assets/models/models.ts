@@ -1,6 +1,7 @@
 import { useGLTF } from '@react-three/drei/native';
 
 import Avatar from './avatar/avatar.glb';
+import AvatarOther from './avatar/avatar-other.glb';
 
 import Room1Background from './room1/background.glb';
 import Room1Bed from './room1/bed.glb';
@@ -34,7 +35,6 @@ import Room3Frame from './room3/frame.glb';
 import Room3DeskSmall from './room3/desk-small.glb';
 import Room3Sofa from './room3/sofa.glb';
 import Room3Lamp from './room3/lamp.glb';
-import Room3Window from './room3/window.glb';
 
 type GLTFObject = {
   src: string;
@@ -43,6 +43,9 @@ type GLTFObject = {
 const AvatarObject: { [key: string]: GLTFObject } = {
   avatar: {
     src: Avatar,
+  },
+  avatarOther: {
+    src: AvatarOther,
   },
 };
 
@@ -146,9 +149,10 @@ const RoomObjects: { [key: string]: GLTFObject } = {
 };
 
 function preloadGLTFObjects() {
-  Object.keys(AvatarObject).forEach((key) => {
-    useGLTF.preload(AvatarObject[key].src);
-  });
+  // Object.keys(AvatarObject).forEach((key) => {
+  //   useGLTF.preload(AvatarObject[key].src);
+  // });
+  useGLTF.preload(AvatarObject.avatar.src);
 
   Object.keys(RoomObjects).forEach((key) => {
     useGLTF.preload(RoomObjects[key].src);

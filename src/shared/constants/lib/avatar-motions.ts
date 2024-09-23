@@ -4,27 +4,121 @@ const avatarMotionList = [
   'idle',
   'laugh',
   'angry',
-  'love-you',
+  'love',
   'shy',
-  'cheer-up',
+  'cheer',
   'hug-me',
-  'waving',
+  'hi',
   'tired',
   'hug',
   'kiss',
   'pat',
-  'be-patted',
   'eat',
-  'study',
+  'labtop',
   'exercise',
   'sleep',
-  'sleep-left',
-  'sleep-right',
 ] as const;
 
 type AvatarMotion = {
-  id: number;
   name: (typeof avatarMotionList)[number];
   price: number;
+  playTime: number;
   category: (typeof avatarMotionTypes)[number];
 };
+
+const avatarMotions: {
+  [key: string]: AvatarMotion;
+} = {
+  '1000': {
+    name: 'laugh',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1001': {
+    name: 'angry',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1002': {
+    name: 'love',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1003': {
+    name: 'shy',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1004': {
+    name: 'cheer',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1005': {
+    name: 'hug-me',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1006': {
+    name: 'hi',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '1007': {
+    name: 'tired',
+    price: 0,
+    playTime: 5000,
+    category: 'solo',
+  },
+  '2000': {
+    name: 'hug',
+    price: 0,
+    playTime: 5000,
+    category: 'multi',
+  },
+  '2001': {
+    name: 'kiss',
+    price: 0,
+    playTime: 5000,
+    category: 'multi',
+  },
+  '2002': {
+    name: 'pat',
+    price: 0,
+    playTime: 5000,
+    category: 'multi',
+  },
+  '3000': {
+    name: 'eat',
+    price: 0,
+    playTime: 5000,
+    category: 'object',
+  },
+  '3001': {
+    name: 'labtop',
+    price: 0,
+    playTime: 5000,
+    category: 'object',
+  },
+  '3003': {
+    name: 'exercise',
+    price: 0,
+    playTime: 5000,
+    category: 'object',
+  },
+  '3004': {
+    name: 'sleep',
+    price: 0,
+    playTime: 5000,
+    category: 'object',
+  },
+};
+
+export { avatarMotions };

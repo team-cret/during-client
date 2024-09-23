@@ -8,6 +8,7 @@ import {
   convertWidth,
   roomItems,
 } from '@/src/shared';
+import { avatarMotions } from '@/src/shared/constants/lib/avatar-motions';
 import { findRoute } from '@/src/shared/func/lib/room';
 import { Gltf, useAnimations, useGLTF } from '@react-three/drei/native';
 import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber/native';
@@ -17,7 +18,7 @@ import { StyleSheet, View } from 'react-native';
 import THREE, { Euler } from 'three';
 
 function RoomCanvas() {
-  const { myAvatar, isObjectExists, initRoom } = useRoomStore();
+  const { myAvatar, otherAvatar, isObjectExists, initRoom } = useRoomStore();
 
   useFocusEffect(
     useCallback(() => {
@@ -41,6 +42,7 @@ function RoomCanvas() {
         <color attach="background" args={[COLOR_BACKGROUND]} />
         <Room />
         <Avatar avatarInfo={myAvatar} isObjectExists={isObjectExists} />
+        <AvatarOther avatarInfo={otherAvatar} isObjectExists={isObjectExists} />
       </Canvas>
     </View>
   );
@@ -102,14 +104,13 @@ function Avatar({
     };
     position: THREE.Vector3;
     rotation: number;
-    animation: number;
+    animation: string | null;
   };
   isObjectExists: Array<Array<boolean>>;
 }) {
   const model = useGLTF(AvatarObject.avatar.src);
   const modelRef = useRef<THREE.Group>(null);
 
-  // 애니메이션 처리
   const animations = useAnimations(model.animations, model.scene);
   useFocusEffect(
     useCallback(() => {
@@ -120,7 +121,6 @@ function Avatar({
         avatarInfo.position.z
       );
       modelRef.current.rotation.set(0, (avatarInfo.rotation * Math.PI) / 2, 0);
-      // animations.actions['Idle']?.play();
     }, [])
   );
 
@@ -142,11 +142,23 @@ function Avatar({
   }, [avatarInfo.style]);
 
   // 아바타 이동 처리
-  const [route, setRoute] = useState<Array<THREE.Vector3>>([avatarInfo.position]);
+  const [route, setRoute] = useState<Array<THREE.Vector3>>([]);
   const [routeIdx, setRouteIdx] = useState(0);
 
   useEffect(() => {
     if (avatarInfo.position === null) return;
+    if (avatarInfo.position.y < 0) return;
+
+    if (route.length === 0) {
+      if (modelRef.current)
+        modelRef.current.position.set(
+          avatarInfo.position.x,
+          avatarInfo.position.y,
+          avatarInfo.position.z
+        );
+      setRoute([avatarInfo.position]);
+      return;
+    }
 
     const lastPosition = routeIdx == route.length - 1 ? route[routeIdx] : route[routeIdx + 1];
     const newRoute = findRoute(lastPosition, avatarInfo.position, isObjectExists);
@@ -203,6 +215,183 @@ function Avatar({
       }
     }
   });
+
+  // 애니메이션 처리
+  useEffect(() => {
+    if (avatarInfo.animation === null) return;
+
+    if (!avatarMotions[avatarInfo.animation]) return;
+
+    // console.log(avatarMotions[avatarInfo.animation].name);
+    // for (const key in animations.actions) {
+    //   console.log(key);
+    // }
+
+    animations.actions['walk']?.stop();
+    animations.actions['Idle']?.stop();
+    setRoute([route[routeIdx]]);
+    setRouteIdx(0);
+
+    animations.actions[avatarMotions[avatarInfo.animation].name]?.play();
+    setTimeout(() => {
+      animations.actions[avatarMotions[avatarInfo.animation!].name]?.stop();
+      animations.actions['Idle']?.play();
+    }, avatarMotions[avatarInfo.animation].playTime);
+  }, [avatarInfo.animation]);
+
+  return (
+    <group position={new THREE.Vector3(1, 0, 1)}>
+      <group ref={modelRef}>
+        <primitive object={model.scene} />
+      </group>
+    </group>
+  );
+}
+
+function AvatarOther({
+  avatarInfo,
+  isObjectExists,
+}: {
+  avatarInfo: {
+    style: {
+      [key in avatarDecorationCategoriesType]: string | null;
+    };
+    position: THREE.Vector3;
+    rotation: number;
+    animation: string | null;
+  };
+  isObjectExists: Array<Array<boolean>>;
+}) {
+  const model = useGLTF(AvatarObject.avatarOther.src);
+  const modelRef = useRef<THREE.Group>(null);
+
+  const animations = useAnimations(model.animations, model.scene);
+  useFocusEffect(
+    useCallback(() => {
+      if (!modelRef.current) return;
+      modelRef.current.position.set(
+        avatarInfo.position.x,
+        avatarInfo.position.y,
+        avatarInfo.position.z
+      );
+      modelRef.current.rotation.set(0, (avatarInfo.rotation * Math.PI) / 2, 0);
+    }, [])
+  );
+
+  // 아바타 스타일 처리
+  useEffect(() => {
+    model.scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.visible = false;
+        if (avatarInfo.style.상의 === null && child.name === 'basic-tops') child.visible = true;
+        if (avatarInfo.style.하의 === null && child.name === 'basic-bottoms') child.visible = true;
+        if (child.name === 'body') child.visible = true;
+
+        if (avatarInfo.style.상의 && child.name === avatarInfo.style.상의) child.visible = true;
+        if (avatarInfo.style.하의 && child.name === avatarInfo.style.하의) child.visible = true;
+        if (avatarInfo.style.신발 && child.name === avatarInfo.style.신발) child.visible = true;
+        if (avatarInfo.style.헤어 && child.name === avatarInfo.style.헤어) child.visible = true;
+      }
+    });
+  }, [avatarInfo.style]);
+
+  // 아바타 이동 처리
+  const [route, setRoute] = useState<Array<THREE.Vector3>>([]);
+  const [routeIdx, setRouteIdx] = useState(0);
+
+  useEffect(() => {
+    if (avatarInfo.position === null) return;
+    if (avatarInfo.position.y < 0) return;
+
+    if (route.length === 0) {
+      if (modelRef.current)
+        modelRef.current.position.set(
+          avatarInfo.position.x,
+          avatarInfo.position.y,
+          avatarInfo.position.z
+        );
+      setRoute([avatarInfo.position]);
+      return;
+    }
+
+    const lastPosition = routeIdx == route.length - 1 ? route[routeIdx] : route[routeIdx + 1];
+    const newRoute = findRoute(lastPosition, avatarInfo.position, isObjectExists);
+    if (newRoute.length === 0) return;
+
+    setRoute(newRoute);
+    setRouteIdx(0);
+  }, [avatarInfo.position]);
+
+  useEffect(() => {
+    if (routeIdx == route.length - 1) {
+      animations.actions['walk']?.stop();
+      animations.actions['Idle']?.play();
+    } else {
+      animations.actions['Idle']?.stop();
+      animations.actions['walk']?.play();
+    }
+  }, [route, routeIdx]);
+
+  // 프레임마다 호출되는 useFrame으로 이동 처리
+  // lerp 마지막 인자로 속도 조절
+  useFrame(() => {
+    if (!modelRef.current) return;
+
+    // 루트의 끝에 도달
+    if (routeIdx == route.length - 1) return;
+
+    modelRef.current.position.lerp(route[routeIdx + 1], 0.08);
+
+    // 다음 루트로 이동
+    if (modelRef.current.position.distanceTo(route[routeIdx + 1]) < 0.01) setRouteIdx(routeIdx + 1);
+
+    // 방향 바꾸기
+    if (
+      modelRef.current.position.distanceTo(route[routeIdx]) < 0.1 &&
+      routeIdx < route.length - 1
+    ) {
+      const curDir = [
+        route[routeIdx + 1].z - route[routeIdx].z,
+        route[routeIdx + 1].x - route[routeIdx].x,
+      ];
+      if (curDir[0] === 0) {
+        if (curDir[1] === 1) {
+          modelRef.current.rotation.set(0, Math.PI / 2, 0);
+        } else {
+          modelRef.current.rotation.set(0, (3 * Math.PI) / 2, 0);
+        }
+      } else {
+        if (curDir[0] === 1) {
+          modelRef.current.rotation.set(0, 0, 0);
+        } else {
+          modelRef.current.rotation.set(0, Math.PI, 0);
+        }
+      }
+    }
+  });
+
+  // 애니메이션 처리
+  useEffect(() => {
+    if (avatarInfo.animation === null) return;
+
+    if (!avatarMotions[avatarInfo.animation]) return;
+
+    // console.log(avatarMotions[avatarInfo.animation].name);
+    // for (const key in animations.actions) {
+    //   console.log(key);
+    // }
+
+    animations.actions['walk']?.stop();
+    animations.actions['Idle']?.stop();
+    setRoute([route[routeIdx]]);
+    setRouteIdx(0);
+
+    animations.actions[avatarMotions[avatarInfo.animation].name]?.play();
+    setTimeout(() => {
+      animations.actions[avatarMotions[avatarInfo.animation!].name]?.stop();
+      animations.actions['Idle']?.play();
+    }, avatarMotions[avatarInfo.animation].playTime);
+  }, [avatarInfo.animation]);
 
   return (
     <group position={new THREE.Vector3(1, 0, 1)}>

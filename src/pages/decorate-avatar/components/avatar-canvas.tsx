@@ -60,6 +60,7 @@ function Avatar() {
     useCallback(() => {
       model.scene.position.set(0, 0, 0);
       model.scene.rotation.set(0, 0, 0);
+      animations.actions['Idle']?.stop();
       animations.actions['Idle']?.play();
     }, [])
   );
