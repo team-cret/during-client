@@ -1,5 +1,17 @@
 import { fetchAPI } from '../../auth/api/middleware';
 
+async function setMemberPushTokenAPI({ pushToken }: { pushToken: string }) {
+  return fetchAPI({
+    method: 'PUT',
+    path: 'api/v0/info/member/notification',
+    body: {
+      expoPushToken: pushToken,
+    },
+  }).then((res) => {
+    return res ?? false;
+  });
+}
+
 async function getMemberProfileInfoAPI() {
   return fetchAPI({
     method: 'GET',
@@ -142,6 +154,7 @@ async function readChatAPI({ chatId }: { chatId: number }): Promise<boolean> {
 }
 
 export {
+  setMemberPushTokenAPI,
   getMemberProfileInfoAPI,
   updateMemberProfileInfoAPI,
   deleteMemberAPI,
