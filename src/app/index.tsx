@@ -2,6 +2,7 @@ import { RootLayout } from './routes/index';
 import { useFonts } from 'expo-font';
 import { SplashPage, SplashPageBeforeLoaded } from '@/src/pages';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ToastProvider } from 'react-native-toast-notifications';
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -18,8 +19,10 @@ export default function App() {
   if (!fontsLoaded) return <SplashPageBeforeLoaded />;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <RootLayout />
-    </GestureHandlerRootView>
+    <ToastProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <RootLayout />
+      </GestureHandlerRootView>
+    </ToastProvider>
   );
 }

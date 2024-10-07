@@ -8,8 +8,10 @@ import {
 import { StyleSheet, View } from 'react-native';
 import { TextContainer } from './my-code.text-container';
 import { CopyButton } from './my-code.copy-button';
+import { useToast } from 'react-native-toast-notifications';
 
 function MyInvitationCode() {
+  const toast = useToast();
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={28} />
@@ -18,7 +20,12 @@ function MyInvitationCode() {
         <CopyButton />
       </View>
       <SpaceFlexBox flex={27} />
-      <BarButtonGreen text="링크 공유하기" onPress={() => {}} />
+      <BarButtonGreen
+        text="링크 공유하기"
+        onPress={() => {
+          toast.show('준비중입니다.');
+        }}
+      />
       <SpaceFlexBox flex={23} />
     </View>
   );
