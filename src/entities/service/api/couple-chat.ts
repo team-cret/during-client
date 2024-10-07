@@ -5,9 +5,13 @@ import {
   logError,
   logInfo,
   MESSAGE_PAGE_SIZE,
+  setUserToken,
 } from '@/src/shared';
 import { fetchAPI } from '../../auth/api/middleware';
 import { readChatAPI } from '../../info';
+
+import THREE from 'three';
+import { takeAttendanceAPI } from '../../event';
 
 async function getCoupleChatAPI({
   chatId,
@@ -58,7 +62,7 @@ async function sendCoupleChatAPI({
   aiToggle: boolean;
   replyId: number | null;
 }) {
-  fetchAPI({
+  return fetchAPI({
     path: 'api/v0/service/couple-chat',
     method: 'POST',
     body: {
@@ -68,6 +72,8 @@ async function sendCoupleChatAPI({
       aiToggle,
       replyId,
     },
+  }).then((res) => {
+    return res ?? false;
   });
 }
 
@@ -85,10 +91,16 @@ async function chatWebSocketOpen({
   appendMessage,
   readMessage,
   setMotion,
+  moveAvatar,
+  initRoom,
+  getCoupleInfo,
 }: {
   appendMessage: (chat: Chat) => void;
   readMessage: ({ startChatId, endChatId }: { startChatId: number; endChatId: number }) => void;
   setMotion: (isMyInfo: boolean, motionId: string) => void;
+  moveAvatar: (isMyInfo: boolean, position: THREE.Vector3) => void;
+  initRoom: () => void;
+  getCoupleInfo: () => void;
 }) {
   const token = await getUserToken();
   if (token === null) {
@@ -99,6 +111,8 @@ async function chatWebSocketOpen({
     logError('accessToken is null');
     return null;
   }
+
+  takeAttendanceAPI();
 
   const ws = new WebSocket(
     `${process.env.EXPO_PUBLIC_DURING_WEBSOCKET_URL!}/api/v0/couple-chat/connect?token=${
@@ -126,6 +140,25 @@ async function chatWebSocketOpen({
         break;
       case 'MOTION_UPDATE':
         setMotion(message.isMyInfo, message.result['motion_id']);
+        break;
+      case 'AVATAR_MOVE':
+        moveAvatar(
+          message.isMyInfo,
+          new THREE.Vector3(message.moveInfo.x, message.moveInfo.y, message.moveInfo.z)
+        );
+        break;
+      case 'ROOM_UPDATE':
+        initRoom();
+        break;
+      case 'COUPLE_UPDATE':
+        getCoupleInfo();
+        break;
+      case 'AVATAR_UPDATE':
+        initRoom();
+        break;
+      case 'MEMBER_DELETE':
+      case 'COUPLE_DELETE':
+        setUserToken({ accessToken: null, refreshToken: null });
         break;
       default:
         console.log(message);
