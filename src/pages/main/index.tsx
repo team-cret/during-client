@@ -11,6 +11,8 @@ import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RoomCanvas } from './components/room-canvas';
 import { TempNotificationToast } from './components/temp-notification-toast';
+import { ChatListContainer } from './components/chat-list-container';
+import { useToast } from 'react-native-toast-notifications';
 
 function MainPage() {
   const navigation = useNavigation<NavProp<'main/index'>>();
@@ -18,7 +20,14 @@ function MainPage() {
   const { setMotion } = useRoomStore();
 
   const { startChat } = useChatStore();
+  const toast = useToast();
+
   useEffect(() => {
+    takeAttendance().then((res) => {
+      if (!res) return;
+      toast.show('출석체크하여 포인트가 적립되었습니다!');
+    });
+
     if (role === 'ROLE_SINGLE') {
       navigation.navigate('connection/index');
     }

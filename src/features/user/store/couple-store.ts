@@ -1,4 +1,5 @@
 import { disconnectCoupleAPI, getCoupleProfileInfoAPI } from '@/src/entities';
+import { takeAttendanceAPI } from '@/src/entities/event';
 import { create } from 'zustand';
 
 type State = {
@@ -32,6 +33,7 @@ const defaultState: State = {
 type Action = {
   getCoupleInfo: () => Promise<boolean>;
   disconnectCouple: () => Promise<boolean>;
+  takeAttendance: () => Promise<boolean>;
 };
 
 const useCoupleStore = create<State & Action>((set) => ({
@@ -54,6 +56,10 @@ const useCoupleStore = create<State & Action>((set) => ({
   },
   disconnectCouple: async () => {
     return await disconnectCoupleAPI();
+  },
+
+  takeAttendance: async () => {
+    return await takeAttendanceAPI();
   },
 }));
 

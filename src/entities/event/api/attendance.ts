@@ -5,8 +5,7 @@ async function takeAttendanceAPI() {
     method: 'POST',
     path: 'api/v0/event/attendance',
   }).then((res) => {
-    if (res === null) return null;
-    return res.coupleInfo;
+    return res ?? false;
   });
 }
 
