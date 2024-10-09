@@ -65,7 +65,7 @@ function Room() {
         src={roomItems[background.itemId].object.src}
         onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
           const floorPoint = e.intersections.sort((a, b) => b.distance - a.distance)[0].point;
-          updateMyAvatarPosition(floorPoint);
+          updateMyAvatarPosition({ position: floorPoint, userRole: role });
         }}
       />
       {objects.map((object, index) => {

@@ -1,6 +1,7 @@
 import {
   getAvatarStyleAPI,
   getRoomInfoAPI,
+  updateAvatarPosition,
   updateAvatarStyleAPI,
   updateRoomInfoAPI,
 } from '@/src/entities';
@@ -303,6 +304,21 @@ const useRoomStore = create<State & Action>((set, get) => ({
       ...state,
       myAvatar: {
         ...state.myAvatar,
+          position,
+        },
+      }));
+      return;
+    }
+    updateAvatarPosition({ x: position.x, y: position.y, z: position.z });
+  },
+
+  moveAvatar: (isMyInfo, position) => {
+    position = new THREE.Vector3(position.x, 0, position.z);
+
+    set((state) => ({
+      ...state,
+      [isMyInfo ? 'myAvatar' : 'otherAvatar']: {
+        ...state[isMyInfo ? 'myAvatar' : 'otherAvatar'],
         position,
       },
     }));

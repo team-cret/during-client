@@ -234,4 +234,32 @@ async function updateAvatarStyleAPI({
   });
 }
 
-export { getRoomInfoAPI, updateRoomInfoAPI, getAvatarStyleAPI, updateAvatarStyleAPI };
+async function updateAvatarPosition({
+  x,
+  y,
+  z,
+}: {
+  x: number;
+  y: number;
+  z: number;
+}): Promise<boolean> {
+  return fetchAPI({
+    path: `api/v0/object/custom/avatar-move`,
+    method: 'PUT',
+    body: {
+      x,
+      y,
+      z,
+    },
+  }).then((res: boolean) => {
+    return res ?? false;
+  });
+}
+
+export {
+  getRoomInfoAPI,
+  updateRoomInfoAPI,
+  getAvatarStyleAPI,
+  updateAvatarStyleAPI,
+  updateAvatarPosition,
+};
