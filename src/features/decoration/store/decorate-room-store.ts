@@ -5,7 +5,7 @@ import {
   RoomItem,
   roomItems,
 } from '@/src/shared';
-import THREE from 'three';
+import * as THREE from 'three';
 import { create } from 'zustand';
 
 type State = {
@@ -76,7 +76,7 @@ type Action = {
 
   selectBagItem: (itemId: string) => void;
   selectShopItem: (itemId: string) => void;
-  confirmPurchase: () => Promise<{
+  confirmPurchase: ({ userRole }: { userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null }) => Promise<{
     background: {
       id: number | null;
       itemId: string;
@@ -128,10 +128,7 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
     const shopItems = await getRoomItemShopAPI();
 
     set({
-      mode: defaultState.mode,
-      category: defaultState.category,
-      isPurchaseMode: defaultState.isPurchaseMode,
-      purchaseItems: defaultState.purchaseItems,
+      ...defaultState,
       bagItems: bagItems,
       shopItems: shopItems,
       roomInfo: {
@@ -217,8 +214,9 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
         purchaseItems: [...state.purchaseItems, { itemId }],
       }));
   },
-  confirmPurchase: async () => {
-    const purchaseResult = await purchaseRoomItemAPI(get().purchaseItems);
+  confirmPurchase: async ({ userRole }) => {
+    const purchaseResult =
+      userRole == 'ROLE_SINGLE' ? true : await purchaseRoomItemAPI(get().purchaseItems);
     if (!purchaseResult)
       return {
         background: null,
@@ -355,9 +353,9 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
     }));
   },
   rotateSelectedObject: () => {
-    const selectedObject = get().roomInfo.objects[get().roomInfo.selectedObjectIdx!];
-    if (!selectedObject) return;
+    if (get().roomInfo.selectedObjectIdx === null) return;
 
+    const selectedObject = get().roomInfo.objects[get().roomInfo.selectedObjectIdx!];
     for (let i = 1; i <= 4; i++) {
       if (
         selectedObject.position.z +
@@ -377,14 +375,11 @@ const useDecorateRoomStore = create<State & Action>((set, get) => ({
         ...state,
         roomInfo: {
           ...state.roomInfo,
-          objects: state.roomInfo.objects.map((object) => {
-            if (object.itemId === selectedObject.itemId)
-              return {
-                ...object,
-                rotation: (object.rotation + i) % 4,
-              };
-            else return object;
-          }),
+          objects: state.roomInfo.objects.map((object, idx) =>
+            idx === state.roomInfo.selectedObjectIdx
+              ? { ...object, rotation: (object.rotation + i) % 4 }
+              : object
+          ),
         },
       }));
       break;

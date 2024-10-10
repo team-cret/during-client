@@ -10,7 +10,7 @@ import {
   avatarDecorationCategoriesType,
   roomItems,
 } from '@/src/shared';
-import THREE from 'three';
+import * as THREE from 'three';
 import { create } from 'zustand';
 
 type State = {
@@ -52,7 +52,7 @@ const defaultState: State = {
   name: '',
   thumbnailImageUrl: '',
   background: {
-    id: null,
+    id: 0,
     itemId: '1',
   },
   objects: [],
@@ -64,7 +64,7 @@ const defaultState: State = {
       하의: null,
       신발: null,
     },
-    position: new THREE.Vector3(-2, -2, -2),
+    position: new THREE.Vector3(0, 0, 0),
     rotation: 0,
     animation: null,
   },
@@ -82,18 +82,21 @@ const defaultState: State = {
 };
 
 type Action = {
-  initRoom: () => Promise<void>;
+  initRoom: ({ userRole }: { userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null }) => Promise<void>;
   updateMyAvatarStyle: ({
     style,
+    userRole,
   }: {
     style: {
       [key in avatarDecorationCategoriesType]: string | null;
     };
+    userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null;
   }) => void;
   setMotion: (isMyInfo: boolean, motionId: string | null) => void;
   updateRoom: ({
     background,
     objects,
+    userRole,
   }: {
     background: {
       id: number | null;
@@ -105,15 +108,29 @@ type Action = {
       position: THREE.Vector3;
       rotation: number;
     }> | null;
+    userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null;
   }) => void;
-  updateMyAvatarPosition: (position: THREE.Vector3) => void;
+  updateMyAvatarPosition: ({
+    position,
+    userRole,
+  }: {
+    position: THREE.Vector3;
+    userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null;
+  }) => void;
+
+  //API 콜이 아닌, 내부 상태만 변경하는 메서드들
+  moveAvatar: (isMyInfo: boolean, position: THREE.Vector3) => void;
 };
 
 const useRoomStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  initRoom: async () => {
+  initRoom: async ({ userRole }) => {
+    if (userRole === 'ROLE_SINGLE') {
+      return;
+    }
+
     const { id, name, thumbnailImageUrl, background, objects } = await getRoomInfoAPI();
 
     const isObjectExists = Array.from({ length: 12 }, () =>
@@ -137,42 +154,13 @@ const useRoomStore = create<State & Action>((set, get) => ({
             : roomItems[object.itemId].size.depth);
           j++
         ) {
-          isObjectExists[object.position.z + i][object.position.x + j] = true;
+          isObjectExists[Math.min(11, object.position.z + i)][Math.min(11, object.position.x + j)] =
+            true;
         }
       }
     }
 
     const { myAvatarStyle, otherAvatarStyle } = await getAvatarStyleAPI();
-    const myAvatarPosition = new THREE.Vector3(-2, 0, -2);
-
-    for (let i = 0; i < 12; i++) {
-      for (let j = 0; j < 12; j++) {
-        if (!isObjectExists[i][j]) {
-          myAvatarPosition.x = j;
-          myAvatarPosition.z = i;
-
-          isObjectExists[i][j] = true;
-          break;
-        }
-      }
-      if (myAvatarPosition.x !== -2) break;
-    }
-
-    const otherAvatarPosition = new THREE.Vector3(-2, 0, -2);
-
-    for (let i = 0; i < 12; i++) {
-      for (let j = 0; j < 12; j++) {
-        if (!isObjectExists[i][j]) {
-          otherAvatarPosition.x = j;
-          otherAvatarPosition.z = i;
-
-          isObjectExists[i][j] = true;
-          break;
-        }
-      }
-      if (otherAvatarPosition.x !== -2) break;
-    }
-
     set({
       ...defaultState,
       id,
@@ -191,7 +179,7 @@ const useRoomStore = create<State & Action>((set, get) => ({
               헤어: myAvatarStyle.style['헤어'] !== '' ? myAvatarStyle.style['헤어'] : null,
             }
           : defaultState.myAvatar.style,
-        position: myAvatarStyle ? myAvatarPosition : defaultState.myAvatar.position,
+        position: myAvatarStyle ? myAvatarStyle.position : defaultState.myAvatar.position,
       },
       otherAvatar: {
         ...defaultState.otherAvatar,
@@ -203,28 +191,34 @@ const useRoomStore = create<State & Action>((set, get) => ({
               헤어: otherAvatarStyle.style['헤어'] !== '' ? otherAvatarStyle.style['헤어'] : null,
             }
           : defaultState.otherAvatar.style,
-        position: otherAvatarStyle ? otherAvatarPosition : defaultState.otherAvatar.position,
+        position: otherAvatarStyle ? otherAvatarStyle.position : defaultState.otherAvatar.position,
       },
     });
   },
-  updateMyAvatarStyle: ({ style }) => {
+  updateMyAvatarStyle: ({ style, userRole }) => {
+    if (userRole === 'ROLE_SINGLE') {
+      set((state) => ({
+        ...state,
+        myAvatar: {
+          ...state.myAvatar,
+          style: {
+            ...style,
+          },
+        },
+      }));
+      return;
+    }
+
     const addedProducts = [];
     const removedProduct = [];
 
     for (const category of avatarDecorationCategories) {
-      if (style[category] !== null && get().myAvatar.style[category] !== style[category])
-        addedProducts.push({ id: style[category]! });
-      else if (
-        get().myAvatar.style[category] !== null &&
-        get().myAvatar.style[category] !== style[category]
-      )
+      if (get().myAvatar.style[category] === style[category]) continue;
+      if (get().myAvatar.style[category] !== null)
         removedProduct.push({ id: get().myAvatar.style[category]! });
+      if (style[category] !== null) addedProducts.push({ id: style[category] });
     }
-    updateAvatarStyleAPI({ addProducts: addedProducts, removeProducts: removedProduct }).then(
-      () => {
-        get().initRoom();
-      }
-    );
+    updateAvatarStyleAPI({ addProducts: addedProducts, removeProducts: removedProduct });
   },
   setMotion: (isMyInfo, motionId) => {
     set((state) => ({
@@ -235,7 +229,24 @@ const useRoomStore = create<State & Action>((set, get) => ({
       },
     }));
   },
-  updateRoom: ({ background, objects }) => {
+  updateRoom: ({ background, objects, userRole }) => {
+    if (userRole === 'ROLE_SINGLE') {
+      set((state) => ({
+        ...state,
+        background: background ?? state.background,
+        objects: objects
+          ? objects.map((object, idx) => {
+              return {
+                ...object,
+                id: idx,
+              };
+            })
+          : state.objects,
+      }));
+
+      return;
+    }
+
     const addedObjects: Array<{
       itemId: string;
       position: THREE.Vector3;
@@ -289,21 +300,16 @@ const useRoomStore = create<State & Action>((set, get) => ({
       addedObjects,
       updatedObjects,
       removedObjects,
-    }).then(() => {
-      get().initRoom();
     });
   },
-  updateMyAvatarPosition: (position) => {
-    position = new THREE.Vector3(
-      Math.min(Math.floor(position.x), 11),
-      0,
-      Math.min(Math.floor(position.z), 11)
-    );
-
-    set((state) => ({
-      ...state,
-      myAvatar: {
-        ...state.myAvatar,
+  updateMyAvatarPosition: ({ position, userRole }) => {
+    if (userRole === 'ROLE_SINGLE') {
+      console.log(position);
+      position = new THREE.Vector3(Math.floor(position.x), 0, Math.floor(position.z));
+      set((state) => ({
+        ...state,
+        myAvatar: {
+          ...state.myAvatar,
           position,
         },
       }));

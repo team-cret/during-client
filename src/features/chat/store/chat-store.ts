@@ -7,6 +7,7 @@ import {
 } from '@/src/entities';
 import { isValidChatMessage } from '@/src/shared';
 import { create } from 'zustand';
+import * as THREE from 'three';
 
 type State = {
   input: {
@@ -32,15 +33,21 @@ type Action = {
   startChat: ({
     lastChatId,
     setMotion,
+    moveAvatar,
+    initRoom,
+    getCoupleInfo,
   }: {
     lastChatId: number;
     setMotion: (isMyInfo: boolean, motionId: string) => void;
+    moveAvatar: (isMyInfo: boolean, position: THREE.Vector3) => void;
+    initRoom: ({ userRole }: { userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null }) => void;
+    getCoupleInfo: () => void;
   }) => void;
   setInputMessage: ({ message }: { message: string }) => void;
   setIsScrollBottom: (isScrollBottom: boolean) => void;
   setIsChatMode: (isChatMode: boolean) => void;
 
-  sendMessage: ({ ifAi }: { ifAi: boolean }) => void;
+  sendMessage: ({ ifAi }: { ifAi: boolean }) => Promise<boolean>;
   deleteMessage: ({ messageId }: { messageId: number }) => void;
   getMessages: ({
     basisChatId,
@@ -63,18 +70,27 @@ const useChatStore = create<State & Action>((set, get) => ({
   startChat: ({
     lastChatId,
     setMotion,
+    moveAvatar,
+    initRoom,
+    getCoupleInfo,
   }: {
     lastChatId: number;
     setMotion: (isMyInfo: boolean, motionId: string) => void;
+    moveAvatar: (isMyInfo: boolean, position: THREE.Vector3) => void;
+    initRoom: ({ userRole }: { userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null }) => void;
+    getCoupleInfo: () => void;
   }) => {
     getCoupleChatAPI({ chatId: lastChatId, scrollType: 'INIT' }).then((res) => {
-      if (res === null) return;
+      if (res === null) return set((state) => ({ ...state, chatList: [] }));
       chatWebSocketOpen({
         appendMessage: get().appendMessage,
         readMessage: get().readMessage,
         setMotion,
+        moveAvatar,
+        initRoom,
+        getCoupleInfo,
       });
-      if (res.length == 0) return;
+      if (res.length == 0) return set((state) => ({ ...state, chatList: [] }));
 
       readChatAPI({ chatId: res[res.length - 1].id });
       set((state) => ({
@@ -106,9 +122,9 @@ const useChatStore = create<State & Action>((set, get) => ({
     }));
   },
 
-  sendMessage: ({ ifAi }) => {
-    if (!isValidChatMessage(get().input.message)) return;
-    sendCoupleChatAPI({
+  sendMessage: async ({ ifAi }) => {
+    if (!isValidChatMessage(get().input.message)) return true;
+    return await sendCoupleChatAPI({
       type: 'TEXT',
       content: get().input.message,
       date: new Date(),

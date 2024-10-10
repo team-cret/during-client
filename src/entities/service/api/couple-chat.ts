@@ -10,8 +10,7 @@ import {
 import { fetchAPI } from '../../auth/api/middleware';
 import { readChatAPI } from '../../info';
 
-import THREE from 'three';
-import { takeAttendanceAPI } from '../../event';
+import * as THREE from 'three';
 
 async function getCoupleChatAPI({
   chatId,
@@ -99,7 +98,7 @@ async function chatWebSocketOpen({
   readMessage: ({ startChatId, endChatId }: { startChatId: number; endChatId: number }) => void;
   setMotion: (isMyInfo: boolean, motionId: string) => void;
   moveAvatar: (isMyInfo: boolean, position: THREE.Vector3) => void;
-  initRoom: () => void;
+  initRoom: ({ userRole }: { userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null }) => void;
   getCoupleInfo: () => void;
 }) {
   const token = await getUserToken();
@@ -111,8 +110,6 @@ async function chatWebSocketOpen({
     logError('accessToken is null');
     return null;
   }
-
-  takeAttendanceAPI();
 
   const ws = new WebSocket(
     `${process.env.EXPO_PUBLIC_DURING_WEBSOCKET_URL!}/api/v0/couple-chat/connect?token=${
@@ -148,13 +145,13 @@ async function chatWebSocketOpen({
         );
         break;
       case 'ROOM_UPDATE':
-        initRoom();
+        initRoom({ userRole: 'ROLE_COUPLE' });
         break;
       case 'COUPLE_UPDATE':
         getCoupleInfo();
         break;
       case 'AVATAR_UPDATE':
-        initRoom();
+        initRoom({ userRole: 'ROLE_COUPLE' });
         break;
       case 'MEMBER_DELETE':
       case 'COUPLE_DELETE':
