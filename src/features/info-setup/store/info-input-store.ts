@@ -38,6 +38,7 @@ type Action = {
   setNickName: (value: string) => void;
   clearNickName: () => void;
   continueStep: () => void;
+  setCurStep: (step: State['curStep']) => void;
 };
 
 const useInfoInputStore = create<State & Action>((set, get) => ({
@@ -83,6 +84,7 @@ const useInfoInputStore = create<State & Action>((set, get) => ({
         break;
     }
   },
+  setCurStep: (step) => set({ curStep: step }),
 }));
 
 export { useInfoInputStore };
