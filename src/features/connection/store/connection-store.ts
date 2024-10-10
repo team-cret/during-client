@@ -9,11 +9,11 @@ type State = {
 
 const defaultState: State = {
   invitationCode: '',
-  ifValid: false,
+  ifValid: true,
 };
 
 type Action = {
-  setInvitationCode: (invitationCode: string) => void;
+  setInvitationCode: (val: string) => void;
   requestConnection: () => Promise<boolean>;
 };
 
@@ -21,9 +21,9 @@ const useConnectionStore = create<State & Action>((set, get) => ({
   ...defaultState,
 
   //actions
-  setInvitationCode: (invitationCode) => {
-    const ifValid = isValidInvitationCode(invitationCode);
-    set((state) => ({ ...state, invitationCode, ifValid }));
+  setInvitationCode: (val) => {
+    const ifValid = isValidInvitationCode(val);
+    set((state) => ({ ...state, invitationCode: val, ifValid }));
   },
 
   requestConnection: async () => {
