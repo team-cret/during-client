@@ -10,7 +10,7 @@ import {
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Item } from './purchase-bottom-sheet.item';
-import { useDecorateAvatarStore, useRoomStore } from '@/src/features';
+import { useDecorateAvatarStore, useRoomStore, useUserStore } from '@/src/features';
 import { useEffect } from 'react';
 import { useNavigation } from 'expo-router';
 
@@ -29,6 +29,8 @@ function PurchaseBottomSheet() {
   const { updateMyAvatarStyle } = useRoomStore();
   const { isPurchaseMode, setIsPurchaseMode, purchaseItems, confirmPurchase } =
     useDecorateAvatarStore();
+  const { role } = useUserStore();
+
   useEffect(() => {
     bottom.value = withTiming(isPurchaseMode ? 0 : -height, animatinonConfig);
   }, [isPurchaseMode]);
@@ -50,8 +52,8 @@ function PurchaseBottomSheet() {
       <BarButtonGreen
         text="구매"
         onPress={() => {
-          confirmPurchase().then((newAvatarStyle) => {
-            updateMyAvatarStyle(newAvatarStyle);
+          confirmPurchase({ userRole: role }).then((newAvatarStyle) => {
+            updateMyAvatarStyle({ ...newAvatarStyle, userRole: role });
             navigation.navigate('main/index');
           });
         }}

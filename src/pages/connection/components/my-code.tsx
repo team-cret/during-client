@@ -5,11 +5,17 @@ import {
   convertWidth,
   SpaceFlexBox,
 } from '@/src/shared';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { TextContainer } from './my-code.text-container';
 import { CopyButton } from './my-code.copy-button';
+import { useUserStore } from '@/src/features';
+
+import * as Clipboard from 'expo-clipboard';
+import { useToast } from 'react-native-toast-notifications';
 
 function MyInvitationCode() {
+  const toast = useToast();
+  const { invitationCode } = useUserStore();
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={28} />
@@ -18,7 +24,18 @@ function MyInvitationCode() {
         <CopyButton />
       </View>
       <SpaceFlexBox flex={27} />
-      <BarButtonGreen text="링크 공유하기" onPress={() => {}} />
+      <BarButtonGreen
+        text="코드 복사하기"
+        onPress={() => {
+          if (invitationCode == null) return;
+          Clipboard.setStringAsync(invitationCode).then((res) => {
+            if (!res) return;
+            if (Platform.OS === 'ios') {
+              toast.show('코드가 복사되었습니다.');
+            }
+          });
+        }}
+      />
       <SpaceFlexBox flex={23} />
     </View>
   );

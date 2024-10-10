@@ -1,29 +1,30 @@
-import { BarButtonGreen, COLOR_BACKGROUND, NavProp, SpaceFlexBox } from '@/src/shared';
+import { BarButtonGreen, COLOR_BACKGROUND, convertHeight, NavProp } from '@/src/shared';
 import { InfoSetupAppBar } from './components/app-bar';
 import { StyleSheet, View } from 'react-native';
 import { InputBirthday } from './components/input-birthday';
 import { InputNickname } from './components/input-nickname';
 import { useInfoInputStore, useUserStore } from '@/src/features';
 import { useEffect } from 'react';
-import { parse } from '@babel/core';
 import { useNavigation } from 'expo-router';
 
 function InfoSetupPage() {
   const navigation = useNavigation<NavProp<'info-setup/index'>>();
 
-  const { curStep, ifCurStepValid, continueStep, setBirthDay, birthDay, nickName } =
+  const { curStep, ifCurStepValid, setBirthDay, birthDay, nickName, setCurStep, continueStep } =
     useInfoInputStore();
 
   const { birth, name, updateUserInfo } = useUserStore();
   useEffect(() => {
-    if (birth !== null) {
-      setBirthDay({
-        year: birth.getFullYear().toString(),
-        month: (birth.getMonth() + 1).toString(),
-        day: birth.getDate().toString(),
-      });
-      continueStep();
-    }
+    if (birth === null) return;
+    setBirthDay({
+      year: birth.getFullYear().toString(),
+      month: (birth.getMonth() + 1).toString(),
+      day: birth.getDate().toString(),
+    });
+    setCurStep('nickName');
+
+    if (name === null) return;
+    setCurStep('done');
   }, [birth, name]);
 
   useEffect(() => {
@@ -45,13 +46,13 @@ function InfoSetupPage() {
 
   return (
     <View style={styles.container}>
-      <SpaceFlexBox flex={45} />
       <InfoSetupAppBar />
 
       {curStep === 'birthDay' ? <InputBirthday /> : <InputNickname />}
 
-      <BarButtonGreen text="완료" onPress={continueStep} ifDisabled={!ifCurStepValid} />
-      <SpaceFlexBox flex={10} />
+      <View style={styles.barButtonContainer}>
+        <BarButtonGreen text="완료" onPress={continueStep} ifDisabled={!ifCurStepValid} />
+      </View>
     </View>
   );
 }
@@ -61,6 +62,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR_BACKGROUND,
     alignItems: 'center',
+  },
+
+  barButtonContainer: {
+    position: 'absolute',
+    bottom: convertHeight(46),
   },
 });
 

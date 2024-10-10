@@ -7,7 +7,7 @@ import {
   convertWidth,
   convertHeight,
 } from '@/src/shared';
-import { Pressable } from 'react-native';
+import { Linking, Pressable } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 import NavigateIcon from '@/src/shared/assets/icons/navigation/navigate.svg';
@@ -28,7 +28,14 @@ function TermBarRequired({
     <View style={styles.container}>
       <Text style={styles.TextRequired}>필수</Text>
       <View style={styles.TermsContainer}>
-        <Pressable style={styles.TermButtonContainer}>
+        <Pressable
+          style={styles.TermButtonContainer}
+          onPress={() => {
+            Linking.openURL(
+              `https://pond-receipt-8ec.notion.site/during-1690805faa6b4926b8c3da291bfbd9ed?pvs=4`
+            );
+          }}
+        >
           <Text style={styles.TermTitle}>{term.title}</Text>
           <HorizontalSizedBox width={convertWidth(9)} />
           <NavigateIcon height={convertHeight(6)} />

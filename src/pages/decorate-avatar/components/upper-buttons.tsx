@@ -11,8 +11,9 @@ import {
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CreditIcon from '@/src/shared/assets/icons/decoration/credit.svg';
-import { useCoupleStore, useDecorateAvatarStore, useRoomStore } from '@/src/features';
+import { useCoupleStore, useDecorateAvatarStore, useRoomStore, useUserStore } from '@/src/features';
 import { useNavigation } from 'expo-router';
+import { useToast } from 'react-native-toast-notifications';
 
 function UpperButtons() {
   const navigation = useNavigation<NavProp<'decorate-avatar/index'>>();
@@ -20,11 +21,12 @@ function UpperButtons() {
   const { isPurchaseMode, setIsPurchaseMode, purchaseItems, confirmPurchase } =
     useDecorateAvatarStore();
   const { updateMyAvatarStyle } = useRoomStore();
+  const { role } = useUserStore();
 
   function onConfirm() {
     if (purchaseItems.length === 0) {
-      confirmPurchase().then((newAvatarStyle) => {
-        updateMyAvatarStyle(newAvatarStyle);
+      confirmPurchase({ userRole: role }).then((newAvatarStyle) => {
+        updateMyAvatarStyle({ ...newAvatarStyle, userRole: role });
         navigation.navigate('main/index');
       });
     } else {
@@ -32,16 +34,21 @@ function UpperButtons() {
     }
   }
 
+  const toast = useToast();
+  function creditButtonOnPress() {
+    toast.show('매일 첫 번째 접속 시 포인트를 얻을 수 있습니다!');
+  }
+
   return (
     <View style={styles.container}>
-      <View style={[styles.blackButton, { opacity: isPurchaseMode ? 0 : 1 }]}>
+      <View style={[styles.blackButton, { opacity: 0 }]}>
         <Text style={styles.blackButtonText}>초기화</Text>
       </View>
-      <View style={styles.creditButton}>
+      <Pressable onPress={creditButtonOnPress} style={styles.creditButton}>
         <CreditIcon width={convertWidth(14)} />
         <HorizontalSizedBox width={convertWidth(13)} />
         <Text style={styles.creditButtonText}>{cashPoint}</Text>
-      </View>
+      </Pressable>
       <Pressable
         style={[styles.blackButton, { opacity: isPurchaseMode ? 0 : 1 }]}
         onPress={onConfirm}

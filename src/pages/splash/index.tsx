@@ -3,7 +3,7 @@ import { useCoupleStore, useUserStore } from '@/src/features';
 import { COLOR_BACKGROUND, NavProp } from '@/src/shared';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { registerForPushNotificationsAsync } from '../notification-test';
 import LongLogoIcon from '@/src/shared/assets/icons/logo/logo-long.svg';
 
@@ -30,9 +30,12 @@ function SplashPage() {
 
   useFocusEffect(
     useCallback(() => {
+      if (id.length === 0) return;
+
       if (!requiredTermsAgreed) navigation.replace('terms-of-service/index');
-      else if (birth === null || name === null) navigation.replace('info-setup/index');
-      else if (role === 'ROLE_COUPLE') {
+      else if (birth === null || name === null) {
+        navigation.replace('info-setup/index');
+      } else if (role === 'ROLE_COUPLE') {
         getCoupleInfo().then((res) => {
           if (!res) navigation.replace('auth/index');
           else navigation.replace('main/index');

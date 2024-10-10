@@ -1,17 +1,16 @@
-import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth, NavProp } from '@/src/shared';
-import { Pressable, StyleSheet } from 'react-native';
+import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth } from '@/src/shared';
+import { Keyboard, Pressable, StyleSheet } from 'react-native';
 
 import ChatIcon from '@/src/shared/assets/icons/chat/chat.svg';
-import { useNavigation } from '@react-navigation/native';
 import { useChatStore } from '@/src/features';
 
 function ChatFloatingButton() {
-  const navigation = useNavigation<NavProp<'main/index'>>();
   const { isChatMode, setIsChatMode } = useChatStore();
   return (
     <Pressable
       style={styles.container}
       onPress={() => {
+        if (Keyboard.isVisible()) return;
         setIsChatMode(!isChatMode);
       }}
     >
@@ -22,10 +21,6 @@ function ChatFloatingButton() {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    left: convertWidth(24),
-    bottom: convertHeight(80),
-
     width: convertWidth(45),
     height: convertHeight(42),
     backgroundColor: COLOR_BASE_4,

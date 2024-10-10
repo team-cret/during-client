@@ -1,12 +1,12 @@
 import { useDecorateAvatarStore } from '@/src/features';
 import { AvatarObject, COLOR_BACKGROUND, convertHeight, convertWidth } from '@/src/shared';
-import { Gltf, useAnimations, useGLTF } from '@react-three/drei/native';
-import { Canvas, ThreeEvent } from '@react-three/fiber/native';
+import { useAnimations, useGLTF } from '@react-three/drei/native';
+import { Canvas } from '@react-three/fiber/native';
 import { useFocusEffect } from 'expo-router';
 import { Suspense, useCallback, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
-import THREE from 'three';
+import * as THREE from 'three';
 
 const bottomSheetConfig = {
   bottom: {
@@ -53,14 +53,17 @@ function AvatarCanvas() {
 function Avatar() {
   const { avatarStyle } = useDecorateAvatarStore();
 
-  const model = useGLTF(AvatarObject.avatar.src);
+  const model = useGLTF(
+    Platform.OS === 'ios' ? AvatarObject.avatarCopy.src : AvatarObject.avatar.src
+  );
 
   const animations = useAnimations(model.animations, model.scene);
   useFocusEffect(
     useCallback(() => {
       model.scene.position.set(0, 0, 0);
       model.scene.rotation.set(0, 0, 0);
-      animations.actions['Idle']?.stop();
+
+      for (const action in animations.actions) animations.actions[action]?.stop();
       animations.actions['Idle']?.play();
     }, [])
   );

@@ -27,7 +27,8 @@ function isValidNickName(nickName: string): boolean {
 }
 
 function isValidInvitationCode(code: string): boolean {
-  return code.length === 10;
+  const regex = /^[A-Z0-9]*$/;
+  return regex.test(code);
 }
 
 function isValidChatMessage(message: string): boolean {

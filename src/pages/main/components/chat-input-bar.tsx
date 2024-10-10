@@ -3,6 +3,7 @@ import {
   COLOR_BASE_4,
   convertHeight,
   convertWidth,
+  NavProp,
   SpaceFlexBox,
 } from '@/src/shared';
 import { Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
@@ -11,16 +12,19 @@ import PlusIcon from '@/src/shared/assets/icons/chat/plus.svg';
 import SmileIcon from '@/src/shared/assets/icons/chat/smile.svg';
 import SendIcon from '@/src/shared/assets/icons/chat/send.svg';
 import { useChatAIStore, useChatStore } from '@/src/features';
-import { useCallback, useRef } from 'react';
-import { useFocusEffect } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
+import { useFocusEffect, useNavigation } from 'expo-router';
 
 function ChatInputBar() {
+  const navigation = useNavigation<NavProp<'main/index'>>();
   const {
     input: { message, ifValid },
     setInputMessage,
     sendMessage,
+    setIsChatMode,
   } = useChatStore();
   const { isAIOn } = useChatAIStore();
+  const [isChatSending, setIsChatSending] = useState(false);
   const textInputRef = useRef<TextInput>(null);
 
   useFocusEffect(
@@ -43,13 +47,24 @@ function ChatInputBar() {
         style={styles.chatInput}
         cursorColor={COLOR_BASE_1}
         value={message}
+        onFocus={() => {
+          setIsChatMode(true);
+        }}
         onChange={(e) => {
           setInputMessage({ message: e.nativeEvent.text });
         }}
-        onSubmitEditing={() => {
-          sendMessage({ ifAi: isAIOn });
-          setInputMessage({ message: '' });
-        }}
+        onSubmitEditing={
+          isChatSending
+            ? () => {}
+            : (e) => {
+                setIsChatSending(true);
+                sendMessage({ ifAi: isAIOn }).then((res) => {
+                  setIsChatSending(false);
+                  if (res) setInputMessage({ message: '' });
+                  else navigation.replace('main/index');
+                });
+              }
+        }
         blurOnSubmit={false}
       />
       <SpaceFlexBox flex={8} />
@@ -59,10 +74,18 @@ function ChatInputBar() {
       <SpaceFlexBox flex={10} />
       <Pressable
         style={styles.sendContainer}
-        onPress={() => {
-          sendMessage({ ifAi: isAIOn });
-          setInputMessage({ message: '' });
-        }}
+        onPress={
+          isChatSending
+            ? () => {}
+            : (e) => {
+                setIsChatSending(true);
+                sendMessage({ ifAi: isAIOn }).then((res) => {
+                  setIsChatSending(false);
+                  if (res) setInputMessage({ message: '' });
+                  else navigation.replace('main/index');
+                });
+              }
+        }
       >
         <SendIcon />
       </Pressable>
@@ -78,9 +101,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BASE_4,
 
     borderRadius: convertHeight(10),
-
-    position: 'absolute',
-    bottom: convertHeight(20),
 
     flexDirection: 'row',
     alignItems: 'center',
@@ -98,6 +118,7 @@ const styles = StyleSheet.create({
   plusContainer: {
     width: convertWidth(14),
     height: convertHeight(14),
+    opacity: 0,
   },
 
   chatInput: {
@@ -114,6 +135,7 @@ const styles = StyleSheet.create({
   ImoticonContainer: {
     width: convertWidth(20),
     height: convertHeight(20),
+    opacity: 0,
   },
 
   sendContainer: {

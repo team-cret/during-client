@@ -1,8 +1,7 @@
-import { COLOR_BASE_1, convertHeight, convertWidth } from '@/src/shared';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { COLOR_BASE_1, convertWidth } from '@/src/shared';
+import { StyleSheet, Text, View } from 'react-native';
 import { ProfileItem } from './profile-item';
 
-import RefreshButtonIcon from '@/src/shared/assets/icons/setting/refresh-button.svg';
 import { useUserStore } from '@/src/features';
 
 function ProfileItemInvitationCode() {
@@ -13,9 +12,9 @@ function ProfileItemInvitationCode() {
       Content={
         <View style={styles.container}>
           <Text style={styles.text}>{invitationCode}</Text>
-          <Pressable>
+          {/* <Pressable>
             <RefreshButtonIcon width={convertWidth(85)} height={convertHeight(23)} />
-          </Pressable>
+          </Pressable> */}
         </View>
       }
     />

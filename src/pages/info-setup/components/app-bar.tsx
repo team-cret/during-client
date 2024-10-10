@@ -1,8 +1,10 @@
-import { CloseButton, convertHeight, convertWidth, SpaceFlexBox } from '@/src/shared';
+import { CloseButton, convertHeight, convertWidth, NavProp, SpaceFlexBox } from '@/src/shared';
 import { StyleSheet, View } from 'react-native';
 import { InfoSetupStepper } from './stepper';
+import { useNavigation } from 'expo-router';
 
 function InfoSetupAppBar() {
+  const navigation = useNavigation<NavProp<'setting/index'>>();
   return (
     <View style={styles.container}>
       <SpaceFlexBox flex={23} />
@@ -12,7 +14,10 @@ function InfoSetupAppBar() {
       <SpaceFlexBox flex={223} />
       <CloseButton
         onPress={() => {
-          //enable 안됐을 때 처리하기
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'auth/index' }], // your stack screen name
+          });
         }}
       />
       <SpaceFlexBox flex={24} />

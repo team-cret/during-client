@@ -53,7 +53,7 @@ type Action = {
 
   ////구매하기
   //수정된 스타일 오브젝트는 수정된 값으로, 수정되지 않은 스타일 오브젝트는 null 반환
-  confirmPurchase: () => Promise<{
+  confirmPurchase: ({ userRole }: { userRole: 'ROLE_SINGLE' | 'ROLE_COUPLE' | null }) => Promise<{
     style: State['avatarStyle'];
   }>;
 };
@@ -67,11 +67,7 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
     const shopItems = await getAvatarShopAPI();
 
     set({
-      mode: defaultState.mode,
-      category: defaultState.category,
-      isPurchaseMode: defaultState.isPurchaseMode,
-      purchaseItems: defaultState.purchaseItems,
-      bottomSheetMode: defaultState.bottomSheetMode,
+      ...defaultState,
       bagItems,
       shopItems,
       avatarStyle,
@@ -112,7 +108,12 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
       set((state) => ({
         ...state,
         avatarStyle: { ...state.avatarStyle, [selectedItemCategory]: id },
-        purchaseItems: [...state.purchaseItems, { id, isSelected: true }],
+        purchaseItems: [
+          ...state.purchaseItems.filter(
+            (item) => avatarItems[item.id].category !== selectedItemCategory
+          ),
+          { id, isSelected: true },
+        ],
       }));
     }
   },
@@ -124,10 +125,11 @@ const useDecorateAvatarStore = create<State & Action>((set, get) => ({
       ),
     }));
   },
-  confirmPurchase: async () => {
-    const purchaseResult = await purchaseAvatarObjectAPI(
-      get().purchaseItems.filter((item) => item.isSelected)
-    );
+  confirmPurchase: async ({ userRole }) => {
+    const purchaseResult =
+      userRole == 'ROLE_SINGLE'
+        ? true
+        : await purchaseAvatarObjectAPI(get().purchaseItems.filter((item) => item.isSelected));
     if (!purchaseResult)
       return {
         style: defaultState.avatarStyle,

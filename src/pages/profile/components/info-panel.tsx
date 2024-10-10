@@ -1,12 +1,24 @@
-import { useUserStore } from '@/src/features';
-import { COLOR_BASE_1, COLOR_BASE_4, convertHeight, convertWidth } from '@/src/shared';
+import { useRoomStore, useUserStore } from '@/src/features';
+import {
+  AvatarObject,
+  COLOR_BASE_1,
+  COLOR_BASE_4,
+  convertHeight,
+  convertWidth,
+} from '@/src/shared';
+import { AvatarProfileImage } from '@/src/widgets';
 import { StyleSheet, Text, View } from 'react-native';
 
 function InfoPanel() {
   const { name } = useUserStore();
+  const { myAvatar } = useRoomStore();
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer} />
+      <AvatarProfileImage
+        avatarStyle={myAvatar.style}
+        modelSrc={AvatarObject.avatar.src}
+        width={convertHeight(114)}
+      />
       <Text style={styles.nameText}>{name ?? ''}</Text>
     </View>
   );

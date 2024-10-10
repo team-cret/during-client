@@ -24,7 +24,12 @@ function ProfilePage() {
   const { disconnectCouple } = useCoupleStore();
   return (
     <View style={styles.container}>
-      <TitleCloseAppbar title="개인프로필" />
+      <TitleCloseAppbar
+        title="개인프로필"
+        onPress={() => {
+          navigation.pop();
+        }}
+      />
       <InfoPanel />
       <VerticalSizedBox height={30} />
       <Text style={styles.groupTitleText}>내 정보</Text>
