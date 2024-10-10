@@ -6,12 +6,12 @@ const termsRequired: Array<{
   {
     id: 1,
     title: '서비스 이용약관',
-    subTitle: '서비스 이용약관 부제',
+    subTitle: '서비스 제공을 위해 필요한 약관에 동의해주세요.',
   },
   {
     id: 2,
     title: '개인정보 수집 및 이용동의',
-    subTitle: '개인정보 수집 및 이용동의 부제',
+    subTitle: '서비스에 필요한 개인정보 수집에 동의해주세요.',
   },
 ];
 
@@ -19,17 +19,6 @@ const termsOptional: Array<{
   id: number;
   title: string;
   subTitle: string;
-}> = [
-  {
-    id: 3,
-    title: '민감정보 수집동의',
-    subTitle: '민감정보 수집동의 부제',
-  },
-  {
-    id: 4,
-    title: '마케팅 정보 수신',
-    subTitle: '마케팅 정보 수신 부제',
-  },
-];
+}> = [];
 
 export { termsRequired, termsOptional };
