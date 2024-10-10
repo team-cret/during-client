@@ -1,4 +1,5 @@
 import {
+  AvatarObject,
   COLOR_BASE_3,
   COLOR_SECONDARY_PINK_LIGHT,
   convertHeight,
@@ -7,12 +8,23 @@ import {
 import { StyleSheet, View } from 'react-native';
 
 import HeartIcon from '@/src/shared/assets/icons/setting/heart.svg';
+import { useRoomStore } from '@/src/features';
+import { AvatarProfileImage } from '@/src/widgets';
 
 function CoupleImage() {
+  const { myAvatar, otherAvatar } = useRoomStore();
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}></View>
-      <View style={styles.imageContainer}></View>
+      <AvatarProfileImage
+        avatarStyle={myAvatar.style}
+        modelSrc={AvatarObject.avatar.src}
+        width={convertHeight(106)}
+      />
+      <AvatarProfileImage
+        avatarStyle={otherAvatar.style}
+        modelSrc={AvatarObject.avatarOther.src}
+        width={convertHeight(106)}
+      />
       <View style={styles.heartContainer}>
         <HeartIcon />
       </View>
