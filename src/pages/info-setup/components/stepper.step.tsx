@@ -4,7 +4,6 @@ import {
   COLOR_BASE_3,
   COLOR_BASE_4,
   convertHeight,
-  convertWidth,
 } from '@/src/shared';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -44,7 +43,6 @@ function Step({
 
 const styles = StyleSheet.create({
   container: {
-    width: convertWidth(26),
     height: convertHeight(40),
 
     justifyContent: 'space-between',
@@ -52,7 +50,6 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    width: convertWidth(26),
     height: convertHeight(16),
     justifyContent: 'center',
     alignItems: 'center',

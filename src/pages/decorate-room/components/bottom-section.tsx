@@ -1,7 +1,6 @@
 import {
   convertHeight,
   convertWidth,
-  DESIGN_HEIGHT,
   useNavigationBarHeight,
   useStatusbarHeight,
 } from '@/src/shared';
@@ -11,7 +10,6 @@ import { BottomSheet } from './bottom-sheet';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const bottomSheetConfig = {
   animatinonConfig: {
@@ -37,7 +35,7 @@ function BottomSection() {
   const screenHeight = Dimensions.get('screen').height;
   const stautsBarHeight = useStatusbarHeight();
   const navBarHeight = useNavigationBarHeight();
-  const bottom = useSharedValue<number>(bottomSheetConfig.bottom['handle-only']);
+  const bottom = useSharedValue<number>(bottomSheetConfig.bottom['one-row']);
   const bottomStartOffset = useSharedValue(0);
 
   const gesturePan = Gesture.Pan()
