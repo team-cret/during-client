@@ -2,7 +2,7 @@
   "expo": {
     "name": "during-client",
     "slug": "during-client",
-    "version": "1.0.0",
+    "version": "1.0.8",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -13,13 +13,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cret.duringclient"
+      "bundleIdentifier": "com.cret.during",
+      "entitlements": {
+        "com.apple.developer.applesignin": ["Default"]
+      }
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "softwareKeyboardLayoutMode": "pan",
       "package": "com.cret.duringclient"
     },
     "web": {
