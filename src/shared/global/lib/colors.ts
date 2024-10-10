@@ -1,0 +1,34 @@
+const COLOR_BASE_1 = '#1E1E1E';
+const COLOR_BASE_2 = '#767676';
+const COLOR_BASE_2_30 = '#7676764D';
+const COLOR_BASE_3 = '#EDEDED';
+const COLOR_BASE_4 = '#F8F8F8';
+
+const COLOR_WHITE = '#FFFFFF';
+const COLOR_BACKGROUND = '#FCFCFD';
+
+const COLOR_PRIMARY_GREEN_DARK = '#B1C500';
+const COLOR_PRIMARY_GREEN = '#E2F070';
+const COLOR_PRIMARY_GREEN_LIGHT = '#EDF798';
+const COLOR_SECONDARY_PINK_DARK = '#FF7989';
+const COLOR_SECONDARY_PINK_LIGHT = '#FFD6DB';
+
+function colorWithOpacity(color: string, opacity: number) {
+  return color + Math.round(opacity * 255).toString(16);
+}
+
+export {
+  COLOR_BASE_1,
+  COLOR_BASE_2,
+  COLOR_BASE_2_30,
+  COLOR_BASE_3,
+  COLOR_BASE_4,
+  COLOR_WHITE,
+  COLOR_BACKGROUND,
+  COLOR_PRIMARY_GREEN_DARK,
+  COLOR_PRIMARY_GREEN,
+  COLOR_PRIMARY_GREEN_LIGHT,
+  COLOR_SECONDARY_PINK_DARK,
+  COLOR_SECONDARY_PINK_LIGHT,
+  colorWithOpacity,
+};

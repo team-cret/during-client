@@ -1,0 +1,306 @@
+import { ImageSourcePropType } from 'react-native';
+import { avatarDecorationCategories } from './decoration';
+
+const avatarItemList = [
+  '검정색 여자 긴머리',
+  '갈색 여자 긴머리',
+  '초록색 여자 긴머리',
+  '분홍색 여자 긴머리',
+  '검정색 남자 덮은 머리',
+  '갈색 남자 덮은 머리',
+  '초록색 남자 덮은 머리',
+  '분홍색 남자 덮은 머리',
+  '교복 상의',
+  '교복 치마',
+  '검정색 슬랙스',
+  '검정색 여자 구두',
+  '흰색 운동화',
+  '검정색 여자 포니테일',
+  '갈색 여자 포니테일',
+  '초록색 여자 포니테일',
+  '분홍색 여자 포니테일',
+  '검정색 남자 올린 머리',
+  '갈색 남자 올린 머리',
+  '초록색 남자 올린 머리',
+  '분홍색 남자 올린 머리',
+  '빨간색 레터링 상의',
+  '파란색 레터링 상의',
+  '빨간색 짧은 바지',
+  '파란색 짧은 바지',
+  '빨간색 크록스',
+  '파란색 크록스',
+  '검정색 여자 중단발',
+  '갈색 여자 중단발',
+  '초록색 여자 중단발',
+  '분홍색 여자 중단발',
+  '검정색 남자 짧은 머리',
+  '갈색 남자 짧은 머리',
+  '초록색 남자 짧은 머리',
+  '분홍색 남자 짧은 머리',
+  '회색 크롭 맨투맨',
+  '회색 맨투맨',
+  '청치마',
+  '청바지',
+  '연두색 스니커즈',
+  '흰색 스니커즈',
+] as const;
+
+type AvatarItem = {
+  name: (typeof avatarItemList)[number];
+  price: number;
+  image: ImageSourcePropType;
+  category: (typeof avatarDecorationCategories)[number];
+};
+
+const avatarItems: {
+  [key: string]: AvatarItem;
+} = {
+  '1': {
+    name: '검정색 여자 긴머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-black-female.png'),
+    category: '헤어',
+  },
+  '2': {
+    name: '갈색 여자 긴머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-brown-female.png'),
+    category: '헤어',
+  },
+  '3': {
+    name: '초록색 여자 긴머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-green-female.png'),
+    category: '헤어',
+  },
+  '4': {
+    name: '분홍색 여자 긴머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-pink-female.png'),
+    category: '헤어',
+  },
+  '5': {
+    name: '검정색 남자 덮은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-black-male.png'),
+    category: '헤어',
+  },
+  '6': {
+    name: '갈색 남자 덮은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-brown-male.png'),
+    category: '헤어',
+  },
+  '7': {
+    name: '초록색 남자 덮은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-green-male.png'),
+    category: '헤어',
+  },
+  '8': {
+    name: '분홍색 남자 덮은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-hair-pink-male.png'),
+    category: '헤어',
+  },
+  '9': {
+    name: '교복 상의',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-tops.png'),
+    category: '상의',
+  },
+  '10': {
+    name: '교복 치마',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-bottoms-female.png'),
+    category: '하의',
+  },
+  '11': {
+    name: '검정색 슬랙스',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-bottoms-male.png'),
+    category: '하의',
+  },
+  '12': {
+    name: '검정색 여자 구두',
+    price: 10,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-shoes-female.png'),
+    category: '신발',
+  },
+  '13': {
+    name: '흰색 운동화',
+    price: 10,
+    image: require('@/src/shared/assets/images/avatar-items/avatar1-shoes-male.png'),
+    category: '신발',
+  },
+  '14': {
+    name: '검정색 여자 포니테일',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-black-female.png'),
+    category: '헤어',
+  },
+  '15': {
+    name: '갈색 여자 포니테일',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-brown-female.png'),
+    category: '헤어',
+  },
+  '16': {
+    name: '초록색 여자 포니테일',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-green-female.png'),
+    category: '헤어',
+  },
+  '17': {
+    name: '분홍색 여자 포니테일',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-pink-female.png'),
+    category: '헤어',
+  },
+  '18': {
+    name: '검정색 남자 올린 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-black-male.png'),
+    category: '헤어',
+  },
+  '19': {
+    name: '갈색 남자 올린 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-brown-male.png'),
+    category: '헤어',
+  },
+  '20': {
+    name: '초록색 남자 올린 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-green-male.png'),
+    category: '헤어',
+  },
+  '21': {
+    name: '분홍색 남자 올린 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-hair-pink-male.png'),
+    category: '헤어',
+  },
+  '22': {
+    name: '빨간색 레터링 상의',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-tops-female.png'),
+    category: '상의',
+  },
+  '23': {
+    name: '파란색 레터링 상의',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-tops-male.png'),
+    category: '상의',
+  },
+  '24': {
+    name: '빨간색 짧은 바지',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-bottoms-female.png'),
+    category: '하의',
+  },
+  '25': {
+    name: '파란색 짧은 바지',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-bottoms-male.png'),
+    category: '하의',
+  },
+  '26': {
+    name: '빨간색 크록스',
+    price: 10,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-shoes-female.png'),
+    category: '신발',
+  },
+  '27': {
+    name: '파란색 크록스',
+    price: 10,
+    image: require('@/src/shared/assets/images/avatar-items/avatar2-shoes-male.png'),
+    category: '신발',
+  },
+  '28': {
+    name: '검정색 여자 중단발',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-black-female.png'),
+    category: '헤어',
+  },
+  '29': {
+    name: '갈색 여자 중단발',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-brown-female.png'),
+    category: '헤어',
+  },
+  '30': {
+    name: '초록색 여자 중단발',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-green-female.png'),
+    category: '헤어',
+  },
+  '31': {
+    name: '분홍색 여자 중단발',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-pink-female.png'),
+    category: '헤어',
+  },
+  '32': {
+    name: '검정색 남자 짧은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-black-male.png'),
+    category: '헤어',
+  },
+  '33': {
+    name: '갈색 남자 짧은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-brown-male.png'),
+    category: '헤어',
+  },
+  '34': {
+    name: '초록색 남자 짧은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-green-male.png'),
+    category: '헤어',
+  },
+  '35': {
+    name: '분홍색 남자 짧은 머리',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-hair-pink-male.png'),
+    category: '헤어',
+  },
+  '36': {
+    name: '회색 크롭 맨투맨',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-tops-female.png'),
+    category: '상의',
+  },
+  '37': {
+    name: '회색 맨투맨',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-tops-male.png'),
+    category: '상의',
+  },
+  '38': {
+    name: '청치마',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-bottoms-female.png'),
+    category: '하의',
+  },
+  '39': {
+    name: '청바지',
+    price: 15,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-bottoms-male.png'),
+    category: '하의',
+  },
+  '40': {
+    name: '연두색 스니커즈',
+    price: 10,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-shoes-female.png'),
+    category: '신발',
+  },
+  '41': {
+    name: '흰색 스니커즈',
+    price: 10,
+    image: require('@/src/shared/assets/images/avatar-items/avatar3-shoes-male.png'),
+    category: '신발',
+  },
+};
+
+export { avatarItems, AvatarItem };
