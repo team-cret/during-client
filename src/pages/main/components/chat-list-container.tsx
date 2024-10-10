@@ -1,5 +1,5 @@
-import { convertHeight, convertWidth } from '@/src/shared';
-import { NativeScrollEvent, StyleSheet, View } from 'react-native';
+import { COLOR_BASE_3, colorWithOpacity, convertHeight, convertWidth } from '@/src/shared';
+import { Keyboard, NativeScrollEvent, StyleSheet, View } from 'react-native';
 import { OtherTextChat } from './chat-container.other-chat';
 import { MyTextChat } from './chat-container.my-chat';
 import { useChatStore, useUserStore } from '@/src/features';
@@ -13,37 +13,85 @@ const chatContainerConfig = {
     duration: 300,
     easing: Easing.bezier(0.1, 0.71, 0.37, 0.9),
   },
-  chatContainerHeight: {
-    chatMode: convertHeight(600),
-    roomMode: convertHeight(200),
+  chatContainerMarginBottom: {
+    chatMode: convertHeight(0),
+    roomMode: convertHeight(332),
   },
 };
 
-function ChatContainer() {
+function ChatListContainer() {
   const { id: userId } = useUserStore();
   const { chatList, getMessages, isScrollBottom, setIsScrollBottom, isChatMode } = useChatStore();
 
   const [isChatLoading, setIsChatLoading] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   //채팅 모드 관련
-  const height = useSharedValue(
+  const marginBottom = useSharedValue(
     isChatMode
-      ? chatContainerConfig.chatContainerHeight.chatMode
-      : chatContainerConfig.chatContainerHeight.roomMode
+      ? chatContainerConfig.chatContainerMarginBottom.chatMode
+      : chatContainerConfig.chatContainerMarginBottom.roomMode
   );
   useEffect(() => {
-    height.value = withTiming(
+    if (Keyboard.isVisible()) return;
+    marginBottom.value = withTiming(
       isChatMode
-        ? chatContainerConfig.chatContainerHeight.chatMode
-        : chatContainerConfig.chatContainerHeight.roomMode,
+        ? chatContainerConfig.chatContainerMarginBottom.chatMode
+        : chatContainerConfig.chatContainerMarginBottom.roomMode,
       chatContainerConfig.animatinonConfig
     );
+
+    if (isChatMode) {
+      flatListRef.current?.scrollToOffset({
+        offset: scrollY - convertHeight(332),
+        animated: true,
+      });
+    } else {
+      flatListRef.current?.scrollToOffset({
+        offset: scrollY + convertHeight(332),
+        animated: true,
+      });
+    }
   }, [isChatMode]);
 
-  //스크롤 관련
+  ////스크롤 관련
+
+  // 키보드 노출시 스크롤
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean | null>(null);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', (e) => {
+      setIsKeyboardVisible(true);
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardVisible(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isKeyboardVisible === null) return;
+
+    if (isKeyboardVisible) {
+      flatListRef.current?.scrollToEnd({ animated: true });
+      //   if (isChatMode) {
+      //     flatListRef.current?.scrollToOffset({
+      //       offset: scrollY + keyboardHeight,
+      //       animated: true,
+      //     });
+      //   }
+      // } else {
+      //   flatListRef.current?.scrollToOffset({
+      //     offset: scrollY - keyboardHeight,
+      //     animated: true,
+      //   });
+    }
+  }, [isKeyboardVisible]);
+
   function onScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
+    setScrollY(e.nativeEvent.contentOffset.y);
     if (
       e.nativeEvent.contentSize.height -
         e.nativeEvent.contentOffset.y -
@@ -54,16 +102,13 @@ function ChatContainer() {
     else setIsScrollBottom(false);
   }
 
-  function onContentSizeChange() {
-    if (isScrollBottom) flatListRef.current?.scrollToEnd({ animated: false });
-  }
-
   useEffect(() => {
     if (isScrollBottom) flatListRef.current?.scrollToEnd({ animated: false });
   }, [isScrollBottom]);
 
   //채팅 페이지네이션
   function onStartReached() {
+    if (chatList.length == 0) return;
     if (isChatLoading) return;
     setIsChatLoading(true);
     getMessages({ basisChatId: chatList[0].id, scrollType: 'BEFORE' }).then(() => {
@@ -71,16 +116,27 @@ function ChatContainer() {
     });
   }
 
+  const [chatListHeight, setChatListHeight] = useState(0);
+  function onContentSizeChange(w: number, h: number) {
+    setChatListHeight(h);
+  }
+  useEffect(() => {
+    if (isScrollBottom) flatListRef.current?.scrollToEnd({ animated: true });
+  }, [chatListHeight]);
+
   return (
     <Animated.FlatList
       ref={flatListRef}
-      style={[styles.container, { height }]}
-      contentContainerStyle={{ alignItems: 'center' }}
+      style={[styles.container, { marginBottom }]}
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingTop: convertHeight(70),
+      }}
       scrollEnabled
       data={chatList}
       onScroll={onScroll}
-      onContentSizeChange={onContentSizeChange}
       onStartReached={onStartReached}
+      onContentSizeChange={onContentSizeChange}
       renderItem={({ item, index }) => {
         if (item.sendMemberInfo.id === userId) {
           switch (item.messageType) {
@@ -127,9 +183,10 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 0,
     width: convertWidth(375),
-    height: convertHeight(600),
-    // backgroundColor: colorWithOpacity('#00ffff', 0.5),
+    minHeight: convertHeight(542),
+
+    backgroundColor: colorWithOpacity(COLOR_BASE_3, 0.6),
   },
 });
 
-export { ChatContainer };
+export { ChatListContainer };
