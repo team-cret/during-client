@@ -21,10 +21,6 @@ function DownFloatingButton() {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    right: convertWidth(22),
-    bottom: convertHeight(80),
-
     width: convertWidth(45),
     height: convertHeight(42),
     backgroundColor: COLOR_BASE_4,

@@ -4,7 +4,7 @@ import {
   COLOR_WHITE,
   convertHeight,
   convertWidth,
-  SpaceFlexBox,
+  VerticalSizedBox,
 } from '@/src/shared';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { ModeToggle } from './bottom-sheet.mode-toggle';
@@ -19,16 +19,16 @@ function BottomSheet() {
 
   return (
     <View style={styles.container}>
-      <SpaceFlexBox flex={12} />
+      <VerticalSizedBox height={12} />
       <View style={styles.handle} />
-      <SpaceFlexBox flex={17} />
+      <VerticalSizedBox height={17} />
       <View style={styles.topRow}>
         <IndexRow />
         <ModeToggle />
       </View>
-      <SpaceFlexBox flex={8} />
+      <VerticalSizedBox height={8} />
       <Divider />
-      <SpaceFlexBox flex={5} />
+      <VerticalSizedBox height={5} />
 
       <View style={styles.itemContainer}>
         <ScrollView>
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_WHITE,
 
     alignItems: 'center',
+    justifyContent: 'flex-start',
   },
 
   handle: {
@@ -113,7 +114,6 @@ const styles = StyleSheet.create({
 
   itemContainer: {
     width: convertWidth(390),
-    height: convertHeight(274),
 
     alignItems: 'center',
   },
