@@ -7,7 +7,7 @@ import {
   NavProp,
 } from '@/src/shared';
 import { TitleCloseAppbar } from '@/src/widgets';
-import { StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import { InfoPanel } from './components/info-panel';
 import { SettingItem } from './components/setting-item';
 import { useNavigation } from 'expo-router';
@@ -38,15 +38,27 @@ function SettingPage() {
           navigation.navigate('profile/index');
         }}
       />
-      <SettingItem title="알림/소리" onPress={() => {}} />
-      <SettingItem title="고객센터" onPress={() => {}} />
+      {/* <SettingItem title="알림/소리" onPress={() => {}} /> */}
+      <SettingItem
+        title="고객센터"
+        onPress={() => {
+          Linking.openURL(`https://forms.gle/fbSE7Ws222XqcWxHA`);
+        }}
+      />
       <SettingItem
         title="커플 연결"
         onPress={() => {
           navigation.navigate('connection/index');
         }}
       />
-      <SettingItem title="약관" onPress={() => {}} />
+      <SettingItem
+        title="약관"
+        onPress={() => {
+          Linking.openURL(
+            `https://pond-receipt-8ec.notion.site/during-1690805faa6b4926b8c3da291bfbd9ed?pvs=4`
+          );
+        }}
+      />
     </View>
   );
 }
