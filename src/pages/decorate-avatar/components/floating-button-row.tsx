@@ -10,7 +10,7 @@ function FloatingButtonRow() {
       <View style={styles.button}>
         <BagIcon width={convertWidth(22)} />
       </View>
-      <View style={styles.button}>
+      <View style={[styles.button, { opacity: 0 }]}>
         <ResetIcon width={convertWidth(26)} />
       </View>
     </View>

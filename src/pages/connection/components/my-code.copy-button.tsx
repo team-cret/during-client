@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_WHITE,
     width: convertWidth(91),
     height: convertHeight(26),
+    opacity: 0,
 
     borderRadius: convertHeight(13),
 
