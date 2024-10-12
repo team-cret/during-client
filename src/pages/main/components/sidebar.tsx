@@ -1,19 +1,23 @@
 import {
   COLOR_BASE_1,
+  COLOR_BASE_2,
   COLOR_BASE_2_30,
   COLOR_WHITE,
   convertHeight,
   convertWidth,
   HorizontalDivider,
   NavProp,
-  SpaceFlexBox,
+  VerticalSizedBox,
 } from '@/src/shared';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import CloseIcon from '@/src/shared/assets/icons/menu/close.svg';
 import RoomIcon from '@/src/shared/assets/icons/menu/room.svg';
 import AvatarIcon from '@/src/shared/assets/icons/menu/avatar.svg';
 import SettingIcon from '@/src/shared/assets/icons/menu/setting.svg';
+import ReportIcon from '@/src/shared/assets/icons/menu/report.svg';
+import AiChatIcon from '@/src/shared/assets/icons/menu/ai-chat.svg';
+
 import {
   useDecorateAvatarStore,
   useDecorateRoomStore,
@@ -91,10 +95,11 @@ function SideBar() {
     <GestureDetector gesture={gesturePan}>
       <Animated.View style={{ ...styles.container, left }}>
         <View style={styles.sideBarContainer}>
-          <SpaceFlexBox flex={10} />
-          <Pressable style={styles.iconContainer} onPress={closeSideBar}>
+          <VerticalSizedBox height={convertHeight(11)} />
+          <Pressable style={styles.closeButtonContainer} onPress={closeSideBar}>
             <CloseIcon width={convertWidth(20)} height={convertHeight(20)} />
           </Pressable>
+
           <HorizontalDivider
             width={convertWidth(46)}
             height={convertHeight(32)}
@@ -103,8 +108,9 @@ function SideBar() {
             lowerFlex={16}
             color={COLOR_BASE_2_30}
           />
+
           <Pressable
-            style={styles.iconContainer}
+            style={styles.buttonContainer}
             onPress={() => {
               decorateRoomInit({ background, objects });
               closeSideBar();
@@ -112,10 +118,11 @@ function SideBar() {
             }}
           >
             <RoomIcon width={convertWidth(22)} height={convertHeight(25)} />
+            <Text style={styles.buttonText}>방</Text>
           </Pressable>
-          <SpaceFlexBox flex={10} />
+
           <Pressable
-            style={styles.iconContainer}
+            style={styles.buttonContainer}
             onPress={() => {
               decorateAvatarInit({ avatarStyle });
               closeSideBar();
@@ -123,25 +130,46 @@ function SideBar() {
             }}
           >
             <AvatarIcon width={convertWidth(25)} height={convertHeight(25)} />
+            <Text style={styles.buttonText}>아바타</Text>
           </Pressable>
+          {/* 
+          <Pressable style={styles.buttonContainer} onPress={() => {}}>
+            <ReportIcon width={convertWidth(25)} height={convertHeight(25)} />
+            <Text style={styles.buttonText}>리포트</Text>
+          </Pressable> */}
+
+          <Pressable
+            style={styles.buttonContainer}
+            onPress={() => {
+              closeSideBar();
+              navigation.navigate('ai-chat/index');
+            }}
+          >
+            <AiChatIcon width={convertWidth(25)} height={convertHeight(25)} />
+            <Text style={styles.buttonText}>곰듀</Text>
+          </Pressable>
+
           <HorizontalDivider
             width={convertWidth(46)}
-            height={convertHeight(51)}
+            height={convertHeight(25)}
             lineHeight={convertHeight(0.34)}
-            upperFlex={25}
-            lowerFlex={25}
+            upperFlex={1}
+            lowerFlex={1}
             color={COLOR_BASE_2_30}
           />
+
           <Pressable
-            style={styles.iconContainer}
+            style={styles.buttonContainer}
             onPress={() => {
               closeSideBar();
               navigation.navigate('setting/index');
             }}
           >
             <SettingIcon width={convertWidth(23)} height={convertHeight(24)} />
+            <Text style={styles.buttonText}>설정</Text>
           </Pressable>
-          <SpaceFlexBox flex={20} />
+
+          <VerticalSizedBox height={12} />
         </View>
         <MenuPage />
       </Animated.View>
@@ -157,8 +185,8 @@ const styles = StyleSheet.create({
   },
 
   sideBarContainer: {
-    width: convertWidth(75),
-    height: convertHeight(309),
+    width: convertWidth(78),
+    height: convertHeight(439),
 
     backgroundColor: COLOR_WHITE,
 
@@ -171,17 +199,33 @@ const styles = StyleSheet.create({
       height: convertHeight(4),
     },
     shadowOpacity: 0.08,
-
-    alignItems: 'flex-start',
-    paddingLeft: convertWidth(15),
-  },
-
-  iconContainer: {
-    width: convertWidth(46),
-    aspectRatio: 1,
+    elevation: 1,
 
     alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+
+  closeButtonContainer: {
+    width: convertWidth(78),
+    height: convertHeight(45),
+
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  buttonContainer: {
+    width: convertWidth(78),
+    height: convertHeight(63),
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 10,
+    fontFamily: 'Pretendard-Regular',
+    color: COLOR_BASE_2,
+
+    marginTop: convertHeight(5),
   },
 });
 
