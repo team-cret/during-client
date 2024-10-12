@@ -12,3 +12,4 @@ export * from './notification-temp/index';
 export * from './notification-test/index';
 export * from './decorate-room/index';
 export * from './decorate-avatar/index';
+export * from './ai-chat/index';
