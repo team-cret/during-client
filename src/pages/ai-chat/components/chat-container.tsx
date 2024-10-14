@@ -5,7 +5,11 @@ import { ChatListContainer } from './chat-container.chat-list-container';
 
 function ChatContainer() {
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={convertHeight(70)}
+    >
       <ChatListContainer />
       <ChatInputBar />
     </KeyboardAvoidingView>
