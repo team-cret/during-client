@@ -6,6 +6,7 @@ type State = {
   input: {
     val: string;
     ifValid: boolean;
+    ifSendable: boolean;
   };
 
   chatList: Array<{
@@ -19,6 +20,7 @@ const defaultState: State = {
   input: {
     val: '',
     ifValid: false,
+    ifSendable: true,
   },
 
   chatList: [],
@@ -56,8 +58,19 @@ const useAiChatStore = create<State & Action>((set, get) => ({
   },
 
   sendChat: () => {
+    if (!get().input.ifValid) return;
+    if (!get().input.ifSendable) return;
+
+    set((state) => ({
+      ...state,
+      input: {
+        ...state.input,
+        ifValid: false,
+        ifSendable: false,
+      },
+    }));
+
     sendAiChatAPI({ message: get().input.val }).then((res) => {
-      if (!res) return;
       set((state) => ({
         ...state,
         chatList: [
@@ -73,6 +86,11 @@ const useAiChatStore = create<State & Action>((set, get) => ({
             date: convertDateToStringHSS(new Date()),
           },
         ],
+        input: {
+          ...state.input,
+          val: '',
+          ifSendable: true,
+        },
       }));
     });
   },
@@ -81,6 +99,7 @@ const useAiChatStore = create<State & Action>((set, get) => ({
     set((state) => ({
       ...state,
       input: {
+        ...state.input,
         val: message,
         ifValid: message.length > 0,
       },
