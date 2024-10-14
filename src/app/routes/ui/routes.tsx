@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { RootStackParamList } from '@/src/shared';
 import {
+  AIChatPage,
   AuthPage,
   ConnectionPage,
   DecorateAvatarPage,
@@ -39,6 +40,7 @@ function RootLayout() {
       <RootStack.Screen name="notification/index" component={NotificationPage} />
       <RootStack.Screen name="decorate-avatar/index" component={DecorateAvatarPage} />
       <RootStack.Screen name="decorate-room/index" component={DecorateRoomPage} />
+      <RootStack.Screen name="ai-chat/index" component={AIChatPage} />
     </RootStack.Navigator>
   );
 }
