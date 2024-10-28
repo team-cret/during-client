@@ -15,6 +15,7 @@ import {
   SettingPage,
   SplashPage,
   TermsOfServicePage,
+  TutorialPage,
 } from '@/src/pages';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -39,6 +40,7 @@ function RootLayout() {
       <RootStack.Screen name="notification/index" component={NotificationPage} />
       <RootStack.Screen name="decorate-avatar/index" component={DecorateAvatarPage} />
       <RootStack.Screen name="decorate-room/index" component={DecorateRoomPage} />
+      <RootStack.Screen name="tutorial/index" component={TutorialPage} />
     </RootStack.Navigator>
   );
 }
