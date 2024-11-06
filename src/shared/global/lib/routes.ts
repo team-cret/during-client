@@ -18,6 +18,9 @@ type RootStackParamList = {
   'decorate-room/index': undefined;
   'decorate-avatar/index': undefined;
   'ai-chat/index': undefined;
+  'report/index': undefined;
+  'report/create': undefined;
+  'report/detail': undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
