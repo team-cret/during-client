@@ -13,3 +13,5 @@ export * from './notification-test/index';
 export * from './decorate-room/index';
 export * from './decorate-avatar/index';
 export * from './ai-chat/index';
+export * from './create-report/index';
+export * from './report-detail/index';
