@@ -1,4 +1,11 @@
-import { COLOR_BACKGROUND, convertHeight, convertWidth, NavProp } from '@/src/shared';
+import {
+  COLOR_BACKGROUND,
+  convertHeight,
+  convertWidth,
+  getTutorialDone,
+  NavProp,
+  setTutorialDone,
+} from '@/src/shared';
 import { StyleSheet, View } from 'react-native';
 import { MainAppBar } from './components/appbar';
 import { ChatControllerContainer } from './components/chat-controller-container';
@@ -26,6 +33,12 @@ function MainPage() {
       toast.show('출석체크하여 포인트가 적립되었습니다!');
     });
 
+    getTutorialDone().then((done) => {
+      if (!done) {
+        setTutorialDone();
+        navigation.navigate('tutorial/index');
+      }
+    });
     if (role === 'ROLE_SINGLE') {
       navigation.navigate('connection/index');
     }
