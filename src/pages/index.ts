@@ -15,3 +15,4 @@ export * from './decorate-avatar/index';
 export * from './ai-chat/index';
 export * from './create-report/index';
 export * from './report-detail/index';
+export * from './tutorial/index';

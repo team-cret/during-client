@@ -21,6 +21,7 @@ type RootStackParamList = {
   'report/index': undefined;
   'report/create': undefined;
   'report/detail': undefined;
+  'tutorial/index': undefined;
 };
 
 type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

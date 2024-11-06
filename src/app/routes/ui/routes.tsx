@@ -18,6 +18,7 @@ import {
   SettingPage,
   SplashPage,
   TermsOfServicePage,
+  TutorialPage,
 } from '@/src/pages';
 import { ReportPage } from '@/src/pages/report-page';
 
@@ -47,6 +48,7 @@ function RootLayout() {
       <RootStack.Screen name="report/index" component={ReportPage} />
       <RootStack.Screen name="report/create" component={CreateReportPage} />
       <RootStack.Screen name="report/detail" component={ReportDetailPage} />
+      <RootStack.Screen name="tutorial/index" component={TutorialPage} />
     </RootStack.Navigator>
   );
 }
