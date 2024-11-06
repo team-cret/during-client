@@ -80,6 +80,7 @@ function BottomSheet() {
                     </View>
                   );
                 })}
+          <VerticalSizedBox height={100} />
         </ScrollView>
       </View>
     </View>

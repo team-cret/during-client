@@ -17,6 +17,10 @@ type RootStackParamList = {
   'notification/index': undefined;
   'decorate-room/index': undefined;
   'decorate-avatar/index': undefined;
+  'ai-chat/index': undefined;
+  'report/index': undefined;
+  'report/create': undefined;
+  'report/detail': undefined;
   'tutorial/index': undefined;
 };
 

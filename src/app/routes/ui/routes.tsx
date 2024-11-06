@@ -2,8 +2,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { RootStackParamList } from '@/src/shared';
 import {
+  AIChatPage,
   AuthPage,
   ConnectionPage,
+  CreateReportPage,
   DecorateAvatarPage,
   DecorateRoomPage,
   InfoSetupPage,
@@ -12,11 +14,13 @@ import {
   NotificationPage,
   OauthWebVewPage,
   ProfilePage,
+  ReportDetailPage,
   SettingPage,
   SplashPage,
   TermsOfServicePage,
   TutorialPage,
 } from '@/src/pages';
+import { ReportPage } from '@/src/pages/report-page';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -40,6 +44,10 @@ function RootLayout() {
       <RootStack.Screen name="notification/index" component={NotificationPage} />
       <RootStack.Screen name="decorate-avatar/index" component={DecorateAvatarPage} />
       <RootStack.Screen name="decorate-room/index" component={DecorateRoomPage} />
+      <RootStack.Screen name="ai-chat/index" component={AIChatPage} />
+      <RootStack.Screen name="report/index" component={ReportPage} />
+      <RootStack.Screen name="report/create" component={CreateReportPage} />
+      <RootStack.Screen name="report/detail" component={ReportDetailPage} />
       <RootStack.Screen name="tutorial/index" component={TutorialPage} />
     </RootStack.Navigator>
   );
