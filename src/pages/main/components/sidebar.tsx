@@ -132,11 +132,17 @@ function SideBar() {
             <AvatarIcon width={convertWidth(25)} height={convertHeight(25)} />
             <Text style={styles.buttonText}>아바타</Text>
           </Pressable>
-          {/* 
-          <Pressable style={styles.buttonContainer} onPress={() => {}}>
+
+          <Pressable
+            style={styles.buttonContainer}
+            onPress={() => {
+              closeSideBar();
+              navigation.navigate('report/index');
+            }}
+          >
             <ReportIcon width={convertWidth(25)} height={convertHeight(25)} />
             <Text style={styles.buttonText}>리포트</Text>
-          </Pressable> */}
+          </Pressable>
 
           <Pressable
             style={styles.buttonContainer}
